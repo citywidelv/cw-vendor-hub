@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Maintenance Work Ticket | City Wide Facility Solutions</title>
+<link rel="icon" href="favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+<style>
+:root{--red:#D22730;--red-dark:#B01F27;--black:#2D2A26;--grey:#636466;--light:#F5F5F5;
+--border:#E5E5E5;--gold:#E5B423;--teal:#0AA6A9;
+--shadow:0 1px 3px rgba(45,42,38,.08),0 4px 14px rgba(45,42,38,.06)}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Verdana,'Liberation Sans','DejaVu Sans',Geneva,Tahoma,sans-serif;
+color:var(--black);background:var(--light);font-size:14px;line-height:1.6}
+.head{background:#fff;box-shadow:0 1px 8px rgba(45,42,38,.10)}
+.head .bar{max-width:860px;margin:0 auto;padding:0 20px;height:60px;display:flex;align-items:center;gap:14px}
+.head img{height:36px;width:auto;flex:none}
+.head .t{font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--grey);
+border-left:2px solid var(--border);padding-left:14px;white-space:nowrap}
+.head a.back{margin-left:auto;font-size:11px;font-weight:700;color:var(--grey);text-decoration:none;
+border:1px solid var(--border);border-radius:14px;padding:5px 12px;background:var(--light);white-space:nowrap}
+.head a.back:hover{background:var(--red);color:#fff;border-color:var(--red)}
+.hero{background:linear-gradient(180deg,#26231f 0%,var(--black) 85%);color:#fff;border-bottom:4px solid var(--red)}
+.hero .in{max-width:860px;margin:0 auto;padding:26px 20px 22px}
+.hero h1{font-size:clamp(20px,3vw,26px);line-height:1.25}
+.hero h1::after{content:"";display:block;width:52px;height:4px;background:var(--red);border-radius:2px;margin-top:10px}
+.hero p{color:#cfcdc9;margin-top:8px;font-size:13px;max-width:640px}
+.wrap{max-width:860px;margin:0 auto;padding:20px}
+.card{background:#fff;border:1px solid var(--border);border-radius:14px;box-shadow:var(--shadow);
+padding:20px 22px;margin-bottom:16px}
+.card h2{font-size:14px;display:flex;align-items:center;gap:10px;margin-bottom:14px}
+.card h2 .num{flex:none;width:24px;height:24px;border-radius:50%;background:var(--red);color:#fff;
+font-size:12px;display:flex;align-items:center;justify-content:center}
+label.f{display:block;font-size:12px;font-weight:700;margin:12px 0 5px}
+label.f .req{color:var(--red)}
+input[type=text],input[type=email],input[type=tel],input[type=date],input[type=time],input[type=number],select,textarea{
+width:100%;font-family:inherit;font-size:14px;border:1.5px solid var(--border);border-radius:8px;
+padding:10px 12px;background:#fff;outline:none;color:var(--black)}
+input:focus,select:focus,textarea:focus{border-color:var(--red)}
+textarea{min-height:90px;resize:vertical}
+.hint{font-size:11px;color:var(--grey);margin-top:4px}
+.radio-list{display:flex;flex-direction:column;gap:8px}
+.radio-row{display:flex;flex-wrap:wrap;gap:8px}
+.radio-item{display:flex;align-items:flex-start;gap:10px;border:1.5px solid var(--border);border-radius:10px;
+padding:11px 14px;cursor:pointer;background:#fff}
+.radio-item:hover{border-color:var(--red)}
+.radio-item.on{border-color:var(--red);background:#fdf3f3}
+.radio-item input{margin-top:3px;accent-color:var(--red)}
+.radio-item .rt{font-size:13px;font-weight:700}
+.radio-item .rs{font-size:11px;color:var(--grey)}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:0 16px}
+@media(max-width:620px){.grid2{grid-template-columns:1fr}}
+.photo-drop{border:2px dashed var(--border);border-radius:12px;padding:22px;text-align:center;cursor:pointer;background:#fff}
+.photo-drop:hover{border-color:var(--red)}
+.photo-drop .big{font-size:14px;font-weight:700}
+.photo-drop .sm{font-size:11px;color:var(--grey);margin-top:4px}
+.thumbs{display:flex;flex-wrap:wrap;gap:10px;margin-top:12px}
+.thumb{position:relative;width:86px;height:86px;border-radius:10px;overflow:hidden;border:1px solid var(--border)}
+.thumb img{width:100%;height:100%;object-fit:cover;display:block}
+.thumb button{position:absolute;top:4px;right:4px;width:22px;height:22px;border:none;border-radius:50%;
+background:rgba(45,42,38,.85);color:#fff;font-size:12px;font-weight:700;cursor:pointer;line-height:1}
+.submitbar{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin:4px 0 30px}
+#send{font-family:inherit;font-size:16px;font-weight:700;background:var(--red);color:#fff;border:none;
+border-radius:10px;padding:15px 34px;cursor:pointer}
+#send:hover{background:var(--red-dark)}
+#send[disabled]{opacity:.55;cursor:wait}
+#err{font-size:12.5px;font-weight:700;color:var(--red)}
+#done{display:none;background:#fff;border:1px solid var(--border);border-top:6px solid var(--teal);
+border-radius:14px;box-shadow:var(--shadow);padding:38px 26px;text-align:center;margin-bottom:40px}
+#done .chk{width:58px;height:58px;border-radius:50%;background:var(--teal);color:#fff;font-size:30px;
+display:flex;align-items:center;justify-content:center;margin:0 auto 14px}
+#done h2{font-size:19px;margin-bottom:6px}
+#done p{font-size:13px;color:var(--grey)}
+#done .woid{display:inline-block;margin-top:12px;font-size:14px;font-weight:700;background:var(--light);
+border:1px solid var(--border);border-radius:8px;padding:8px 18px}
+#done a{display:inline-block;margin-top:18px;font-size:13px;font-weight:700;color:var(--red)}
+.foot{border-top:1px solid var(--border);background:#fff}
+.foot .fin{max-width:860px;margin:0 auto;padding:18px 20px;display:flex;align-items:center;gap:12px;
+font-size:11px;color:var(--grey);flex-wrap:wrap}
+.foot b{color:var(--black)}
+.hp{position:absolute;left:-9999px;top:-9999px}
+</style>
+</head>
+<body>
+
+<header class="head">
+<div class="bar">
+<img src="https://emailer.emfluence.com/clients/citywide/uploadedfiles/signature_logo.png" alt="City Wide Facility Solutions">
+<span class="t">Work Ticket</span>
+<a class="back" href="index.html">&larr; Vendor Hub</a>
+</div>
+</header>
+
+<section class="hero">
+<div class="in">
+<h1>Maintenance Work Ticket</h1>
+<p>For our in-house handyman and vendor crews. Fill this out after the work is done.
+Your time, materials, receipts, and photos go straight to the operations team so the
+customer can be billed correctly.</p>
+</div>
+</section>
+
+<main class="wrap" id="formzone">
+
+<div class="card">
+<h2><span class="num">1</span>Who is submitting this ticket?</h2>
+<div class="grid2">
+<div>
+<label class="f">Your name <span class="req">*</span></label>
+<input type="text" id="name" autocomplete="name">
+</div>
+<div>
+<label class="f">Your company name</label>
+<input type="text" id="company" placeholder="City Wide Facility Solutions">
+</div>
+<div>
+<label class="f">Email <span class="req">*</span></label>
+<input type="email" id="email" autocomplete="email" placeholder="you@example.com">
+</div>
+<div>
+<label class="f">Phone</label>
+<input type="tel" id="phone" autocomplete="tel" placeholder="(702) 555-0100">
+</div>
+</div>
+</div>
+
+<div class="card">
+<h2><span class="num">2</span>Where did you do the work?</h2>
+<label class="f">Property name <span class="req">*</span></label>
+<input type="text" id="property" placeholder="Business or building name">
+<label class="f">Full address <span class="req">*</span></label>
+<input type="text" id="address" placeholder="Street, suite, city, state, zip">
+</div>
+
+<div class="card">
+<h2><span class="num">3</span>What work did you do?</h2>
+<div class="grid2">
+<div>
+<label class="f">Date the work was done <span class="req">*</span></label>
+<input type="date" id="dateOfWork">
+</div>
+<div>
+<label class="f">Who at City Wide requested this work? <span class="req">*</span></label>
+<input type="text" id="requestedBy" placeholder="Name of the FSM or team member">
+</div>
+</div>
+<label class="f">Task type</label>
+<input type="text" id="task" list="taskList" placeholder="Start typing to search the task list...">
+<datalist id="taskList"></datalist>
+<label class="f">Describe the work performed <span class="req">*</span></label>
+<textarea id="desc" placeholder="What did you do? Where in the building? Anything ops should know when billing or following up?"></textarea>
+</div>
+
+<div class="card">
+<h2><span class="num">4</span>Time on the job</h2>
+<div class="grid2">
+<div>
+<label class="f">Start time</label>
+<input type="time" id="startTime">
+</div>
+<div>
+<label class="f">End time</label>
+<input type="time" id="endTime">
+</div>
+<div>
+<label class="f">Number of technicians</label>
+<input type="number" id="techs" min="1" step="1" value="1">
+</div>
+<div>
+<label class="f">Total labor hours, all technicians combined <span class="req">*</span></label>
+<input type="number" id="hours" min="0" step="0.25" placeholder="Example: 3.5">
+<div class="hint" id="hoursHint">This is the number ops bills from. It fills in automatically from your times, but you can correct it.</div>
+</div>
+</div>
+</div>
+
+<div class="card">
+<h2><span class="num">5</span>Materials and supplies</h2>
+<label class="f">Did you purchase any supplies or materials for this job? <span class="req">*</span></label>
+<div class="radio-row" id="matList">
+<label class="radio-item"><input type="radio" name="mat" value="No" checked><span><span class="rt">No</span></span></label>
+<label class="radio-item"><input type="radio" name="mat" value="Yes"><span><span class="rt">Yes</span></span></label>
+</div>
+<div id="matWrap" style="display:none">
+<label class="f">What did you purchase? <span class="req">*</span></label>
+<textarea id="matDesc" style="min-height:60px" placeholder="Example: 2 gallons paint, 1 tube caulk, door closer"></textarea>
+<label class="f">Total cost of materials <span class="req">*</span></label>
+<input type="number" id="matCost" min="0" step="0.01" placeholder="Example: 84.50">
+<label class="f">Receipt photos <span class="req">*</span></label>
+<div class="photo-drop" id="rdrop">
+<div class="big">Tap to add receipt photos</div>
+<div class="sm">Up to 6. Ops needs these to bill the customer for materials.</div>
+</div>
+<input type="file" id="rfile" accept="image/*" multiple style="display:none">
+<div class="thumbs" id="rthumbs"></div>
+</div>
+</div>
+
+<div class="card">
+<h2><span class="num">6</span>How did the job wrap up?</h2>
+<label class="f">Work status <span class="req">*</span></label>
+<div class="radio-list" id="statusList">
+<label class="radio-item"><input type="radio" name="wstatus" value="Work complete" checked>
+<span><span class="rt">Work complete</span></span></label>
+<label class="radio-item"><input type="radio" name="wstatus" value="Return trip needed to finish">
+<span><span class="rt">Return trip needed to finish</span><br><span class="rs">The operations team is flagged so the follow-up gets scheduled.</span></span></label>
+<label class="radio-item"><input type="radio" name="wstatus" value="Could not complete">
+<span><span class="rt">Could not complete</span><br><span class="rs">Tell us why in the description above.</span></span></label>
+</div>
+<label class="f">Did the on-site client check the work before you left?</label>
+<div class="radio-row" id="chkList">
+<label class="radio-item"><input type="radio" name="chk" value="Yes"><span><span class="rt">Yes</span></span></label>
+<label class="radio-item"><input type="radio" name="chk" value="No" checked><span><span class="rt">No</span></span></label>
+</div>
+<div id="chkWrap" style="display:none">
+<div class="grid2">
+<div>
+<label class="f">Who checked the work?</label>
+<input type="text" id="checkedBy" placeholder="First and last name">
+</div>
+<div>
+<label class="f">What was their feedback?</label>
+<select id="feedback">
+<option>Completely Satisfied</option>
+<option>Need to reschedule to finish</option>
+<option>Unsatisfied with work</option>
+</select>
+</div>
+</div>
+</div>
+</div>
+
+<div class="card">
+<h2><span class="num">7</span>Photos of the work</h2>
+<div class="photo-drop" id="drop">
+<div class="big">Tap to add photos</div>
+<div class="sm">Up to 8. Before and after shots help ops bill without callbacks. Saved by property, date, and your name.</div>
+</div>
+<input type="file" id="file" accept="image/*" multiple style="display:none">
+<div class="thumbs" id="thumbs"></div>
+</div>
+
+<div class="card">
+<h2><span class="num">8</span>Billing notes</h2>
+<label class="f">Anything ops needs to bill this correctly?</label>
+<input type="text" id="billing" placeholder="Example: bill to Radiation Center, PO 4471, quoted at $350">
+</div>
+
+<input type="text" name="website" id="website" class="hp" tabindex="-1" autocomplete="off">
+
+<div class="submitbar">
+<button id="send">Submit Work Ticket</button>
+<span id="err"></span>
+</div>
+</main>
+
+<div class="wrap" style="padding-top:0">
+<div id="done">
+<div class="chk">&#10003;</div>
+<h2>Work ticket submitted</h2>
+<p>The operations team has your time, materials, and photos. Keep this number if you need to follow up.</p>
+<div class="woid" id="woid"></div><br>
+<a href="work-order.html">Submit another work ticket</a>
+</div>
+</div>
+
+<footer class="foot"><div class="fin">
+<b>City Wide Facility Solutions</b> &middot; Las Vegas &amp; Northern Nevada &middot;
+Questions? Contact your FSM. <span style="margin-left:auto;font-style:italic;font-weight:700">GoCityWide.com</span>
+</div></footer>
+
+<script>
+"use strict";
+var WEBHOOK="https://script.google.com/macros/s/AKfycbyD91q07tfClt0QHxUtBjgZ-4ILTdCFi4QZJkuniLlS4NptqWtSL6zB21OiisYWfvcdrw/exec";
+
+var TASKS=["Touch-up painting (scuffs, marks on walls)","Door hardware adjustments and repairs (handles, closers, hinges)",
+"Cabinet and drawer adjustments/repairs","Hanging whiteboards, bulletin boards, artwork, and signage",
+"Light bulb and ballast replacements","Minor drywall repairs (nail pops, small holes)",
+"Caulking (sinks, countertops, baseboards)","Baseboard and trim repairs","Furniture assembly and adjustments",
+"Window blind repairs and adjustments","Interior door repairs and adjustments","Ceiling tile replacement",
+"Weatherstripping replacement","Floor tile repairs (VCT, LVT replacements)",
+"Bathroom accessory repairs (paper holders, grab bars, soap dispensers)","Carpet repairs (re-stretching, patching)",
+"Chair rail and wall protection installation/repair","Shelving installation and repairs","Minor countertop repairs",
+"Threshold and transition strip replacement","Full room painting","Floor refinishing or coating",
+"Reception desk repairs","Signage installation (wayfinding, ADA compliance)","Furniture moving and reconfiguration",
+"Cork board and tack board installation","Wall-mounted equipment installation (TVs, monitors)",
+"Cubicle and partition adjustments","Handrail tightening and repair","Window casing and trim repair",
+"Office reconfiguration support","Flooring replacement projects","Millwork installation",
+"Exterior door hardware replacement","Access panel installation",
+"Safety equipment installation (fire extinguisher brackets, AED mounts)","Employee break room updates",
+"Storage solution installation","Privacy film installation on glass","Minor demolition for remodel prep",
+"Exterior touch-up painting","Roof access ladder repairs","Loading dock equipment minor repairs",
+"Parking lot sign post repairs","Exterior building number installation","Other"];
+
+var photos=[];
+var receipts=[];
+var hoursTouched=false;
+
+
+// populate task list, default date to today
+(function(){
+var dl=document.getElementById("taskList");
+TASKS.forEach(function(t){var o=document.createElement("option");o.value=t;dl.appendChild(o);});
+var d=new Date();
+var mm=("0"+(d.getMonth()+1)).slice(-2),dd=("0"+d.getDate()).slice(-2);
+document.getElementById("dateOfWork").value=d.getFullYear()+"-"+mm+"-"+dd;
+})();
+
+// radio highlight + conditional sections
+function wireRadios(listId,fn){
+document.querySelectorAll("#"+listId+" input").forEach(function(r){
+r.addEventListener("change",function(){
+document.querySelectorAll("#"+listId+" .radio-item").forEach(function(x){x.classList.remove("on");});
+r.closest(".radio-item").classList.add("on");
+if(fn)fn(r.value);
+});
+});
+var checked=document.querySelector("#"+listId+" input:checked");
+if(checked)checked.closest(".radio-item").classList.add("on");
+}
+wireRadios("matList",function(v){document.getElementById("matWrap").style.display=(v==="Yes")?"block":"none";});
+wireRadios("statusList");
+wireRadios("chkList",function(v){document.getElementById("chkWrap").style.display=(v==="Yes")?"block":"none";});
+
+// auto-calc labor hours = (end - start) x techs, editable
+function calcHours(){
+if(hoursTouched)return;
+var s=document.getElementById("startTime").value,e=document.getElementById("endTime").value;
+if(!s||!e)return;
+var sm=s.split(":"),em=e.split(":");
+var mins=(parseInt(em[0],10)*60+parseInt(em[1],10))-(parseInt(sm[0],10)*60+parseInt(sm[1],10));
+if(mins<=0)return;
+var techs=parseInt(document.getElementById("techs").value,10)||1;
+var h=Math.round((mins/60)*techs*4)/4;
+document.getElementById("hours").value=h;
+}
+document.getElementById("startTime").addEventListener("change",calcHours);
+document.getElementById("endTime").addEventListener("change",calcHours);
+document.getElementById("techs").addEventListener("change",calcHours);
+document.getElementById("hours").addEventListener("input",function(){hoursTouched=true;});
+
+// photo + receipt pipelines
+function wireUploader(dropId,fileId,thumbsId,store,max){
+var drop=document.getElementById(dropId),file=document.getElementById(fileId);
+drop.addEventListener("click",function(){file.click();});
+file.addEventListener("change",function(){addFiles(Array.from(file.files));file.value="";});
+drop.addEventListener("dragover",function(e){e.preventDefault();});
+drop.addEventListener("drop",function(e){e.preventDefault();addFiles(Array.from(e.dataTransfer.files));});
+function addFiles(list){
+list.filter(function(f){return /^image\//.test(f.type);}).forEach(function(f){
+if(store.length>=max)return;
+compress(f,function(dataUrl){
+store.push({name:f.name,type:"image/jpeg",data:dataUrl});
+renderThumbs();
+});
+});
+}
+function renderThumbs(){
+var t=document.getElementById(thumbsId);t.innerHTML="";
+store.forEach(function(p,i){
+var d=document.createElement("div");d.className="thumb";
+var im=document.createElement("img");im.src=p.data;d.appendChild(im);
+var b=document.createElement("button");b.textContent="×";
+b.onclick=function(){store.splice(i,1);renderThumbs();};
+d.appendChild(b);t.appendChild(d);
+});
+}
+}
+function compress(f,cb){
+var img=new Image(),rd=new FileReader();
+rd.onload=function(){img.src=rd.result;};
+img.onload=function(){
+var max=1600,w=img.width,h=img.height;
+if(w>max||h>max){var k=Math.min(max/w,max/h);w=Math.round(w*k);h=Math.round(h*k);}
+var c=document.createElement("canvas");c.width=w;c.height=h;
+c.getContext("2d").drawImage(img,0,0,w,h);
+cb(c.toDataURL("image/jpeg",0.75));
+};
+rd.readAsDataURL(f);
+}
+wireUploader("drop","file","thumbs",photos,8);
+wireUploader("rdrop","rfile","rthumbs",receipts,6);
+
+document.getElementById("send").addEventListener("click",function(){
+var err=document.getElementById("err");err.textContent="";
+function val(id){return document.getElementById(id).value.trim();}
+var name=val("name"),email=val("email"),property=val("property"),address=val("address"),
+dateOfWork=val("dateOfWork"),requestedBy=val("requestedBy"),desc=val("desc"),hours=val("hours");
+if(!name){err.textContent="Add your name.";return;}
+if(!email||email.indexOf("@")<1){err.textContent="Add a valid email.";return;}
+if(!property){err.textContent="Enter the property name.";return;}
+if(!address){err.textContent="Enter the property address.";return;}
+if(!dateOfWork){err.textContent="Add the date the work was done.";return;}
+if(!requestedBy){err.textContent="Tell us who at City Wide requested this work.";return;}
+if(!desc){err.textContent="Describe the work performed.";return;}
+if(!hours||parseFloat(hours)<=0){err.textContent="Add the total labor hours so ops can bill.";return;}
+var mat=document.querySelector('input[name="mat"]:checked').value;
+if(mat==="Yes"){
+if(!val("matDesc")){err.textContent="List the materials you purchased.";return;}
+if(!val("matCost")){err.textContent="Add the total cost of materials.";return;}
+if(!receipts.length){err.textContent="Add at least one receipt photo so ops can bill the materials.";return;}
+}
+var chk=document.querySelector('input[name="chk"]:checked').value;
+var payload={
+kind:"work_order",
+website:document.getElementById("website").value,
+name:name, company:val("company"),
+email:email, phone:val("phone"),
+property_name:property, address:address,
+date_of_work:dateOfWork, requested_by:requestedBy,
+task_type:val("task"), description:desc,
+start_time:val("startTime"), end_time:val("endTime"),
+techs:val("techs")||"1", labor_hours:hours,
+materials_purchased:mat, materials_desc:(mat==="Yes")?val("matDesc"):"",
+materials_cost:(mat==="Yes")?val("matCost"):"",
+work_status:document.querySelector('input[name="wstatus"]:checked').value,
+client_checked:chk,
+checked_by:(chk==="Yes")?val("checkedBy"):"",
+client_feedback:(chk==="Yes")?document.getElementById("feedback").value:"",
+billing_notes:val("billing"),
+photos:photos, receipts:receipts
+};
+var btn=document.getElementById("send");
+btn.disabled=true;btn.textContent="Submitting...";
+fetch(WEBHOOK,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify(payload)})
+.then(function(r){return r.json();})
+.then(function(j){
+btn.disabled=false;btn.textContent="Submit Work Ticket";
+if(j&&j.ok){
+document.getElementById("formzone").style.display="none";
+document.getElementById("done").style.display="block";
+document.getElementById("woid").textContent=j.wo_id||"Received";
+window.scrollTo({top:0,behavior:"smooth"});
+}else{
+err.textContent=(j&&j.error)?j.error:"Could not submit. Check the fields and try again.";
+}
+})
+.catch(function(){
+btn.disabled=false;btn.textContent="Submit Work Ticket";
+err.textContent="Could not reach the server. Check your connection and try again. Large photos can also time out - try removing one or two.";
+});
+});
+</script>
+</body>
+</html>
