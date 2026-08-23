@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>New Building Kit Builder | City Wide Vendor Hub</title>
+<script src="shop/config.js"></script>
+<style>
+:root{
+  --cw-red:#D22730; --cw-black:#2D2A26; --cw-grey:#636466; --cw-white:#FFFFFF;
+  --cw-light-grey:#F5F5F5; --cw-border:#E5E5E5; --cw-placeholder:#E8E8E8;
+  --cw-green:#1F7A45;
+}
+*{box-sizing:border-box; margin:0; padding:0;}
+body{
+  font-family:Verdana,'Liberation Sans','DejaVu Sans',Geneva,Tahoma,sans-serif;
+  color:var(--cw-black); background:var(--cw-white); font-size:13px; line-height:1.6;
+}
+img{max-width:100%;}
+button{font-family:inherit; cursor:pointer;}
+input,select,textarea{font-family:inherit; font-size:13px;}
+
+header{position:sticky; top:0; z-index:50; background:var(--cw-white);
+  border-bottom:3px solid var(--cw-red); box-shadow:0 1px 6px rgba(0,0,0,.08);}
+.hdr-inner{max-width:1200px; margin:0 auto; padding:10px 16px; display:flex; align-items:center; gap:16px; flex-wrap:wrap;}
+.hdr-logo img{height:38px; width:auto; display:block; flex:none;}
+.hdr-title{font-size:16px; font-weight:700; line-height:1.2;}
+.hdr-title small{display:block; font-size:11px; font-weight:400; color:var(--cw-grey);}
+.hdr-sp{margin-left:auto;}
+.hdr-link{font-size:13px;font-weight:700;color:var(--cw-black);text-decoration:none;border:1.5px solid var(--cw-border);
+  border-radius:8px;padding:9px 14px;white-space:nowrap;}
+.hdr-link:hover{color:var(--cw-red);border-color:var(--cw-red);}
+
+main{max-width:1200px; margin:0 auto; padding:0 16px 140px;}
+.hero{padding:28px 0 8px;}
+.hero h1{font-size:26px; line-height:1.25; margin-bottom:6px;}
+.hero p{color:var(--cw-grey); max-width:760px;}
+.accent{height:3px; width:56px; background:var(--cw-red); margin:14px 0 22px;}
+
+.section-title{font-size:17px; font-weight:700; margin-top:34px;}
+.section-sub{color:var(--cw-grey); font-size:12px; margin-top:2px; margin-bottom:12px; max-width:820px;}
+
+/* building type picker */
+.types{display:grid; grid-template-columns:repeat(auto-fit,minmax(190px,1fr)); gap:10px;}
+.type{border:2px solid var(--cw-border); border-radius:10px; padding:14px; background:var(--cw-white);
+  text-align:left; transition:.12s;}
+.type:hover{border-color:var(--cw-grey);}
+.type.on{border-color:var(--cw-red); background:#FDF5F5;}
+.type b{display:block; font-size:14px; margin-bottom:3px;}
+.type span{color:var(--cw-grey); font-size:11px; line-height:1.45; display:block;}
+
+/* education */
+.edu{border:1.5px solid var(--cw-border); border-left:4px solid var(--cw-red); border-radius:8px;
+  padding:14px 16px; margin:14px 0; background:var(--cw-light-grey);}
+.edu h3{font-size:13px; margin-bottom:6px;}
+.edu p{font-size:12px; color:#43403C; margin-bottom:8px;}
+.edu p:last-child{margin-bottom:0;}
+.edu ul{margin:0 0 8px 18px; font-size:12px; color:#43403C;}
+.edu li{margin-bottom:4px;}
+.edu .src{font-size:10.5px; color:var(--cw-grey); font-style:italic;}
+details.edu summary{cursor:pointer; font-weight:700; font-size:13px; list-style:none;}
+details.edu summary::-webkit-details-marker{display:none;}
+details.edu summary:before{content:"+ "; color:var(--cw-red); font-weight:700;}
+details.edu[open] summary:before{content:"\2212 "; }
+details.edu[open] summary{margin-bottom:8px;}
+
+/* item rows */
+.items{border:1.5px solid var(--cw-border); border-radius:10px; overflow:hidden;}
+.row{display:flex; gap:12px; align-items:center; padding:10px 12px; border-bottom:1px solid var(--cw-border);}
+.row:last-child{border-bottom:none;}
+.row.off{background:#FAFAFA; color:var(--cw-grey);}
+.row .thumb{width:46px; height:46px; flex:none; background:var(--cw-placeholder); border-radius:6px;
+  display:flex; align-items:center; justify-content:center; overflow:hidden;}
+.row .thumb img{max-width:100%; max-height:100%; object-fit:contain;}
+.row .nm{flex:1; min-width:0;}
+.row .nm b{font-size:12.5px; font-weight:700; display:block; line-height:1.35;}
+.row .nm span{font-size:11px; color:var(--cw-grey);}
+.row .why{font-size:11px; color:var(--cw-red); font-weight:700; display:block; margin-top:2px;}
+.row .pr{width:82px; text-align:right; font-weight:700; font-size:12.5px; flex:none;}
+.qty{display:flex; align-items:center; gap:4px; flex:none;}
+.qty button{width:26px; height:26px; border:1.5px solid var(--cw-border); background:var(--cw-white);
+  border-radius:5px; font-weight:700; font-size:14px; line-height:1;}
+.qty button:hover{border-color:var(--cw-red); color:var(--cw-red);}
+.qty input{width:42px; height:26px; text-align:center; border:1.5px solid var(--cw-border); border-radius:5px;}
+.chk{width:18px; height:18px; flex:none; accent-color:var(--cw-red);}
+
+.grp-hd{background:var(--cw-black); color:var(--cw-white); padding:7px 12px; font-size:11.5px;
+  font-weight:700; letter-spacing:.03em; text-transform:uppercase;}
+
+/* browse */
+.searchrow{display:flex; gap:8px; margin-bottom:10px; flex-wrap:wrap;}
+.searchrow input,.searchrow select{padding:9px 12px; border:1.5px solid var(--cw-border); border-radius:8px;}
+.searchrow input{flex:1; min-width:200px;}
+
+/* summary bar */
+.bar{position:fixed; left:0; right:0; bottom:0; background:var(--cw-white); border-top:3px solid var(--cw-red);
+  box-shadow:0 -2px 12px rgba(0,0,0,.12); z-index:60;}
+.bar-inner{max-width:1200px; margin:0 auto; padding:10px 16px; display:flex; gap:16px; align-items:center; flex-wrap:wrap;}
+.tiers{flex:1; min-width:260px;}
+.track{height:8px; background:var(--cw-border); border-radius:99px; position:relative; margin:7px 0 5px;}
+.fill{height:100%; background:var(--cw-red); border-radius:99px; width:0; transition:width .25s;}
+.ticks{display:flex; justify-content:space-between; font-size:10.5px; color:var(--cw-grey);}
+.tick.hit{color:var(--cw-green); font-weight:700;}
+.totals{text-align:right; font-size:12px; white-space:nowrap;}
+.totals .big{font-size:19px; font-weight:700; display:block;}
+.totals .save{color:var(--cw-green); font-weight:700;}
+.totals .strike{text-decoration:line-through; color:var(--cw-grey);}
+.cta{background:var(--cw-red); color:var(--cw-white); border:none; border-radius:8px; padding:13px 22px;
+  font-weight:700; font-size:14px;}
+.cta:hover{background:#B31F27;}
+.cta:disabled{background:var(--cw-border); color:var(--cw-grey); cursor:not-allowed;}
+
+/* drawer */
+.overlay{position:fixed; inset:0; background:rgba(0,0,0,.45); z-index:70; display:none;}
+.overlay.on{display:block;}
+.drawer{position:fixed; top:0; right:0; bottom:0; width:min(460px,100%); background:var(--cw-white);
+  z-index:80; transform:translateX(100%); transition:.22s; display:flex; flex-direction:column;}
+.drawer.on{transform:translateX(0);}
+.drawer-hd{padding:14px 16px; border-bottom:3px solid var(--cw-red); display:flex; align-items:center; justify-content:space-between;}
+.drawer-hd h2{font-size:16px;}
+.drawer-hd button{border:none; background:none; font-size:20px; line-height:1;}
+.drawer-bd{flex:1; overflow-y:auto; padding:16px;}
+.drawer-ft{padding:14px 16px; border-top:1.5px solid var(--cw-border); background:var(--cw-light-grey);}
+.form-grp{margin-bottom:11px;}
+.form-grp label{display:block; font-size:11.5px; font-weight:700; margin-bottom:4px;}
+.form-grp input,.form-grp textarea{width:100%; padding:9px 11px; border:1.5px solid var(--cw-border); border-radius:7px;}
+.req{color:var(--cw-red);}
+.ln{display:flex; justify-content:space-between; font-size:12px; padding:4px 0; gap:10px;}
+.ln.tot{border-top:1.5px solid var(--cw-border); margin-top:8px; padding-top:8px; font-weight:700; font-size:14px;}
+.ln.disc{color:var(--cw-green); font-weight:700;}
+.ack{display:flex; gap:8px; align-items:flex-start; font-size:11px; margin:10px 0;}
+.err{color:var(--cw-red); font-size:11.5px; font-weight:700; min-height:16px;}
+.notice{font-size:10.5px; color:var(--cw-grey); line-height:1.5; margin-top:8px;}
+.badge{display:inline-block; background:var(--cw-red); color:#fff; font-size:9.5px; font-weight:700;
+  padding:2px 6px; border-radius:4px; vertical-align:middle; margin-left:6px; letter-spacing:.03em;}
+.badge.g{background:var(--cw-green);}
+.badge.k{background:var(--cw-black);}
+.empty{padding:26px; text-align:center; color:var(--cw-grey); border:1.5px dashed var(--cw-border); border-radius:10px;}
+@media(max-width:640px){
+  .row .pr{width:66px;} .hdr-title{font-size:14px;}
+  .totals{text-align:left;} .bar-inner{gap:10px;}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="hdr-inner">
+    <a class="hdr-logo" href="./"><img src="https://emailer.emfluence.com/clients/citywide/uploadedfiles/signature_logo.png" alt="City Wide Facility Solutions"></a>
+    <div class="hdr-title">New Building Kit Builder<small>Start a new account with the right tools</small></div>
+    <span class="hdr-sp"></span>
+    <a class="hdr-link" href="shop/">Vendor Shop</a>
+    <a class="hdr-link" href="./">Vendor Hub</a>
+  </div>
+</header>
+
+<main>
+  <div class="hero">
+    <h1>Build your new building kit</h1>
+    <p>Pick the building type and we will load a starting kit built around what that kind of facility actually needs. Change any quantity, uncheck what you already own, and add anything else from the full catalog. The more complete the kit, the bigger the discount.</p>
+    <div class="accent"></div>
+  </div>
+
+  <div class="section-title">1. What kind of building is this?</div>
+  <div class="section-sub">Each kit is a starting point, not a rule. You know the site.</div>
+  <div class="types" id="types"></div>
+
+  <div id="kitArea" style="display:none">
+
+    <div class="section-title">2. Your suggested kit</div>
+    <div class="section-sub" id="kitSub"></div>
+    <div id="eduWrap"></div>
+    <div class="items" id="coreItems"></div>
+
+    <div class="section-title">3. Also worth adding</div>
+    <div class="section-sub">Not in the base kit. Check anything that fits the building.</div>
+    <div class="items" id="optItems"></div>
+
+    <div class="section-title">4. Add anything else</div>
+    <div class="section-sub">The full catalog. Search it and add to your kit.</div>
+    <div class="searchrow">
+      <input id="q" type="search" placeholder="Search the full catalog by name, SKU, or keyword...">
+      <select id="cat"><option value="">All categories</option></select>
+    </div>
+    <div class="items" id="browse"></div>
+    <div class="empty" id="browseEmpty" style="display:none">Nothing matches that search.</div>
+  </div>
+</main>
+
+<div class="bar">
+  <div class="bar-inner">
+    <div class="tiers">
+      <div style="font-size:11.5px;font-weight:700" id="tierMsg">Pick a building type to start</div>
+      <div class="track"><div class="fill" id="fill"></div></div>
+      <div class="ticks">
+        <span class="tick" id="t0">$500 &middot; 5%</span>
+        <span class="tick" id="t1">$1,200 &middot; 8%</span>
+        <span class="tick" id="t2">$2,500 &middot; 10%</span>
+      </div>
+    </div>
+    <div class="totals">
+      <span id="subLine" style="color:var(--cw-grey)">0 items</span>
+      <span class="big" id="grand">$0.00</span>
+      <span class="save" id="saveLine"></span>
+    </div>
+    <button class="cta" id="reviewBtn" onclick="openReview()" disabled>Review Kit</button>
+  </div>
+</div>
+
+<div class="overlay" id="overlay" onclick="closeReview()"></div>
+<aside class="drawer" id="drawer">
+  <div class="drawer-hd">
+    <h2>Review your kit</h2>
+    <button onclick="closeReview()">&#10005;</button>
+  </div>
+  <div class="drawer-bd" id="drawerBd"></div>
+  <div class="drawer-ft">
+    <div class="err" id="fErr"></div>
+    <button class="cta" style="width:100%" id="submitBtn" onclick="submitKit()">Submit Kit Order</button>
+  </div>
+</aside>
+
+<script>
+const CFG = window.CW_CONFIG || {};
+const TIERS = [
+  {min:500,  pct:5},
+  {min:1200, pct:8},
+  {min:2500, pct:10}
+];
+const MAX_PCT = 10;
+
+const TYPES = [
+  {k:'office', n:'Office / Professional',
+   s:'Suites, banks, law and medical office common areas, small multi tenant.',
+   sub:'A general purpose kit. Dual chamber mopping, a corded backpack for after hours, and the everyday chemical set.'},
+  {k:'medical', n:'Medical / Clinic',
+   s:'Clinics, urgent care, dental, surgery centers, dialysis, labs.',
+   sub:'Flat mop and charging bucket instead of string mopping, color coded microfiber, a cordless backpack for day cleaning, and EPA registered disinfectants including a sporicidal.'},
+  {k:'school', n:'School / Education',
+   s:'K-12, charter, daycare, training centers, campus buildings.',
+   sub:'Built for restroom volume and day cleaning during instruction. Certified green chemistry where we carry it, since Nevada regulates cleaning products in schools.'},
+  {k:'industrial', n:'Industrial / Warehouse',
+   s:'Warehouse, distribution, manufacturing, shops, docks.',
+   sub:'Heavier soil, degreasers, large area sweeping, and the safety items an open floor with traffic needs.'},
+  {k:'cleanroom', n:'Cleanroom / GMP',
+   s:'Compounding pharmacy, medical device, controlled environments.',
+   sub:'Low lint and non shedding only, sterile 70% IPA, tacky mats, and dedicated tools that never leave the classified area.'}
+];
+
+const EDU = {
+  mopping: {
+    t:'Why we push a dual chamber bucket',
+    h:`<p><b>Two chambers keep the clean solution clean.</b> With one bucket you rinse soil back into the solution and then put it on the next floor. CDC environmental cleaning guidance calls for a two bucket method, solution plus rinse, for routine cleaning, and three buckets when you are disinfecting.</p>
+       <p><b>It is also faster.</b> Published ISSA cleaning times put a 32 oz mop with a double bucket at 8.40 minutes per 1,000 sq ft against 9.60 with a single bucket for damp mopping, and 15.00 against 18.00 for wet mop and rinse. The bigger the mop, the more the second chamber pays.</p>
+       <p>We build kits on the Rubbermaid WaveBrake 35 quart with the red 18 quart dirty water insert. That is the setup our crews already run.</p>
+       <p class="src">Sources: CDC Best Practices for Environmental Cleaning in Healthcare Facilities; ISSA cleaning times.</p>`
+  },
+  flat: {
+    t:'Flat mop or string mop, honestly',
+    h:`<p><b>Where flat mops genuinely win:</b> a fresh pad per room means no re-dipping, far less water and chemical, and much more consistent results across different people. In a controlled hospital study, a microfiber system with its own bucket removed 94.5% of microbial load using only detergent, against 67.8% for a cotton mop with detergent. The spread between operators also collapsed, which matters more than the average when several people clean the same building.</p>
+       <p><b>Where they do not win:</b> raw speed. On published ISSA times a 14 inch flat mop runs about 11.2 minutes per 1,000 sq ft, slower than a 32 oz string mop damp mopping with a double bucket at 8.40. Flat mops also hold less liquid, so string mops are still the right tool for spills, heavy grease, and stripping.</p>
+       <p><b>One trap worth knowing:</b> in that same study, microfiber pads dunked in a conventional bucket performed <i>worse</i> than cotton when a quat disinfectant was used. If you buy microfiber pads, buy the charging bucket or pre soak method with them. Microfiber dropped into the old workflow can make results go backwards.</p>
+       <p><b>On scuff marks:</b> a flat mop frame is a better carrier for a scrubbing or melamine pad than a string mop is, because it puts your weight over a flat plate. But the scuff removal is being done by the pad and the chemistry, not by the mop format. For real black marks on VCT, a melamine pad with light pressure or a low speed buffer with the right pad will beat any mop.</p>
+       <p class="src">Sources: Rutala, Gergen &amp; Weber, Am J Infect Control 2007;35:569-573; ISSA cleaning times; Hillyard floor care guidance.</p>`
+  },
+  vac: {
+    t:'Corded, cordless, or upright',
+    h:`<ul>
+        <li><b>Corded backpack</b> is the lowest cost per square foot and the right default for after hours routes. The ProTeam Super Coach Pro 6 in this kit runs at 69.7 dBA and carries the CRI Seal of Approval, with a 50 ft cord and HEPA media filtration.</li>
+        <li><b>Cordless backpack</b> earns its price when the building is occupied while you clean. A 50 ft cord across a clinic corridor or a school hallway during passing period is a real trip hazard, and OSHA 1910.22 puts that on you. Plan on roughly 75 minutes of runtime at full power, so budget a spare battery or design the route around a lower setting.</li>
+        <li><b>Upright</b> still wins on wide open unobstructed carpet, and it is the tool when you need a beater bar on deep pile. It loses badly in cubicles, on stairs, on edges, and on mixed hard and soft floor routes.</li>
+       </ul>
+       <p>One honest caution on productivity claims. Older ISSA figures put backpacks around 7,400 sq ft per hour against roughly 2,900 for a 14 inch upright, but a newer timed study found the two much closer. What really drives the number is how obstructed the space is, not the badge on the machine.</p>
+       <p class="src">Sources: ProTeam published specs; CRI Seal of Approval; ISSA 612 cleaning times; American Institute for Cleaning Sciences timed study.</p>`
+  },
+  medical: {
+    t:'Before you clean a medical building',
+    h:`<ul>
+        <li><b>Contact time is federal law, not a suggestion.</b> Every EPA registered disinfectant label carries the line that using it inconsistently with its labeling is a violation of federal law. The surface has to stay visibly wet for the full dwell time on the label. Wiping a ten minute product dry in forty seconds is a label violation.</li>
+        <li><b>Never put a chlorine or bleach product on microfiber.</b> CDC is explicit about this, and it is a real conflict because C. diff protocols call for a sporicidal. Use disposable pads for those rooms.</li>
+        <li><b>There is no national color code.</b> CDC gives an example, other authorities publish different schemes. Match whatever the building already uses. Changing a facility's colors forces retraining and raises risk during the switch.</li>
+        <li><b>Change mop water and pads often</b> — when visibly soiled, after every isolation room, and at least every one to two hours.</li>
+        <li>Work cleaner to dirtier, high to low, and from the far point back toward the door.</li>
+       </ul>
+       <p class="src">Sources: CDC environmental cleaning guidance and disinfectant regulatory framework (FIFRA); Minnesota Hospital Association EVS Cleaning Guidebook.</p>`
+  },
+  school: {
+    t:'Before you clean a school',
+    h:`<ul>
+        <li><b>Nevada regulates cleaning products in schools.</b> Green cleaning requirements apply here, so certified products are not just a preference on these accounts. Confirm the district's own approved product list before you substitute anything.</li>
+        <li><b>Clean first, disinfect where it matters.</b> Current CDC guidance for schools is routine cleaning with soap and water, sanitizing on anything that touches a child's mouth, and disinfecting in restrooms, on diaper changing surfaces, and when someone has been sick. Blanket daily disinfection of every classroom surface is not the standard anymore.</li>
+        <li><b>Ventilate, and store chemicals out of reach.</b> Some disinfectants trigger asthma, which is a large part of why these rules exist.</li>
+        <li><b>Never mix products</b> unless both labels say it is safe.</li>
+        <li><b>Gym floors are their own program.</b> Do not take an aggressive pad or a burnisher to a wood sport floor without the finish manufacturer's sign off.</li>
+       </ul>
+       <p class="src">Sources: CDC cleaning guidance for education settings; Environmental Law Institute survey of state school green cleaning laws. Verify the current Nevada requirement and the district's approved list before you buy.</p>`
+  },
+  industrial: {
+    t:'Industrial floors are a different job',
+    h:`<ul>
+        <li>The chemistry shifts from disinfectant to degreaser and enzyme. Quats are not the main spend here.</li>
+        <li>OSHA 1910.22 requires floors kept clean and, so far as feasible, dry, with drainage and dry standing places wherever a wet process runs. Your program either supports that or undermines it.</li>
+        <li>At real warehouse square footage a mop is marginal. Push sweepers and scrubbers carry the floor, and mopping is for spot work.</li>
+        <li>Carry the safety items: signage at scale, eye protection, chemical resistant gloves matched to the degreaser SDS, and high visibility where there is forklift traffic.</li>
+       </ul>
+       <p class="src">Source: OSHA 29 CFR 1910.22.</p>`
+  },
+  cleanroom: {
+    t:'Cleanroom rules that change the kit',
+    h:`<ul>
+        <li><b>Low lint or non shedding only</b>, and no wood handles anywhere. Tools are dedicated to the classified area and never leave it.</li>
+        <li><b>Sterile 70% IPA</b> is applied after cleaning and disinfection, immediately before compounding, and again every 30 minutes during work. It is not a substitute for the cleaning step that comes first.</li>
+        <li><b>Daily disinfectant, monthly sporicidal</b> on surfaces, floors, walls, and ceilings under current USP &lt;797&gt;. Category 3 compounding moves the sporicidal to weekly.</li>
+        <li>Clean to dirty always. The same mop may cross from buffer room to anteroom, but only in that direction.</li>
+        <li>Tacky mats are standard practice at entries. We carry them, but the facility's own SOP governs placement and change frequency.</li>
+       </ul>
+       <p class="src">Source: USP &lt;797&gt; compliance guidance; ISO 14644-1.</p>`
+  }
+};
+
+const EDU_BY_TYPE = {
+  office:    ['mopping','vac','flat'],
+  medical:   ['medical','flat','vac','mopping'],
+  school:    ['school','vac','mopping','flat'],
+  industrial:['industrial','mopping','vac'],
+  cleanroom: ['cleanroom','flat']
+};
+
+let PRODUCTS=[], TYPE=null, SEL={}, CATS=[];
+
+/* ---------- CSV ---------- */
+function parseCSV(text){
+  const rows=[]; let row=[], f="", q=false;
+  for(let i=0;i<text.length;i++){
+    const c=text[i];
+    if(q){ if(c==='"'){ if(text[i+1]==='"'){f+='"';i++;} else q=false; } else f+=c; }
+    else if(c==='"') q=true;
+    else if(c===','){ row.push(f); f=""; }
+    else if(c==='\n'){ row.push(f); rows.push(row); row=[]; f=""; }
+    else if(c!=='\r') f+=c;
+  }
+  if(f||row.length){ row.push(f); rows.push(row); }
+  return rows.filter(r=>r.length>1);
+}
+async function fetchCatalogText(){
+  if(CFG.CATALOG_URL){
+    try{
+      const res=await fetch(CFG.CATALOG_URL+(CFG.CATALOG_URL.includes("?")?"&":"?")+"cachebust="+Date.now());
+      if(res.ok){ const t=await res.text(); if(t && t.split("\n")[0].includes("id")) return t; }
+    }catch(e){}
+  }
+  const res=await fetch("shop/catalog.csv?v="+Date.now());
+  return res.text();
+}
+function displayPrice(p){
+  if(p.price>0) return p.price;
+  const m=parseFloat(String(p.margin_pct||"").replace("%",""));
+  const pct=isNaN(m)?(CFG.DEFAULT_MARGIN_PCT||25):m;
+  return p.cost>0 ? +(p.cost/(1-pct/100)).toFixed(2) : 0;
+}
+const fmt = n => "$"+Number(n).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g,",");
+const esc = s => String(s==null?"":s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+
+async function load(){
+  const rows=parseCSV(await fetchCatalogText());
+  const hd=rows[0].map(h=>h.trim());
+  const idx=k=>hd.indexOf(k);
+  PRODUCTS=rows.slice(1).map(r=>({
+    id:r[idx("id")], name:r[idx("name")], sku:r[idx("sku")],
+    categories:(r[idx("categories")]||"").split(";").map(s=>s.trim()).filter(Boolean),
+    fulfillment:r[idx("fulfillment")], source:r[idx("source")],
+    cost:parseFloat(r[idx("cost")])||0, margin_pct:r[idx("margin_pct")],
+    price:parseFloat(r[idx("price")])||0,
+    image:r[idx("image")], description:r[idx("description")],
+    active:r[idx("active")]!=="0",
+    kits:parseKits(idx("kits")>=0 ? (r[idx("kits")]||"") : "")
+  })).filter(p=>p.active && p.id);
+  PRODUCTS.forEach(p=>p.unit=displayPrice(p));
+  CATS=[...new Set(PRODUCTS.flatMap(p=>p.categories))].sort();
+  const sel=document.getElementById("cat");
+  CATS.forEach(c=>{ const o=document.createElement("option"); o.value=c; o.textContent=c; sel.appendChild(o); });
+  renderTypes();
+  restore();
+}
+function parseKits(s){
+  const out={};
+  s.split(";").map(x=>x.trim()).filter(Boolean).forEach(part=>{
+    const bits=part.split(":").map(x=>x.trim());
+    if(bits.length>=2){ out[bits[0]]={tier:bits[1]||"opt", qty:parseInt(bits[2]||"1")||1}; }
+  });
+  return out;
+}
+
+/* ---------- render ---------- */
+function renderTypes(){
+  document.getElementById("types").innerHTML = TYPES.map(t=>
+    `<button class="type${TYPE===t.k?" on":""}" onclick="pickType('${t.k}')">
+       <b>${esc(t.n)}</b><span>${esc(t.s)}</span></button>`).join("");
+}
+function pickType(k){
+  if(TYPE!==k){ SEL={}; }
+  TYPE=k;
+  const t=TYPES.find(x=>x.k===k);
+  document.getElementById("kitArea").style.display="";
+  document.getElementById("kitSub").textContent=t.sub;
+  document.getElementById("eduWrap").innerHTML =
+    (EDU_BY_TYPE[k]||[]).map((e,i)=>{
+      const b=EDU[e]; if(!b) return "";
+      return `<details class="edu"${i===0?" open":""}><summary>${esc(b.t)}</summary>${b.h}</details>`;
+    }).join("");
+  // preselect core
+  PRODUCTS.forEach(p=>{
+    const kk=p.kits[k];
+    if(kk && kk.tier==="core" && SEL[p.id]===undefined) SEL[p.id]=kk.qty;
+  });
+  renderTypes(); renderAll(); save();
+  document.getElementById("kitArea").scrollIntoView({behavior:"smooth",block:"start"});
+}
+function inKit(p){ return SEL[p.id]>0; }
+
+function rowHTML(p, note){
+  const on=inKit(p);
+  const q=SEL[p.id]||0;
+  return `<div class="row${on?"":" off"}">
+    <input class="chk" type="checkbox" ${on?"checked":""} onchange="toggle('${p.id}',this.checked)" aria-label="include">
+    <div class="thumb">${p.image?`<img src="${esc(p.image)}" alt="" loading="lazy" onerror="this.remove()">`:""}</div>
+    <div class="nm">
+      <b>${esc(p.name)}</b>
+      <span>SKU ${esc(p.sku)}${p.fulfillment==="Warehouse"?' <span class="badge">In Stock</span>':""}</span>
+      ${note?`<span class="why">${esc(note)}</span>`:""}
+    </div>
+    <div class="qty">
+      <button onclick="bump('${p.id}',-1)">&minus;</button>
+      <input type="number" min="0" value="${q}" onchange="setQty('${p.id}',this.value)">
+      <button onclick="bump('${p.id}',1)">+</button>
+    </div>
+    <div class="pr">${fmt((q||1)*p.unit)}</div>
+  </div>`;
+}
+const NOTES={
+  P060:'Dual chamber. Clean solution stays clean.',
+  P110:'The red insert that makes it dual chamber.',
+  P119:'Charge pads here. Do not dunk microfiber in a mop bucket.',
+  P069:'Cordless. No cord across an occupied corridor.',
+  P129:'69.7 dBA and CRI certified. Best value for after hours.',
+  P103:'One fresh pad per room. Do not re-use across rooms.',
+  P068:'Adds flat mop wringing to a WaveBrake you already own.',
+  P125:'Sporicidal. Use disposable pads with it, never microfiber.',
+  P005:'Hard water and scum. Not part of the H2Orange2 program.'
+};
+const GROUPS=[
+  ["Mopping &amp; Floor Care", /mop|bucket|wringer|wavebrake|scrubber|sweeper|burnish|floor pad|scraper|squeegee/i],
+  ["Vacuums",                  /vacuum|backpack/i],
+  ["Microfiber &amp; Cloths",  /microfiber cloth|cloth,|terry|wiper/i],
+  ["Chemicals",                /cleaner|disinfect|sanitiz|degreas|polish|spotter|prespray|soap|shock|peroxy|alcohol|remover|treatment|enzyme|wipes/i],
+  ["Tools, Carts &amp; Waste", /broom|dust pan|cart|brute|caddy|dolly|container|liner|duster|pole|sign|wagon|shelv|truck|window|key/i],
+  ["PPE &amp; Safety",         /glove|glasses|vest|boot|mat/i],
+];
+function groupOf(p){
+  const hay=p.name+" "+p.categories.join(" ");
+  for(const [g,re] of GROUPS){ if(re.test(hay)) return g; }
+  return "Other Supplies";
+}
+function renderAll(){
+  const core=PRODUCTS.filter(p=>p.kits[TYPE] && p.kits[TYPE].tier==="core");
+  const opt =PRODUCTS.filter(p=>p.kits[TYPE] && p.kits[TYPE].tier==="opt");
+  const order=GROUPS.map(g=>g[0]).concat(["Other Supplies"]);
+  const grouped = list => {
+    const by={};
+    list.forEach(p=>{ const g=groupOf(p); (by[g]=by[g]||[]).push(p); });
+    return order.filter(g=>by[g]).map(g=>
+      `<div class="grp-hd">${g}</div>`+by[g].map(p=>rowHTML(p,NOTES[p.id])).join("")).join("");
+  };
+  document.getElementById("coreItems").innerHTML = core.length?grouped(core):`<div style="padding:16px;color:var(--cw-grey)">No base items mapped for this type yet.</div>`;
+  document.getElementById("optItems").innerHTML  = opt.length?grouped(opt):`<div style="padding:16px;color:var(--cw-grey)">Nothing extra suggested for this type.</div>`;
+  renderBrowse(); renderBar();
+}
+function renderBrowse(){
+  const q=(document.getElementById("q").value||"").toLowerCase().trim();
+  const c=document.getElementById("cat").value;
+  const inKitIds=new Set(PRODUCTS.filter(p=>p.kits[TYPE]).map(p=>p.id));
+  let list=PRODUCTS.filter(p=>!inKitIds.has(p.id));
+  if(c) list=list.filter(p=>p.categories.includes(c));
+  if(q) list=list.filter(p=>(p.name+" "+p.sku+" "+p.categories.join(" ")+" "+(p.description||"")).toLowerCase().includes(q));
+  if(!q && !c) list=list.filter(p=>inKit(p)).concat(list.filter(p=>!inKit(p)).slice(0,12));
+  document.getElementById("browseEmpty").style.display=list.length?"none":"";
+  document.getElementById("browse").innerHTML=list.map(p=>rowHTML(p,null)).join("");
+}
+function toggle(id,on){
+  const p=PRODUCTS.find(x=>x.id===id);
+  const def=(p.kits[TYPE]&&p.kits[TYPE].qty)||1;
+  SEL[id]= on ? (SEL[id]>0?SEL[id]:def) : 0;
+  renderAll(); save();
+}
+function bump(id,d){ SEL[id]=Math.max(0,(SEL[id]||0)+d); renderAll(); save(); }
+function setQty(id,v){ SEL[id]=Math.max(0,parseInt(v)||0); renderAll(); save(); }
+
+/* ---------- totals ---------- */
+function lines(){
+  return PRODUCTS.filter(inKit).map(p=>({p,qty:SEL[p.id],unit:p.unit,line:+(SEL[p.id]*p.unit).toFixed(2)}));
+}
+function subtotal(){ return lines().reduce((s,l)=>s+l.line,0); }
+function tierFor(sub){
+  let pct=0;
+  TIERS.forEach(t=>{ if(sub>=t.min) pct=t.pct; });
+  return Math.min(pct,MAX_PCT);
+}
+function renderBar(){
+  const sub=subtotal(), pct=tierFor(sub), disc=+(sub*pct/100).toFixed(2), grand=+(sub-disc).toFixed(2);
+  const n=lines().reduce((s,l)=>s+l.qty,0);
+  document.getElementById("subLine").textContent = n===1?"1 item":n+" items";
+  document.getElementById("grand").textContent = fmt(grand);
+  document.getElementById("saveLine").innerHTML = pct
+    ? `${pct}% kit discount, you save ${fmt(disc)} <span class="strike">${fmt(sub)}</span>`
+    : "";
+  const next=TIERS.find(t=>sub<t.min);
+  document.getElementById("tierMsg").textContent = !TYPE ? "Pick a building type to start"
+    : next ? `Add ${fmt(next.min-sub)} more to reach ${next.pct}% off`
+           : `Top tier unlocked. ${MAX_PCT}% is the most we can offer.`;
+  const cap=TIERS[TIERS.length-1].min;
+  document.getElementById("fill").style.width=Math.min(100,(sub/cap)*100)+"%";
+  TIERS.forEach((t,i)=>document.getElementById("t"+i).className="tick"+(sub>=t.min?" hit":""));
+  document.getElementById("reviewBtn").disabled = n===0;
+}
+
+/* ---------- persistence ---------- */
+function save(){ try{ localStorage.setItem("cw_kit",JSON.stringify({t:TYPE,s:SEL})); }catch(e){} }
+function restore(){
+  try{
+    const d=JSON.parse(localStorage.getItem("cw_kit")||"null");
+    if(d && d.t){ SEL=d.s||{}; TYPE=d.t;
+      const t=TYPES.find(x=>x.k===TYPE);
+      if(t){ document.getElementById("kitArea").style.display="";
+        document.getElementById("kitSub").textContent=t.sub;
+        document.getElementById("eduWrap").innerHTML=(EDU_BY_TYPE[TYPE]||[]).map((e,i)=>{
+          const b=EDU[e]; return b?`<details class="edu"${i===0?" open":""}><summary>${esc(b.t)}</summary>${b.h}</details>`:"";}).join("");
+        renderTypes(); renderAll(); return; }
+    }
+  }catch(e){}
+  renderBar();
+}
+
+/* ---------- review + submit ---------- */
+function openReview(){
+  const sub=subtotal(), pct=tierFor(sub), disc=+(sub*pct/100).toFixed(2), grand=+(sub-disc).toFixed(2);
+  const saved=JSON.parse(localStorage.getItem("cw_vendor")||"{}");
+  const t=TYPES.find(x=>x.k===TYPE);
+  document.getElementById("drawerBd").innerHTML=`
+    <div style="font-weight:700;margin-bottom:2px">${esc(t?t.n:"")} kit</div>
+    <div style="font-size:11px;color:var(--cw-grey);margin-bottom:12px">New building start up order</div>
+    ${lines().map(l=>`<div class="ln"><span>${l.qty} &times; ${esc(l.p.name)}</span><span>${fmt(l.line)}</span></div>`).join("")}
+    <div class="ln" style="border-top:1.5px solid var(--cw-border);margin-top:8px;padding-top:8px"><span>Subtotal</span><span>${fmt(sub)}</span></div>
+    ${pct?`<div class="ln disc"><span>New building kit discount (${pct}%)</span><span>-${fmt(disc)}</span></div>`:""}
+    <div class="ln tot"><span>Total</span><span>${fmt(grand)}</span></div>
+    ${pct<MAX_PCT?`<div style="font-size:11px;color:var(--cw-grey);margin-top:6px">${(function(){const nx=TIERS.find(x=>sub<x.min);return nx?`Add ${fmt(nx.min-sub)} more and this becomes ${nx.pct}% off.`:"";})()}</div>`:""}
+    <div style="height:14px"></div>
+    <div class="form-grp"><label>Building / Account Name <span class="req">*</span></label><input id="f-building" placeholder="The new building this kit is for"></div>
+    <div class="form-grp"><label>Your Name <span class="req">*</span></label><input id="f-name" value="${esc(saved.name||"")}"></div>
+    <div class="form-grp"><label>Company Name <span class="req">*</span></label><input id="f-company" value="${esc(saved.company||"")}"></div>
+    <div class="form-grp"><label>Email <span class="req">*</span></label><input id="f-email" type="email" value="${esc(saved.email||"")}"></div>
+    <div class="form-grp"><label>Phone</label><input id="f-phone" value="${esc(saved.phone||"")}"></div>
+    <div class="form-grp"><label>Notes</label><textarea id="f-notes" rows="3" placeholder="Start date, delivery notes, anything we should know"></textarea></div>
+    <label class="ack"><input type="checkbox" id="f-ack" class="chk">
+      <span>I authorize City Wide to charge this order by pay deduction on my next statement.</span></label>
+    <div class="notice">${esc(CFG.PRICING_NOTICE||"")}</div>
+    <div class="notice"><b>Kit discount terms.</b> The new building kit discount applies to kits built on this page for a new account start. Maximum discount is ${MAX_PCT}%. Discounts are applied to the City Wide price shown and are confirmed by City Wide when the order is processed.</div>`;
+  document.getElementById("overlay").classList.add("on");
+  document.getElementById("drawer").classList.add("on");
+}
+function closeReview(){
+  document.getElementById("overlay").classList.remove("on");
+  document.getElementById("drawer").classList.remove("on");
+}
+function v(id){ const e=document.getElementById(id); return e?(e.value||"").trim():""; }
+
+function orderText(info,sub,pct,disc,grand){
+  const t=TYPES.find(x=>x.k===TYPE);
+  return [
+    `NEW BUILDING KIT ORDER - ${new Date().toLocaleString()}`,
+    `Building: ${info.building}`,
+    `Kit Type: ${t?t.n:TYPE}`,
+    `Name: ${info.name}`, `Company: ${info.company}`, `Email: ${info.email}`,
+    info.phone?`Phone: ${info.phone}`:null,
+    info.notes?`Notes: ${info.notes}`:null,
+    ``, `ITEMS:`,
+    ...lines().map(l=>`${l.qty} x ${l.p.name} (SKU ${l.p.sku}) @ ${fmt(l.unit)} = ${fmt(l.line)} [${l.p.fulfillment}]`),
+    ``,
+    `Subtotal: ${fmt(sub)}`,
+    pct?`New Building Kit Discount (${pct}%): -${fmt(disc)}`:`New Building Kit Discount: none`,
+    `Estimated Total: ${fmt(grand)}`,
+    `Payment: Pay deduction (authorized at checkout)`,
+  ].filter(x=>x!==null).join("\n");
+}
+function payloadItems(pct,disc){
+  const its=lines().map(l=>({id:l.p.id,sku:l.p.sku,name:l.p.name,size:"",qty:l.qty,unit:l.unit,line:l.line}));
+  if(pct>0) its.push({id:"KITDISC",sku:"KIT-DISCOUNT",name:`New Building Kit Discount (${pct}%)`,size:"",qty:1,unit:-disc,line:-disc});
+  return its;
+}
+async function submitKit(){
+  const sub=subtotal(), pct=tierFor(sub), disc=+(sub*pct/100).toFixed(2), grand=+(sub-disc).toFixed(2);
+  const info={ building:v("f-building"), name:v("f-name"), company:v("f-company"),
+               email:v("f-email"), phone:v("f-phone"), notes:v("f-notes"),
+               account:v("f-building") };
+  const err=document.getElementById("fErr");
+  if(!info.building||!info.name||!info.company||!info.email){ err.textContent="Please fill in all required fields."; return; }
+  if(!document.getElementById("f-ack").checked){ err.textContent="Please check the authorization box to submit."; return; }
+  err.textContent="";
+  try{ localStorage.setItem("cw_vendor",JSON.stringify({name:info.name,company:info.company,email:info.email,phone:info.phone})); }catch(e){}
+  const btn=document.getElementById("submitBtn");
+  btn.disabled=true; btn.textContent="Submitting...";
+  const text=orderText(info,sub,pct,disc,grand);
+  const items=payloadItems(pct,disc);
+
+  if(CFG.ORDERS_WEBHOOK){
+    try{ fetch(CFG.ORDERS_WEBHOOK,{method:"POST",mode:"no-cors",headers:{"Content-Type":"text/plain"},
+      body:JSON.stringify({vendor:info,total:grand,items:items.map(i=>({sku:i.sku,name:i.name,size:"",qty:i.qty,unit:i.unit}))})}); }catch(e){}
+  }
+  if(CFG.ORDER_ENDPOINT){
+    try{
+      const res=await fetch(CFG.ORDER_ENDPOINT,{method:"POST",
+        headers:{"Content-Type":"application/json","Accept":"application/json"},
+        body:JSON.stringify({_subject:`New Building Kit: ${info.company} - ${info.building} (${fmt(grand)})`,
+          _replyto:info.email, email:info.email, order:text, items, vendor:info, total:grand})});
+      if(!res.ok) throw new Error("HTTP "+res.status);
+      done(); return;
+    }catch(e){
+      btn.disabled=false; btn.textContent="Submit Kit Order";
+      err.textContent="Could not reach the order service. Use the email link below.";
+      mailFallback(text,info); return;
+    }
+  }
+  mailFallback(text,info); done(true);
+}
+function mailFallback(text,info){
+  if(document.getElementById("mailFb")) return;
+  const a=document.createElement("a");
+  a.id="mailFb"; a.className="cta"; a.style.cssText="display:block;text-align:center;margin-top:8px;text-decoration:none";
+  a.href="mailto:"+(CFG.ORDER_EMAIL||"")+"?"+(CFG.ORDER_EMAIL_CC?"cc="+encodeURIComponent(CFG.ORDER_EMAIL_CC)+"&":"")
+    +"subject="+encodeURIComponent("New Building Kit: "+info.company)+"&body="+encodeURIComponent(text);
+  a.textContent="Send by Email Instead";
+  document.querySelector(".drawer-ft").appendChild(a);
+}
+function done(mail){
+  document.getElementById("drawerBd").innerHTML=
+    `<div style="text-align:center;padding:40px 10px">
+      <div style="font-size:40px;color:var(--cw-red);line-height:1">&#10003;</div>
+      <h3 style="margin:12px 0 6px">Kit order submitted</h3>
+      <p style="color:var(--cw-grey);font-size:12px">Your service team has it${mail?" by email":""}. They will confirm current supplier pricing and the kit discount, then schedule the delivery with you.</p>
+      <button class="cta" style="margin-top:18px" onclick="resetKit()">Build Another Kit</button>
+    </div>`;
+  document.querySelector(".drawer-ft").style.display="none";
+  SEL={}; save(); renderAll();
+}
+function resetKit(){
+  try{ localStorage.removeItem("cw_kit"); }catch(e){}
+  location.reload();
+}
+document.getElementById("q").addEventListener("input",renderBrowse);
+document.getElementById("cat").addEventListener("change",renderBrowse);
+load();
+</script>
+</body>
+</html>
