@@ -223,7 +223,7 @@ td .note{display:block;font-weight:400;color:var(--cw-grey);font-size:12px;margi
 .site-foot a:hover{color:#fff;text-decoration:underline}
 .site-foot .fine{margin-top:14px;font-size:11.5px;color:#8b8985}
 .next-link{display:flex;justify-content:space-between;gap:12px;margin:44px 0 10px;flex-wrap:wrap}
-</style>
+.kit-flag .kf-cta{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:10px}.kit-flag .kf-btn{display:inline-block;background:#D22730;color:#fff;text-decoration:none;font-weight:700;font-size:12.5px;padding:9px 15px;border-radius:8px}.kit-flag .kf-btn:hover{background:#B31F27;color:#fff}.kit-flag .kf-alt{font-size:12.5px;font-weight:700;color:#2D2A26}</style>
 <style>
 .r-wrap{max-width:760px;margin:0 auto;padding:0 20px}
 .r-hero{background:linear-gradient(120deg,#2D2A26 0%,#3a3733 100%);color:#fff;padding:34px 0 30px;
@@ -311,10 +311,27 @@ function showKit(o){
   return o && o.type === "contract" &&
     /janitorial|day porter|post-construction|specialty/i.test(String(o.trade || ""));
 }
+/* Map the posting's facility type onto a kit-builder kit so a vendor who clicks
+   through from a solicitation lands on the right starting kit, not a generic one. */
+function kitBuilderHref(o){
+  var f = String(o.facility_type || "").toLowerCase();
+  var t = "office";
+  if (/clean\s*room|cleanroom/.test(f)) t = "cleanroom";
+  else if (/gmp|food|beverage|bakery|kitchen|commissary/.test(f)) t = "gmp";
+  else if (/medical|clinic|dental|surgery|health|dialysis|urgent|lab/.test(f)) t = "medical";
+  else if (/school|academy|charter|educat|daycare|campus|univers/.test(f)) t = "school";
+  else if (/warehouse|industrial|manufact|distribut|plant|shop/.test(f)) t = "industrial";
+  var sq = parseInt(String(o.sqft || "").replace(/[^0-9]/g, ""), 10);
+  var b = "m";
+  if (sq) { b = sq <= 5000 ? "s" : sq <= 15000 ? "m" : sq <= 40000 ? "l" : "xl"; }
+  return "kit-builder.html?type=" + t + "&band=" + b;
+}
 function kitFlag(o){
   return '<div class="kit-flag"><span class="ic">!</span><div><b class="kf-head">Be First-Night Ready</b>'
     + 'Before your first visit, open the <a href="planner.html">New Building Starter Kit</a> and dial in the list for a '
-    + '<b>' + esc(o.facility_type || 'building') + '</b>. Show up on night one with every chemical and piece of equipment this building needs.</div></div>';
+    + '<b>' + esc(o.facility_type || 'building') + '</b>. Show up on night one with every chemical and piece of equipment this building needs.'
+    + '<span class="kf-cta"><a class="kf-btn" href="' + kitBuilderHref(o) + '">Build &amp; price the kit</a>'
+    + '<a class="kf-alt" href="planner.html">See the full checklist</a></span></div></div>';
 }
 function fsmStrip(o){
   var f = o.fsm_info;

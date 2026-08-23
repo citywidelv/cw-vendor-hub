@@ -167,16 +167,20 @@ details.edu[open] summary{margin-bottom:8px;}
 
   <div id="kitArea" style="display:none">
 
-    <div class="section-title">2. Your suggested kit</div>
+    <div class="section-title">2. How big is it?</div>
+    <div class="section-sub">Cleanable square feet. Quantities scale the same way the <a href="planner.html" style="color:var(--cw-red)">New Building Inventory Planner</a> scales them, with the 3x rotation already built in: one set in use, one in the laundry, one spare.</div>
+    <div class="types" id="bands"></div>
+
+    <div class="section-title">3. Your suggested kit</div>
     <div class="section-sub" id="kitSub"></div>
     <div id="eduWrap"></div>
     <div class="items" id="coreItems"></div>
 
-    <div class="section-title">3. Also worth adding</div>
+    <div class="section-title">4. Also worth adding</div>
     <div class="section-sub">Not in the base kit. Check anything that fits the building.</div>
     <div class="items" id="optItems"></div>
 
-    <div class="section-title">4. Add anything else</div>
+    <div class="section-title">5. Add anything else</div>
     <div class="section-sub">The full catalog. Search it and add to your kit.</div>
     <div class="searchrow">
       <input id="q" type="search" placeholder="Search the full catalog by name, SKU, or keyword...">
@@ -229,6 +233,44 @@ const TIERS = [
 ];
 const MAX_PCT = 10;
 
+/* Size bands and scaling mirror the New Building Inventory Planner so the two
+   pages never contradict each other. Sheet quantities are the MEDIUM, general
+   janitorial baseline; band and type multipliers scale from there. */
+const BANDS=[
+  {k:'s',  n:'Small',      s:'Up to 5,000 sq ft'},
+  {k:'m',  n:'Medium',     s:'5,001 to 15,000'},
+  {k:'l',  n:'Large',      s:'15,001 to 40,000'},
+  {k:'xl', n:'Very Large', s:'Over 40,000 sq ft'}
+];
+const BAND_MULT={
+  pads:      {s:0.5, m:1, l:2,   xl:3},
+  cloths:    {s:0.5, m:1, l:1.5, xl:2},
+  consumable:{s:0.5, m:1, l:1.5, xl:2},
+  durable:   {s:1,   m:1, l:2,   xl:2}
+};
+/* Type multipliers apply to pads and cloths only, exactly as the planner does. */
+const TYPE_MULT={
+  office:    {pads:1,   cloths:1},
+  school:    {pads:1.5, cloths:1.5},
+  medical:   {pads:1.5, cloths:1.5},
+  industrial:{pads:1.5, cloths:1.5},
+  cleanroom: {pads:1,   cloths:1},
+  gmp:       {pads:2,   cloths:1.5}
+};
+function scaleClass(p){
+  const n=p.name.toLowerCase();
+  if(/mop pad/.test(n)) return "pads";
+  if(/microfiber cloth/.test(n)) return "cloths";
+  if(/glove|wet floor sign|can liner|cone mop|wipe|bottle/.test(n)) return "consumable";
+  return "durable";
+}
+function scaledQty(p, base){
+  const c=scaleClass(p);
+  const bm=(BAND_MULT[c]||BAND_MULT.durable)[BAND]||1;
+  const tm=(c==="pads"||c==="cloths") ? ((TYPE_MULT[TYPE]||{})[c]||1) : 1;
+  return Math.max(1, Math.round(base*bm*tm));
+}
+
 const TYPES = [
   {k:'office', n:'Office / Professional',
    s:'Suites, banks, law and medical office common areas, small multi tenant.',
@@ -242,9 +284,12 @@ const TYPES = [
   {k:'industrial', n:'Industrial / Warehouse',
    s:'Warehouse, distribution, manufacturing, shops, docks.',
    sub:'Heavier soil, degreasers, large area sweeping, and the safety items an open floor with traffic needs.'},
-  {k:'cleanroom', n:'Cleanroom / GMP',
+  {k:'cleanroom', n:'Cleanroom',
    s:'Compounding pharmacy, medical device, controlled environments.',
-   sub:'Low lint and non shedding only, sterile 70% IPA, tacky mats, and dedicated tools that never leave the classified area.'}
+   sub:'Low lint and non shedding only, sterile 70% IPA, tacky mats, and dedicated tools that never leave the classified area.'},
+  {k:'gmp', n:'GMP / Food',
+   s:'Food production, packaging, beverage, allergen and segregated zones.',
+   sub:'Zone dedicated tools that never cross, doubled pad counts for production floors, food contact sanitizer, and drain discipline.'}
 ];
 
 const EDU = {
@@ -323,10 +368,14 @@ const EDU_BY_TYPE = {
   medical:   ['medical','flat','vac','mopping'],
   school:    ['school','vac','mopping','flat'],
   industrial:['industrial','mopping','vac'],
-  cleanroom: ['cleanroom','flat']
+  cleanroom: ['cleanroom','flat'],
+  gmp:       ['industrial','flat','mopping']
 };
+/* Cleaning types on the New Building Inventory Planner map onto kit types here,
+   so a vendor arriving from planner.html lands on the right kit. */
+const PLANNER_TYPE={gen:'office', porter:'office', medical:'medical', cleanroom:'cleanroom', gmp:'gmp'};
 
-let PRODUCTS=[], TYPE=null, SEL={}, CATS=[];
+let PRODUCTS=[], TYPE=null, BAND='m', SEL={}, TOUCHED={}, CATS=[];
 
 /* ---------- CSV ---------- */
 function parseCSV(text){
@@ -396,11 +445,20 @@ function renderTypes(){
   document.getElementById("types").innerHTML = TYPES.map(t=>
     `<button class="type${TYPE===t.k?" on":""}" onclick="pickType('${t.k}')">
        <b>${esc(t.n)}</b><span>${esc(t.s)}</span></button>`).join("");
+  document.getElementById("bands").innerHTML = BANDS.map(b=>
+    `<button class="type${BAND===b.k?" on":""}" onclick="pickBand('${b.k}')">
+       <b>${esc(b.n)}</b><span>${esc(b.s)}</span></button>`).join("");
 }
-function pickType(k){
-  if(TYPE!==k){ SEL={}; }
-  TYPE=k;
-  const t=TYPES.find(x=>x.k===k);
+function applyKit(){
+  // (re)seed core quantities at the current band and type, keeping anything
+  // the vendor deliberately added or removed by hand.
+  PRODUCTS.forEach(p=>{
+    const kk=p.kits[TYPE];
+    if(kk && kk.tier==="core" && !TOUCHED[p.id]) SEL[p.id]=scaledQty(p,kk.qty);
+  });
+}
+function showType(k){
+  const t=TYPES.find(x=>x.k===k); if(!t) return;
   document.getElementById("kitArea").style.display="";
   document.getElementById("kitSub").textContent=t.sub;
   document.getElementById("eduWrap").innerHTML =
@@ -408,13 +466,15 @@ function pickType(k){
       const b=EDU[e]; if(!b) return "";
       return `<details class="edu"${i===0?" open":""}><summary>${esc(b.t)}</summary>${b.h}</details>`;
     }).join("");
-  // preselect core
-  PRODUCTS.forEach(p=>{
-    const kk=p.kits[k];
-    if(kk && kk.tier==="core" && SEL[p.id]===undefined) SEL[p.id]=kk.qty;
-  });
+}
+function pickType(k){
+  if(TYPE!==k){ SEL={}; TOUCHED={}; }
+  TYPE=k; showType(k); applyKit();
   renderTypes(); renderAll(); save();
   document.getElementById("kitArea").scrollIntoView({behavior:"smooth",block:"start"});
+}
+function pickBand(b){
+  BAND=b; applyKit(); renderTypes(); renderAll(); save();
 }
 function inKit(p){ return SEL[p.id]>0; }
 
@@ -488,12 +548,12 @@ function renderBrowse(){
 }
 function toggle(id,on){
   const p=PRODUCTS.find(x=>x.id===id);
-  const def=(p.kits[TYPE]&&p.kits[TYPE].qty)||1;
-  SEL[id]= on ? (SEL[id]>0?SEL[id]:def) : 0;
-  renderAll(); save();
+  const base=(p.kits[TYPE]&&p.kits[TYPE].qty)||1;
+  SEL[id]= on ? (SEL[id]>0?SEL[id]:scaledQty(p,base)) : 0;
+  TOUCHED[id]=1; renderAll(); save();
 }
-function bump(id,d){ SEL[id]=Math.max(0,(SEL[id]||0)+d); renderAll(); save(); }
-function setQty(id,v){ SEL[id]=Math.max(0,parseInt(v)||0); renderAll(); save(); }
+function bump(id,d){ SEL[id]=Math.max(0,(SEL[id]||0)+d); TOUCHED[id]=1; renderAll(); save(); }
+function setQty(id,v){ SEL[id]=Math.max(0,parseInt(v)||0); TOUCHED[id]=1; renderAll(); save(); }
 
 /* ---------- totals ---------- */
 function lines(){
@@ -524,17 +584,24 @@ function renderBar(){
 }
 
 /* ---------- persistence ---------- */
-function save(){ try{ localStorage.setItem("cw_kit",JSON.stringify({t:TYPE,s:SEL})); }catch(e){} }
+function save(){ try{ localStorage.setItem("cw_kit",JSON.stringify({t:TYPE,b:BAND,s:SEL,x:TOUCHED})); }catch(e){} }
 function restore(){
+  // A link from the New Building Inventory Planner wins over saved state so the
+  // vendor lands on exactly the kit and size they just configured over there.
+  const q=new URLSearchParams(location.search);
+  const qt=q.get("type"), qb=q.get("band");
+  const mapped=qt?(PLANNER_TYPE[qt]||qt):null;
+  if(mapped && TYPES.some(t=>t.k===mapped)){
+    TYPE=mapped;
+    if(qb && BANDS.some(b=>b.k===qb)) BAND=qb;
+    SEL={}; TOUCHED={}; showType(TYPE); applyKit(); renderTypes(); renderAll(); save();
+    return;
+  }
   try{
     const d=JSON.parse(localStorage.getItem("cw_kit")||"null");
-    if(d && d.t){ SEL=d.s||{}; TYPE=d.t;
-      const t=TYPES.find(x=>x.k===TYPE);
-      if(t){ document.getElementById("kitArea").style.display="";
-        document.getElementById("kitSub").textContent=t.sub;
-        document.getElementById("eduWrap").innerHTML=(EDU_BY_TYPE[TYPE]||[]).map((e,i)=>{
-          const b=EDU[e]; return b?`<details class="edu"${i===0?" open":""}><summary>${esc(b.t)}</summary>${b.h}</details>`:"";}).join("");
-        renderTypes(); renderAll(); return; }
+    if(d && d.t && TYPES.some(t=>t.k===d.t)){
+      TYPE=d.t; BAND=d.b||"m"; SEL=d.s||{}; TOUCHED=d.x||{};
+      showType(TYPE); renderTypes(); renderAll(); return;
     }
   }catch(e){}
   renderBar();
@@ -653,7 +720,7 @@ function done(mail){
 }
 function resetKit(){
   try{ localStorage.removeItem("cw_kit"); }catch(e){}
-  location.reload();
+  location.href=location.pathname;
 }
 document.getElementById("q").addEventListener("input",renderBrowse);
 document.getElementById("cat").addEventListener("change",renderBrowse);
