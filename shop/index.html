@@ -140,6 +140,14 @@ main{max-width:1200px; margin:0 auto; padding:16px;}
 .form-grp input,.form-grp textarea,.form-grp select{width:100%; padding:9px 10px; border:1.5px solid var(--cw-border); border-radius:6px; outline:none;}
 .form-grp input:focus,.form-grp textarea:focus{border-color:var(--cw-red);}
 .notice{background:#FDF3F3; border:1px solid var(--cw-red); border-radius:6px; padding:10px; font-size:10px; color:var(--cw-black); line-height:1.5; margin-bottom:12px;}
+.paymethods{display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:10px;}
+.paymethods label{display:flex; gap:7px; align-items:flex-start; border:1.5px solid var(--cw-border); border-radius:8px; padding:9px 10px; font-size:11px; line-height:1.35; cursor:pointer;}
+.paymethods label.on{border-color:var(--cw-red); background:#FDF3F3;}
+.paymethods input{margin-top:2px;}
+.paymethods b{display:block; font-size:11.5px;}
+.paymethods span{color:var(--cw-grey); font-size:10px;}
+.cc-note{background:#F1FAFA; border:1px solid var(--cw-teal); border-radius:6px; padding:10px; font-size:10.5px; line-height:1.55; margin-bottom:12px;}
+.cc-note a{color:var(--cw-red); font-weight:700;}
 .ack{display:flex; gap:8px; align-items:flex-start; font-size:11px; margin-bottom:12px;}
 .ack input{margin-top:2px;}
 .success{padding:32px 16px; text-align:center;}
@@ -496,8 +504,25 @@ function renderDrawer(){
       </div>
       <div class="form-grp"><label>Special Requests / Name Badge Names</label><textarea id="f-notes" rows="3"></textarea></div>
       <div class="notice"><b>Pricing Notice:</b> ${esc(CFG.PRICING_NOTICE||"")}</div>
+      <div class="form-grp"><label>How would you like to pay? <span class="req">*</span></label>
+        <div class="paymethods">
+          <label id="pm-lab-deduct" class="${saved.pay==="card"?"":"on"}">
+            <input type="radio" name="paymethod" value="deduct" ${saved.pay==="card"?"":"checked"} onchange="setPay('deduct')">
+            <span><b>Pay deduction</b><span>Settled the usual way. Nothing else to do.</span></span>
+          </label>
+          <label id="pm-lab-card" class="${saved.pay==="card"?"on":""}">
+            <input type="radio" name="paymethod" value="card" ${saved.pay==="card"?"checked":""} onchange="setPay('card')">
+            <span><b>Credit card</b><span>Card on file, charged only when you approve.</span></span>
+          </label>
+        </div>
+      </div>
+      <div class="cc-note" id="cc-note" style="display:${saved.pay==="card"?"block":"none"}">
+        <b>One-time setup.</b> Card orders need a signed authorization on file. It takes about two minutes and you only
+        do it once. <a href="../card-authorization.html" target="_blank" rel="noopener">Open the card authorization form</a>,
+        then come back and submit your order. Nothing is charged until we confirm your total and you approve it.
+      </div>
       <div class="ack"><input type="checkbox" id="f-ack">
-        <label for="f-ack">I understand prices are estimates, and I authorize this order to be settled by pay deduction. <span class="req">*</span></label>
+        <label for="f-ack" id="f-ack-lab">I understand prices are estimates, and I authorize this order to be settled by pay deduction. <span class="req">*</span></label>
       </div>
       <div id="f-err" style="color:var(--cw-red);font-size:11px;font-weight:700;"></div>`;
     const sub=cartTotal();
@@ -505,6 +530,20 @@ function renderDrawer(){
       <div class="totrow grand"><span>Estimated Total</span><span>${fmt(sub)}</span></div>
       <button class="checkout-btn" id="submitBtn" onclick="submitOrder()">Submit Order</button>`;
   }
+}
+function payMethod(){
+  const el=document.querySelector('input[name="paymethod"]:checked');
+  return el ? el.value : "deduct";
+}
+function setPay(v){
+  const d=document.getElementById("pm-lab-deduct"), c=document.getElementById("pm-lab-card"),
+        n=document.getElementById("cc-note"), l=document.getElementById("f-ack-lab");
+  if(d) d.className = v==="card" ? "" : "on";
+  if(c) c.className = v==="card" ? "on" : "";
+  if(n) n.style.display = v==="card" ? "block" : "none";
+  if(l) l.innerHTML = v==="card"
+    ? 'I understand prices are estimates. I authorize this order to be charged to the card I have on file, at the total City Wide confirms and I approve. <span class="req">*</span>'
+    : 'I understand prices are estimates, and I authorize this order to be settled by pay deduction. <span class="req">*</span>';
 }
 function chQty(id,size,d){
   const c=cart.find(x=>x.id===id&&x.size===size);
@@ -525,7 +564,7 @@ function orderText(info){
     info.notes?`Notes: ${info.notes}`:null,
     ``, `ITEMS:`, ...lines, ``,
     `Estimated Total: ${fmt(cartTotal())}`,
-    `Payment: Pay deduction (authorized at checkout)`,
+    info.pay==="card" ? `Payment: CREDIT CARD on file (vendor approves the total before we charge)` : `Payment: Pay deduction (authorized at checkout)`,
   ].filter(x=>x!==null).join("\n");
 }
 function logOrderToSheet(info){
@@ -545,7 +584,7 @@ function logOrderToSheet(info){
 async function submitOrder(){
   const info={
     name:val("f-name"), company:val("f-company"), email:val("f-email"),
-    account:val("f-account"), notes:val("f-notes"),
+    account:val("f-account"), notes:val("f-notes"), pay:payMethod(),
   };
   const err=document.getElementById("f-err");
   if(!info.name||!info.company||!info.email||!info.account){err.textContent="Please fill in all required fields.";return;}
