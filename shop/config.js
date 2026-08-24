@@ -45,5 +45,5 @@ window.CW_CONFIG = {
     "This price list is for reference only and does not update automatically when supplier prices change. " +
     "The actual price charged is based on current supplier cost at the time the order is placed and may be " +
     "higher or lower than shown. By submitting an order you authorize City Wide to charge the current price " +
-    "and agree that order totals are settled by pay deduction on your next statement.",
+    "and agree that order totals are settled by the payment method you choose below.",
 };
