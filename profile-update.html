@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Upload Insurance &amp; Compliance Documents | City Wide Vendor Hub</title><meta name="description" content="Send City Wide Facility Solutions your certificate of insurance, notarized waiver, or voided check. It goes straight to the compliance team for your region."><style>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Update Your Company Profile | City Wide Vendor Hub</title><meta name="description" content="Update the email, phone, address, contact, company name, or bank letter City Wide Facility Solutions has on file for your company. Every change is confirmed with you before it is applied."><style>
 :root{
   --cw-red:#D22730; --cw-red-dark:#B01F27; --cw-black:#2D2A26; --cw-grey:#636466;
   --cw-white:#FFFFFF; --cw-light:#F5F5F5; --cw-border:#E5E5E5; --cw-teal:#0AA6A9;
@@ -355,113 +355,175 @@ td .note{display:block;font-weight:400;color:var(--cw-grey);font-size:12px;margi
 <link rel="stylesheet" href="https://citywidelv.github.io/cw-base.css">
 </head><body><header class="site-head"><div class="wrap bar"><a href="index.html"><img class="logo" src="https://emailer.emfluence.com/clients/citywide/uploadedfiles/signature_logo.png" alt="City Wide Facility Solutions"></a><button class="menu-toggle" aria-label="Menu">&#9776;</button><nav><a href="index.html">Home</a><a href="opportunities.html" class="nav-opps">Open Opportunities</a><div class="dd"><a class="dd-label" href="new-vendors.html">New Vendors</a><div class="dd-menu"><a href="new-vendors.html?region=lv">Las Vegas</a><a href="new-vendors.html?region=nnv">Northern Nevada</a></div></div><div class="dd"><a class="dd-label" href="#" onclick="return false;">Guides</a><div class="dd-menu"><div class="dd-head">Crew Guides</div><a href="planner.html">New Building Planner</a><a href="workloading.html">Workloading & Crew Sizing</a><a href="equipment.html">Choosing Your Equipment</a><a href="color-coding.html">Color Coding System</a><a href="medical.html">Medical Facility Cleaning</a><a href="cleanroom.html">Clean Room Cleaning</a><a href="gmp.html">GMP & Food Facility Cleaning</a></div></div><div class="dd"><a class="dd-label" href="invoice.html">Invoices &amp; Paperwork</a><div class="dd-menu"><div class="dd-head">Get Paid</div><a href="invoice.html">Submit Your Monthly Invoice</a><div class="dd-head">Orders</div><a href="building-supplies.html">Order Building Supplies</a><a href="shop/">Shop Supplies &amp; Uniforms</a><a href="card-authorization.html">Pay by Credit Card</a><div class="dd-head">Paperwork</div><a href="cleaner-roster.html">Add or Remove a Cleaner</a><a href="upload.html">Upload Insurance &amp; Compliance Docs</a><a href="profile-update.html">Update Your Company Profile</a><a href="work-order.html">Maintenance Work Ticket</a><a href="https://form.asana.com/?k=FRCnQmbTGjAVPieFt4bnWQ&amp;d=13140959242873" target="_blank" rel="noopener">Background Check &amp; Name Badge</a><a href="https://www.onlinecprcertification.net/bloodborne-pathogens-training-certification.php" target="_blank" rel="noopener">Bloodborne Pathogens Certification</a></div></div><a class="btn-order" href="shop/">Order Supplies</a></nav></div></header>
 <section class="inv-hero has-photo"><div class="ph-bg" style="background-image:url('images/paperwork.jpg')"></div><div class="ph-scrim"></div><div class="content-wrap">
-<div class="crumbs" style="margin-bottom:10px"><a href="index.html" style="color:#cfcdca">Resource Center</a> <span style="color:#777">/</span> <span style="color:#fff">Upload Documents</span></div>
-<h1>Upload Insurance &amp; Compliance Documents</h1>
-<p>Certificate of insurance (new or a renewal), notarized Waiver of Agreement, or your voided check or bank letter:
-send it here and it goes straight to the City Wide compliance team for your region. Vendors and
-insurance agents both welcome. You get a confirmation copy for your records.</p>
+<div class="crumbs" style="margin-bottom:10px"><a href="index.html" style="color:#cfcdca">Resource Center</a> <span style="color:#777">/</span> <span style="color:#fff">Update Your Company Profile</span></div>
+<h1>Update Your Company Profile</h1>
+<p>New phone, new email for your ledgers, new address, new bank, new office manager. Tell us here.
+A City Wide team member confirms every change with you at the contact we already have on file
+before anything is updated. Nothing changes automatically.</p>
 </div></section>
 
 <div class="inv-wrap">
 
-<div class="inv-note"><b>Sending a certificate of insurance?</b> It must name the exact City Wide
-entity for your region, letter for letter. Your COI request form (from the
-<a href="new-vendors.html">New Vendor Onboarding page</a>) shows exactly what the certificate
-needs to include.</div>
+<div class="callout-teal"><b class="title">How this works</b>
+<p>1. Pick your region and tell us who you are. &nbsp;2. Check only the things that changed. &nbsp;3. Send it.
+A City Wide team member reaches you at the phone or email we already have on file, confirms the change is really
+from your company, and then makes the update by hand. Bank changes are never applied without that call.</p></div>
 
-<!-- STEP 1: what -->
-<div class="inv-card" id="stepDoc">
-<p class="step-tag">Step 1 of 3</p>
-<h2>What are you uploading?</h2>
-<div class="pick-grid">
-<button type="button" class="pick" data-doc="Certificate of Insurance" onclick="pickDoc(this)">
-<span class="icon">&#9878;</span><h3>Certificate of Insurance</h3>
-<p>General liability, workers' comp, or both. First certificate or an annual renewal, straight from you or your carrier.</p></button>
-<button type="button" class="pick" data-doc="Notarized Waiver of Agreement" onclick="pickDoc(this)">
-<span class="icon">&#9998;</span><h3>Notarized Waiver</h3>
-<p>Your Waiver of Agreement, signed in front of a notary. Scan or photo of the signed pages.</p></button>
-<button type="button" class="pick" data-doc="Voided Check or Bank Letter" onclick="pickDoc(this)">
-<span class="icon">&#128179;</span><h3>Voided Check / Bank Letter</h3>
-<p>A voided business check or bank verification letter for direct deposit setup.</p></button>
-</div>
-<div id="coiSub" style="display:none;margin-top:18px">
-<h2 style="border:none;margin-bottom:10px;padding-bottom:0">What coverage does it show?</h2>
-<div class="pick-grid">
-<button type="button" class="pick" data-cov="General Liability" onclick="pickCov(this)"><h3>General Liability</h3><p>GL coverage only.</p></button>
-<button type="button" class="pick" data-cov="Workers' Compensation" onclick="pickCov(this)"><h3>Workers' Comp</h3><p>Workers' compensation coverage only.</p></button>
-<button type="button" class="pick" data-cov="Both GL and Workers' Comp" onclick="pickCov(this)"><h3>Both</h3><p>One certificate showing both coverages, or both certificates attached below.</p></button>
-</div>
-</div>
-</div>
-
-<!-- STEP 2: region -->
-<div class="inv-card" id="stepRegion" style="display:none">
-<p class="step-tag">Step 2 of 3</p>
-<h2>Which City Wide region is this for?</h2>
+<!-- STEP 1: region -->
+<div class="inv-card" id="stepRegion">
+<p class="step-tag">Step 1 of 4</p>
+<h2>Which City Wide region do you work with?</h2>
 <div class="pick-grid two">
 <button type="button" class="pick" data-region="Las Vegas" onclick="pickRegion(this)">
-<h3>Southern Nevada</h3><p>Las Vegas and the surrounding cities.<br><b>Entity: Low Drag, LLC</b></p></button>
+<h3>Southern Nevada</h3><p>Las Vegas, Henderson, Pahrump and the surrounding cities.<br><b>Entity: Low Drag, LLC</b></p></button>
 <button type="button" class="pick" data-region="Northern Nevada" onclick="pickRegion(this)">
-<h3>Northern Nevada</h3><p>Reno, Sparks, Carson City, and the surrounding area.<br><b>Entity: Dash Two, LLC</b></p></button>
+<h3>Northern Nevada</h3><p>Reno, Sparks, Carson City and the surrounding area.<br><b>Entity: Dash Two, LLC</b></p></button>
 </div>
-</div>
-
-<!-- STEP 3: details + files -->
-<div id="stepForm" style="display:none">
-<div class="crumbtrail" id="crumbs"></div>
-
-<div class="inv-card" id="roleCard" style="display:none">
-<h2>Who is sending this?</h2>
-<div class="pick-grid two">
-<button type="button" class="pick" data-role="Vendor" onclick="pickRole(this)">
-<h3>I'm with the vendor company</h3><p>You own or work for the company doing work with City Wide.</p></button>
-<button type="button" class="pick" data-role="Insurance agent or broker" onclick="pickRole(this)">
-<h3>I'm the insurance agent or broker</h3><p>You're sending this certificate on behalf of your client, the vendor.</p></button>
-</div>
+<p style="font-size:11.5px;color:#636466;margin:12px 0 0">Work with both? Pick the region you invoice most. The team shares the request.</p>
 </div>
 
+<div id="stepRest" style="display:none">
+
+<!-- STEP 2: who -->
 <div class="inv-card">
-<h2>Your Contact Information</h2>
+<p class="step-tag">Step 2 of 4</p>
+<h2>Who You Are</h2>
 <div class="inv-grid">
-<div class="f"><label>First Name <span class="req">*</span></label><input id="first_name" placeholder="First"></div>
-<div class="f"><label>Last Name <span class="req">*</span></label><input id="last_name" placeholder="Last"></div>
-<div class="f"><label id="companyLbl">Vendor Company Name <span class="req">*</span></label><input id="company" placeholder="The vendor's company LLC"></div>
-<div class="f" id="agencyF" style="display:none"><label>Your Agency or Brokerage</label><input id="agency" placeholder="Agency name"></div>
-<div class="f"><label>Email <span class="req">*</span></label><input id="email" type="email" placeholder="you@company.com"></div>
-<div class="f"><label>Phone</label><input id="phone" type="tel" placeholder="(702) 555-1234"></div>
+<div class="f"><label>Company Name (as City Wide has it on file) <span class="req">*</span></label><input id="company" placeholder="Your company LLC" autocomplete="organization"></div>
+<div class="f"><label>Your Name <span class="req">*</span></label><input id="submitter" placeholder="First and last name" autocomplete="name"></div>
+<div class="f"><label>Your Role <span class="req">*</span></label>
+<select id="role"><option value="">Choose one</option><option>Owner</option><option>Office manager or admin</option><option>Bookkeeper or accountant</option><option>Crew supervisor</option><option>Other</option></select></div>
+<div class="f"><label>Best Phone to Reach You <span class="req">*</span></label><input id="callback" type="tel" placeholder="(702) 555-1234" autocomplete="tel"></div>
+<div class="f"><label>Your Email <span class="req">*</span></label><input id="submitter_email" type="email" placeholder="you@company.com" autocomplete="email"></div>
+<div class="f"><label>Vendor Number (optional)</label><input id="vendor_no" placeholder="If you know it, from your ledger"></div>
 </div>
-<p style="font-size:11.5px;color:#636466;margin:12px 0 0">We only use this to reach you if the
-compliance team has a question about your document.</p>
-</div>
-
-<div class="inv-card">
-<h2 id="fileHead">Your Document</h2>
-<label class="file-drop" id="fileDrop" for="up_file">
-<input id="up_file" type="file" multiple accept="application/pdf,image/png,image/jpeg" style="display:none">
-<span id="fileMsg"><b>Click here to choose your file</b><br>
-<span style="font-size:12px;color:#636466">PDF or a clear photo (JPG, PNG) &middot; up to 10 MB
-each &middot; add up to 4 files</span></span>
-</label>
-<ul class="file-list" id="fileList"></ul>
+<p style="font-size:11.5px;color:#636466;margin:12px 0 0">We confirm the change at the contact already on file for your company, not only at the phone or email you type here.</p>
 </div>
 
+<!-- STEP 3: what -->
 <div class="inv-card">
-<h2>Anything Else?</h2>
-<div class="f"><label>Comments</label><textarea id="comments" placeholder="Optional notes for the compliance team"></textarea></div>
+<p class="step-tag">Step 3 of 4</p>
+<h2>What Changed?</h2>
+<p style="font-size:13px;color:#636466;margin:0 0 14px">Check everything that applies. Only the checked sections open.</p>
+<div class="pick-grid" id="chgGrid">
+<button type="button" class="pick" data-chg="notif" onclick="toggleChg(this)"><span class="icon">&#9993;</span><h3>Notification Email</h3><p>Where we send open opportunities, notices, and compliance requests.</p></button>
+<button type="button" class="pick" data-chg="ledger" onclick="toggleChg(this)"><span class="icon">&#128203;</span><h3>Ledger / Accounting Email</h3><p>Where your monthly payment ledger and remittance go.</p></button>
+<button type="button" class="pick" data-chg="phone" onclick="toggleChg(this)"><span class="icon">&#9742;</span><h3>Phone Numbers</h3><p>Main business line or the mobile for your primary contact.</p></button>
+<button type="button" class="pick" data-chg="contact" onclick="toggleChg(this)"><span class="icon">&#128100;</span><h3>Primary Contact Person</h3><p>A new owner, office manager, or the person we should call.</p></button>
+<button type="button" class="pick" data-chg="address" onclick="toggleChg(this)"><span class="icon">&#127968;</span><h3>Mailing or Business Address</h3><p>Where mail and paperwork should go.</p></button>
+<button type="button" class="pick" data-chg="name" onclick="toggleChg(this)"><span class="icon">&#127991;</span><h3>Company Name or DBA</h3><p>New name, new DBA, or a new legal entity. Needs a new W-9.</p></button>
+<button type="button" class="pick" data-chg="bank" onclick="toggleChg(this)"><span class="icon">&#127974;</span><h3>Bank Account (Bank Letter)</h3><p>Replace the bank letter on file for your direct deposit.</p></button>
+<button type="button" class="pick" data-chg="other" onclick="toggleChg(this)"><span class="icon">&#10010;</span><h3>Something Else</h3><p>Website, services you offer, hours, or anything not listed.</p></button>
+</div>
+</div>
+
+<!-- panels -->
+<div class="inv-card chg-panel" id="p_notif" style="display:none">
+<h2>New Notification Email</h2>
+<div class="inv-grid">
+<div class="f"><label>New Email <span class="req">*</span></label><input id="notif_email" type="email" placeholder="office@company.com"></div>
+<div class="f"><label>Should this replace the current email, or be added?</label>
+<select id="notif_mode"><option>Replace the current email</option><option>Add it (keep the current one too)</option></select></div>
+</div>
+</div>
+
+<div class="inv-card chg-panel" id="p_ledger" style="display:none">
+<h2>New Ledger / Accounting Email</h2>
+<div class="inv-grid">
+<div class="f"><label>New Email <span class="req">*</span></label><input id="ledger_email" type="email" placeholder="billing@company.com"></div>
+<div class="f"><label>Should this replace the current email, or be added?</label>
+<select id="ledger_mode"><option>Replace the current email</option><option>Add it (keep the current one too)</option></select></div>
+</div>
+<p style="font-size:11.5px;color:#636466;margin:12px 0 0">This is the address that receives the monthly ledger letter to sign and the payment remittance.</p>
+</div>
+
+<div class="inv-card chg-panel" id="p_phone" style="display:none">
+<h2>New Phone Numbers</h2>
+<div class="inv-grid">
+<div class="f"><label>Main Business Phone</label><input id="phone_main" type="tel" placeholder="(702) 555-1234"></div>
+<div class="f"><label>Primary Contact Mobile</label><input id="phone_mobile" type="tel" placeholder="(702) 555-5678"></div>
+</div>
+<p style="font-size:11.5px;color:#636466;margin:12px 0 0">Fill in the one that changed. Leave the other blank.</p>
+</div>
+
+<div class="inv-card chg-panel" id="p_contact" style="display:none">
+<h2>New Primary Contact</h2>
+<div class="inv-grid">
+<div class="f"><label>Name <span class="req">*</span></label><input id="contact_name" placeholder="First and last name"></div>
+<div class="f"><label>Title</label><input id="contact_title" placeholder="Owner, Office Manager..."></div>
+<div class="f"><label>Email</label><input id="contact_email" type="email" placeholder="name@company.com"></div>
+<div class="f"><label>Phone</label><input id="contact_phone" type="tel" placeholder="(702) 555-1234"></div>
+<div class="f" style="grid-column:1/-1"><label>Who are they replacing? (optional)</label><input id="contact_replaces" placeholder="Name of the previous contact, if any"></div>
+</div>
+</div>
+
+<div class="inv-card chg-panel" id="p_address" style="display:none">
+<h2>New Mailing or Business Address</h2>
+<div class="inv-grid">
+<div class="f" style="grid-column:1/-1"><label>Street Address <span class="req">*</span></label><input id="addr_street" placeholder="123 Main St" autocomplete="address-line1"></div>
+<div class="f"><label>Suite / Unit</label><input id="addr_suite" placeholder="Suite 100" autocomplete="address-line2"></div>
+<div class="f"><label>City <span class="req">*</span></label><input id="addr_city" placeholder="Las Vegas" autocomplete="address-level2"></div>
+<div class="f"><label>State <span class="req">*</span></label><input id="addr_state" placeholder="NV" autocomplete="address-level1"></div>
+<div class="f"><label>ZIP <span class="req">*</span></label><input id="addr_zip" placeholder="89102" autocomplete="postal-code"></div>
+</div>
+</div>
+
+<div class="inv-card chg-panel" id="p_name" style="display:none">
+<h2>New Company Name or DBA</h2>
+<div class="inv-grid">
+<div class="f" style="grid-column:1/-1"><label>New Name, exactly as it should appear <span class="req">*</span></label><input id="name_new" placeholder="New Company Name, LLC dba New Name"></div>
+<div class="f" style="grid-column:1/-1"><label>Is this a new legal entity or a new tax ID (EIN)? <span class="req">*</span></label>
+<select id="entity_change"><option value="">Choose one</option><option>No, same company, just a name or DBA change</option><option>Yes, a new legal entity or a new EIN</option><option>Not sure</option></select></div>
+</div>
+<div class="inv-note" style="margin:14px 0 0"><b>A new W-9 is required for any name change.</b> Attach it below if you have it.
+A new legal entity also means a new agreement and an updated certificate of insurance in the new name. The team will walk you through it.</div>
+<div style="margin-top:14px">
+<label class="file-drop" for="file_w9" id="drop_w9"><input id="file_w9" type="file" data-slot="W-9" accept="application/pdf,image/png,image/jpeg" style="display:none">
+<span id="msg_w9"><b>Attach your new W-9 (optional now, required before the change is made)</b><br><span style="font-size:12px;color:#636466">PDF or a clear photo &middot; up to 10 MB</span></span></label>
+</div>
+</div>
+
+<div class="inv-card chg-panel" id="p_bank" style="display:none">
+<h2>New Bank Account</h2>
+<div class="callout" style="margin:0 0 16px"><b class="title">Read this first</b>
+<p style="margin:0 0 6px">Do not type account or routing numbers anywhere on this page. Attach a <b>bank letter on the bank's letterhead</b> or a <b>voided business check</b> showing the account name, and the account name must match your company's legal name on your W-9.</p>
+<p style="margin:0">Before anything changes, a City Wide team member calls the phone number <b>already on file</b> for your company to confirm. Your payments keep going to the current account until that call is done.</p></div>
+<label class="file-drop" for="file_bank" id="drop_bank"><input id="file_bank" type="file" data-slot="Bank letter" accept="application/pdf,image/png,image/jpeg" style="display:none" multiple>
+<span id="msg_bank"><b>Attach the bank letter or voided check</b> <span class="req">*</span><br><span style="font-size:12px;color:#636466">PDF or a clear photo (JPG, PNG) &middot; up to 10 MB each &middot; up to 2 files</span></span></label>
+<div class="inv-grid" style="margin-top:14px">
+<div class="f"><label>Why the change? (optional)</label><select id="bank_reason"><option value="">Choose one</option><option>Changed banks</option><option>Opened a new business account</option><option>Old account closed</option><option>Other</option></select></div>
+<div class="f"><label>When should it take effect?</label><select id="bank_effective"><option>Next payment after you confirm with us</option><option>A specific date (tell us in the notes below)</option></select></div>
+</div>
+</div>
+
+<div class="inv-card chg-panel" id="p_other" style="display:none">
+<h2>Something Else</h2>
+<div class="f"><label>What should we update? <span class="req">*</span></label><textarea id="other_text" placeholder="Example: our website is now www.company.com, or we now also offer pressure washing"></textarea></div>
+</div>
+
+<!-- STEP 4: confirm -->
+<div class="inv-card">
+<p class="step-tag">Step 4 of 4</p>
+<h2>Send It</h2>
+<div class="f"><label>Notes for the team (optional)</label><textarea id="notes" placeholder="Anything that helps us confirm this quickly"></textarea></div>
+<ul class="file-list" id="fileList" style="margin-top:12px"></ul>
+<label style="display:flex;gap:10px;align-items:flex-start;margin:16px 0 0;font-size:13.5px;cursor:pointer">
+<input type="checkbox" id="authorized" style="margin-top:3px;width:18px;height:18px;flex:none">
+<span>I am authorized to make changes to this company's information with City Wide Facility Solutions. <span class="req">*</span></span></label>
 </div>
 
 <input class="hp" type="text" id="website" tabindex="-1" autocomplete="off">
 <div class="inv-err" id="upErr"></div>
-<button class="inv-submit" id="upBtn" onclick="submitDocs()">Send to City Wide Compliance</button>
+<button class="inv-submit" id="upBtn" onclick="submitProfile()">Send My Change Request</button>
 <p style="font-size:11.5px;color:#636466;text-align:center;margin-top:10px" id="destNote"></p>
 </div>
 
 <div class="inv-done" id="upDone">
 <div class="big">&#10003;</div>
-<h2>Documents Sent</h2>
+<h2>Request Received</h2>
 <p id="doneMsg"></p>
-<p>The compliance team reviews uploads in the order they arrive. If anything on your document
-needs fixing, they'll reach out to the email you gave us.</p>
+<p><b>What happens next.</b> A City Wide team member reaches your company at the contact already on file to confirm the request came from you. Once confirmed, the change is made in our systems by hand and the team lets you know it is done. Nothing changes until then.</p>
+<p id="doneBank" style="display:none"><b>Bank changes:</b> your payments keep going to the current account until the team confirms the new bank letter with you by phone.</p>
 <p style="margin-top:14px"><a class="btn btn-ghost" href="index.html">Back to the Resource Center</a></p>
 </div>
 
@@ -476,113 +538,90 @@ needs fixing, they'll reach out to the email you gave us.</p>
 
 <script>
 var WEBHOOK = "https://script.google.com/macros/s/AKfycbzfNnrpidCbWB1DeUNgXvRhDFMQgApfpn-3C9GU45wMEHcJpWFl8ZQVo6PUBSRfEVfRdg/exec";
-var SEL = { doc:"", cov:"", region:"", role:"" };
-var FILES = [];   // [{name,type,size,data}]
+var SEL = { region:"" };
+var CHG = {};          // {notif:true, ...}
+var FILES = [];        // [{slot,name,type,size,data}]
 var MAX_EACH = 10*1024*1024, MAX_TOTAL = 15*1024*1024, MAX_COUNT = 4;
+var CHG_LABEL = { notif:'Notification email', ledger:'Ledger / accounting email', phone:'Phone numbers',
+  contact:'Primary contact', address:'Address', name:'Company name or DBA', bank:'Bank account', other:'Something else' };
 
+function esc(s){ var d=document.createElement('div'); d.textContent=String(s==null?'':s); return d.innerHTML; }
+function v(id){ var e=document.getElementById(id); return e ? e.value.trim() : ''; }
 function mark(group, el){
   document.querySelectorAll(group).forEach(function(b){ b.classList.remove('on'); });
   el.classList.add('on');
 }
-function pickDoc(el){
-  SEL.doc = el.getAttribute('data-doc');
-  mark('#stepDoc .pick[data-doc]', el);
-  var isCoi = SEL.doc === 'Certificate of Insurance';
-  document.getElementById('coiSub').style.display = isCoi ? 'block' : 'none';
-  if (!isCoi) { SEL.cov=""; showRegion(); }
-  else if (SEL.cov) showRegion();
-  else document.getElementById('coiSub').scrollIntoView({behavior:'smooth',block:'center'});
-  refresh();
-}
-function pickCov(el){
-  SEL.cov = el.getAttribute('data-cov');
-  mark('#coiSub .pick[data-cov]', el);
-  showRegion(); refresh();
-}
-function showRegion(){
-  var s = document.getElementById('stepRegion');
-  s.style.display = 'block';
-  if (!SEL.region) s.scrollIntoView({behavior:'smooth',block:'center'});
-}
 function pickRegion(el){
   SEL.region = el.getAttribute('data-region');
   mark('#stepRegion .pick[data-region]', el);
-  var f = document.getElementById('stepForm');
+  var f = document.getElementById('stepRest');
+  var first = f.style.display === 'none';
   f.style.display = 'block';
-  refresh();
-  f.scrollIntoView({behavior:'smooth',block:'start'});
+  document.getElementById('destNote').textContent = 'Goes to: City Wide ' +
+    (SEL.region === 'Las Vegas' ? 'Las Vegas' : 'Northern Nevada') + ' Compliance';
+  if (first) f.scrollIntoView({behavior:'smooth',block:'start'});
 }
-function pickRole(el){
-  SEL.role = el.getAttribute('data-role');
-  mark('#roleCard .pick[data-role]', el);
-  var isAgent = SEL.role !== 'Vendor';
-  document.getElementById('agencyF').style.display = isAgent ? 'flex' : 'none';
-  document.getElementById('companyLbl').innerHTML = isAgent
-    ? 'Vendor Company Name (your client) <span class="req">*</span>'
-    : 'Vendor Company Name <span class="req">*</span>';
+function toggleChg(el){
+  var k = el.getAttribute('data-chg');
+  CHG[k] = !CHG[k];
+  el.classList.toggle('on', !!CHG[k]);
+  var p = document.getElementById('p_' + k);
+  p.style.display = CHG[k] ? 'block' : 'none';
+  if (CHG[k]) p.scrollIntoView({behavior:'smooth',block:'center'});
 }
-function refresh(){
-  var isCoi = SEL.doc === 'Certificate of Insurance';
-  document.getElementById('roleCard').style.display = isCoi ? 'block' : 'none';
-  if (!isCoi) SEL.role = "";
-  var c = document.getElementById('crumbs'), parts = [];
-  if (SEL.doc) parts.push(SEL.doc);
-  if (SEL.cov) parts.push(SEL.cov);
-  if (SEL.region) parts.push(SEL.region === 'Las Vegas'
-    ? 'Southern Nevada (Low Drag, LLC)' : 'Northern Nevada (Dash Two, LLC)');
-  c.innerHTML = parts.map(function(p){ return '<span>' + esc(p) + '</span>'; }).join('');
-  document.getElementById('fileHead').textContent =
-    isCoi ? 'The Certificate' : (SEL.doc === 'Notarized Waiver of Agreement'
-      ? 'The Signed, Notarized Waiver' : 'Your Voided Check or Bank Letter');
-  document.getElementById('destNote').textContent = SEL.region
-    ? 'Goes to: City Wide ' + (SEL.region === 'Las Vegas' ? 'Las Vegas' : 'Northern Nevada')
-      + ' Compliance'
-    : '';
-}
-function esc(s){ var d=document.createElement('div'); d.textContent=String(s==null?'':s); return d.innerHTML; }
 
-document.getElementById('up_file').addEventListener('change', function(){
-  var errEl = document.getElementById('upErr'); errEl.style.display='none';
-  var picked = Array.prototype.slice.call(this.files || []);
-  this.value = '';
-  picked.forEach(function(f){
-    if (FILES.length >= MAX_COUNT) return fileNote('You can attach up to ' + MAX_COUNT + ' files.');
-    var ok = ['application/pdf','image/png','image/jpeg'];
-    if (ok.indexOf(f.type) < 0) return fileNote('"' + f.name + '" is not a PDF or photo (JPG, PNG).');
-    if (f.size > MAX_EACH) return fileNote('"' + f.name + '" is over 10 MB. Compress it and try again.');
-    var total = FILES.reduce(function(a,x){ return a + x.size; }, 0);
-    if (total + f.size > MAX_TOTAL) return fileNote('All files together must stay under 15 MB.');
-    var rd = new FileReader();
-    rd.onload = function(){
-      var d = String(rd.result);
-      FILES.push({ name:f.name, type:f.type, size:f.size, data:d.slice(d.indexOf(',')+1) });
-      renderFiles();
-    };
-    rd.onerror = function(){ fileNote('Could not read "' + f.name + '". Try again.'); };
-    rd.readAsDataURL(f);
+/* ---- files: two inputs feed one list, each file remembers its slot ---- */
+function bindFile(inputId, msgId, dropId, maxForSlot){
+  var inp = document.getElementById(inputId);
+  inp.addEventListener('change', function(){
+    document.getElementById('upErr').style.display='none';
+    var slot = inp.getAttribute('data-slot');
+    var picked = Array.prototype.slice.call(this.files || []);
+    this.value = '';
+    picked.forEach(function(f){
+      var inSlot = FILES.filter(function(x){ return x.slot === slot; }).length;
+      if (inSlot >= maxForSlot) return fileNote('Up to ' + maxForSlot + ' file' + (maxForSlot>1?'s':'') + ' for the ' + slot.toLowerCase() + '.');
+      if (FILES.length >= MAX_COUNT) return fileNote('You can attach up to ' + MAX_COUNT + ' files in one request.');
+      var ok = ['application/pdf','image/png','image/jpeg'];
+      if (ok.indexOf(f.type) < 0) return fileNote('"' + f.name + '" is not a PDF or photo (JPG, PNG).');
+      if (f.size > MAX_EACH) return fileNote('"' + f.name + '" is over 10 MB. Compress it and try again.');
+      var total = FILES.reduce(function(a,x){ return a + x.size; }, 0);
+      if (total + f.size > MAX_TOTAL) return fileNote('All files together must stay under 15 MB.');
+      var rd = new FileReader();
+      rd.onload = function(){
+        var d = String(rd.result);
+        FILES.push({ slot:slot, name:f.name, type:f.type, size:f.size, data:d.slice(d.indexOf(',')+1) });
+        renderFiles();
+      };
+      rd.onerror = function(){ fileNote('Could not read "' + f.name + '". Try again.'); };
+      rd.readAsDataURL(f);
+    });
   });
-});
+}
+bindFile('file_bank', 'msg_bank', 'drop_bank', 2);
+bindFile('file_w9', 'msg_w9', 'drop_w9', 1);
+
 function fileNote(msg){
   var e = document.getElementById('upErr');
   e.textContent = msg; e.style.display = 'block';
+  e.scrollIntoView({behavior:'smooth',block:'center'});
 }
 function renderFiles(){
   var ul = document.getElementById('fileList');
   ul.innerHTML = FILES.map(function(f,i){
-    return '<li><b>' + esc(f.name) + '</b><small>' + (f.size/1024/1024).toFixed(1) + ' MB</small>'
+    return '<li><b>' + esc(f.slot) + ': ' + esc(f.name) + '</b><small>' + (f.size/1024/1024).toFixed(1) + ' MB</small>'
       + '<button type="button" onclick="dropFile(' + i + ')" title="Remove">&times;</button></li>';
   }).join('');
-  var drop = document.getElementById('fileDrop');
-  if (FILES.length) {
-    drop.classList.add('has');
-    document.getElementById('fileMsg').innerHTML = '<b>&#10003; ' + FILES.length +
-      (FILES.length === 1 ? ' file attached' : ' files attached') + '</b><br>' +
-      '<span style="font-size:12px;color:#636466">Click to add another file</span>';
-  } else {
-    drop.classList.remove('has');
-    document.getElementById('fileMsg').innerHTML = '<b>Click here to choose your file</b><br>' +
-      '<span style="font-size:12px;color:#636466">PDF or a clear photo (JPG, PNG) &middot; up to 10 MB each &middot; add up to 4 files</span>';
-  }
+  [['Bank letter','drop_bank','msg_bank','Attach the bank letter or voided check','up to 2 files'],
+   ['W-9','drop_w9','msg_w9','Attach your new W-9 (optional now, required before the change is made)','up to 10 MB']]
+  .forEach(function(s){
+    var n = FILES.filter(function(x){ return x.slot === s[0]; }).length;
+    var drop = document.getElementById(s[1]), msg = document.getElementById(s[2]);
+    if (n) { drop.classList.add('has');
+      msg.innerHTML = '<b>&#10003; ' + n + (n===1?' file attached':' files attached') + '</b><br><span style="font-size:12px;color:#636466">Click to add another</span>'; }
+    else { drop.classList.remove('has');
+      msg.innerHTML = '<b>' + s[3] + '</b><br><span style="font-size:12px;color:#636466">PDF or a clear photo &middot; ' + s[4] + '</span>'; }
+  });
 }
 function dropFile(i){ FILES.splice(i,1); renderFiles(); }
 
@@ -591,153 +630,74 @@ function fail(msg){
   e.textContent = msg; e.style.display = 'block';
   e.scrollIntoView({behavior:'smooth',block:'center'});
   var b = document.getElementById('upBtn');
-  b.disabled = false; b.textContent = 'Send to City Wide Compliance';
+  b.disabled = false; b.textContent = 'Send My Change Request';
 }
-function v(id){ return document.getElementById(id).value.trim(); }
+function isEmail(s){ return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(s); }
 
-function submitDocs(){
+function submitProfile(){
   document.getElementById('upErr').style.display = 'none';
-  if (!SEL.doc) return fail('Pick what you are uploading at the top of the page.');
-  if (SEL.doc === 'Certificate of Insurance' && !SEL.cov)
-    return fail('Tell us what coverage the certificate shows: general liability, workers\' comp, or both.');
-  if (!SEL.region) return fail('Pick your region: Southern Nevada or Northern Nevada.');
-  if (SEL.doc === 'Certificate of Insurance' && !SEL.role)
-    return fail('Tell us who is sending this: the vendor, or the insurance agent or broker.');
-  if (!v('first_name')) return fail('Your first name is required.');
-  if (!v('last_name')) return fail('Your last name is required.');
-  if (!v('company')) return fail('The vendor company name is required.');
-  var em = v('email');
-  if (!em || em.indexOf('@') < 1) return fail('A valid email is required so we can reach you with any questions.');
-  if (!FILES.length) return fail('Attach your document first: a PDF or a clear photo.');
+  if (!SEL.region) return fail('Pick your region at the top of the page.');
+  if (!v('company')) return fail('Your company name is required.');
+  if (!v('submitter')) return fail('Your name is required.');
+  if (!v('role')) return fail('Tell us your role at the company.');
+  if (!v('callback')) return fail('A phone number where we can reach you is required.');
+  if (!isEmail(v('submitter_email'))) return fail('A valid email is required so we can reach you.');
+  var picked = Object.keys(CHG).filter(function(k){ return CHG[k]; });
+  if (!picked.length) return fail('Check at least one thing that changed in Step 3.');
+  if (CHG.notif && !isEmail(v('notif_email'))) return fail('Enter the new notification email.');
+  if (CHG.ledger && !isEmail(v('ledger_email'))) return fail('Enter the new ledger / accounting email.');
+  if (CHG.phone && !v('phone_main') && !v('phone_mobile')) return fail('Enter at least one new phone number.');
+  if (CHG.contact && !v('contact_name')) return fail('Enter the new contact\'s name.');
+  if (CHG.contact && v('contact_email') && !isEmail(v('contact_email'))) return fail('The new contact\'s email does not look right.');
+  if (CHG.address && (!v('addr_street') || !v('addr_city') || !v('addr_state') || !v('addr_zip'))) return fail('Enter the full new address: street, city, state and ZIP.');
+  if (CHG.name && !v('name_new')) return fail('Enter the new company name exactly as it should appear.');
+  if (CHG.name && !v('entity_change')) return fail('Tell us whether this is a new legal entity or tax ID.');
+  if (CHG.bank && !FILES.some(function(f){ return f.slot === 'Bank letter'; })) return fail('Attach the bank letter or voided check for the new account.');
+  if (CHG.other && !v('other_text')) return fail('Tell us what else should be updated.');
+  if (!document.getElementById('authorized').checked) return fail('Confirm you are authorized to make changes for this company.');
+
   var data = {
-    kind: 'docupload', website: v('website'),
-    doc_type: SEL.doc, coi_coverage: SEL.cov, region: SEL.region,
-    uploader_role: SEL.role || 'Vendor',
-    first_name: v('first_name'), last_name: v('last_name'),
-    company: v('company'), agency: v('agency'),
-    email: em, phone: v('phone'), comments: v('comments'),
-    files: FILES.map(function(f){ return { name:f.name, type:f.type, data:f.data }; })
+    kind: 'profile_update', website: v('website'),
+    region: SEL.region, company: v('company'), vendor_no: v('vendor_no'),
+    submitter: v('submitter'), role: v('role'), callback: v('callback'), submitter_email: v('submitter_email'),
+    changes: picked,
+    notif_email: CHG.notif ? v('notif_email') : '', notif_mode: CHG.notif ? v('notif_mode') : '',
+    ledger_email: CHG.ledger ? v('ledger_email') : '', ledger_mode: CHG.ledger ? v('ledger_mode') : '',
+    phone_main: CHG.phone ? v('phone_main') : '', phone_mobile: CHG.phone ? v('phone_mobile') : '',
+    contact_name: CHG.contact ? v('contact_name') : '', contact_title: CHG.contact ? v('contact_title') : '',
+    contact_email: CHG.contact ? v('contact_email') : '', contact_phone: CHG.contact ? v('contact_phone') : '',
+    contact_replaces: CHG.contact ? v('contact_replaces') : '',
+    address: CHG.address ? [v('addr_street'), v('addr_suite'), v('addr_city') + ', ' + v('addr_state') + ' ' + v('addr_zip')].filter(Boolean).join(', ') : '',
+    name_new: CHG.name ? v('name_new') : '', entity_change: CHG.name ? v('entity_change') : '',
+    bank_reason: CHG.bank ? v('bank_reason') : '', bank_effective: CHG.bank ? v('bank_effective') : '',
+    other_text: CHG.other ? v('other_text') : '', notes: v('notes'),
+    files: FILES.map(function(f){ return { slot:f.slot, name:f.name, type:f.type, data:f.data }; })
   };
   var b = document.getElementById('upBtn');
   b.disabled = true; b.textContent = 'Sending...';
   fetch(WEBHOOK, { method:'POST', headers:{'Content-Type':'text/plain'}, body: JSON.stringify(data) })
   .then(function(r){ return r.text(); })
   .then(function(t){
-    /* A response we cannot parse used to be treated as success, which would show
-       the vendor a reference number for a document that was never stored. For a
-       compliance record that is the worst possible failure, so it now fails
-       closed and points them at a mailbox that always works. */
+    /* Fail closed: an unreadable reply must never show a reference for a request that was not stored. */
     var r; try { r = JSON.parse(t); } catch(err){ r = null; }
     if (!r || !r.ok) {
-      var mailbox = SEL.region === 'Northern Nevada'
-        ? 'rncompliance@gocitywide.com' : 'LVCompliance@gocitywide.com';
+      var mailbox = SEL.region === 'Northern Nevada' ? 'rncompliance@gocitywide.com' : 'LVCompliance@gocitywide.com';
       var why = (r && r.error) ? String(r.error) : '';
-      /* A raw server exception is noise to a vendor. Show them what to do instead. */
-      if (!why || /is not defined|Exception|TypeError|ReferenceError/i.test(why))
-        why = 'We could not store your file just now.';
-      return fail(why + ' Nothing was saved. Email it to ' + mailbox +
-        ' and the compliance team will take it from there.');
+      if (!why || /is not defined|Exception|TypeError|ReferenceError/i.test(why)) why = 'We could not save your request just now.';
+      return fail(why + ' Nothing was saved. Email ' + mailbox + ' and the team will take it from there.');
     }
-    document.getElementById('stepDoc').style.display = 'none';
     document.getElementById('stepRegion').style.display = 'none';
-    document.getElementById('stepForm').style.display = 'none';
-    document.querySelector('.inv-note').style.display = 'none';
-    document.getElementById('doneMsg').innerHTML =
-      'Reference <b>' + esc(r.id || '') + '</b>. Your ' + esc(SEL.doc.toLowerCase()) +
-      ' went to the City Wide ' + (SEL.region === 'Las Vegas' ? 'Las Vegas' : 'Northern Nevada') +
-      ' compliance team, and a confirmation copy is on its way to <b>' + esc(em) + '</b>.';
+    document.getElementById('stepRest').style.display = 'none';
+    document.querySelector('.callout-teal').style.display = 'none';
+    document.getElementById('doneMsg').innerHTML = 'Reference <b>' + esc(r.id || '') + '</b>. Your request went to the City Wide ' +
+      (SEL.region === 'Las Vegas' ? 'Las Vegas' : 'Northern Nevada') + ' compliance team: ' +
+      esc(picked.map(function(k){ return CHG_LABEL[k]; }).join(', ')) + '.';
+    document.getElementById('doneBank').style.display = CHG.bank ? 'block' : 'none';
     var dn = document.getElementById('upDone');
     dn.style.display = 'block';
-    dn.scrollIntoView({behavior:'smooth',block:'center'});
     window.scrollTo(0,0);
   })
   .catch(function(){ fail('Could not reach the server. Check your connection and try again.'); });
 }
-
-/* ------------------------------------------------------------------ prefill --
-   Optional URL parameters so an emailed link can preselect what the sender
-   already knows. Used by the internal insurance request emails:
-     ?doc=coi&cov=gl|wc|both&region=lv|nnv&company=Acme%20Janitorial
-   Nothing here is required. An unknown, misspelled or missing value is ignored
-   and that step simply stays unselected, which is exactly today's behavior.
-   Personal fields (name, email, phone) are deliberately never prefilled: these
-   links get forwarded to insurance agents, and the agent must enter their own
-   details, not the vendor's.
-------------------------------------------------------------------------------*/
-(function prefillFromUrl(){
-  var q;
-  try { q = new URLSearchParams(window.location.search); } catch(e){ return; }
-  if (!q || !q.toString()) return;
-
-  function norm(s){ return String(s||'').trim().toLowerCase().replace(/[^a-z]/g,''); }
-  function clickIf(sel){
-    var b = document.querySelector(sel);
-    if (b) { b.click(); return true; }
-    return false;
-  }
-
-  var DOCS = {
-    coi:'Certificate of Insurance', certificate:'Certificate of Insurance',
-    certificateofinsurance:'Certificate of Insurance', insurance:'Certificate of Insurance',
-    waiver:'Notarized Waiver of Agreement', notarizedwaiver:'Notarized Waiver of Agreement',
-    notarizedwaiverofagreement:'Notarized Waiver of Agreement',
-    check:'Voided Check or Bank Letter', voidedcheck:'Voided Check or Bank Letter',
-    voidedcheckorbankletter:'Voided Check or Bank Letter', bankletter:'Voided Check or Bank Letter'
-  };
-  var COVS = {
-    gl:'General Liability', generalliability:'General Liability',
-    wc:"Workers' Compensation", workerscomp:"Workers' Compensation",
-    workerscompensation:"Workers' Compensation",
-    both:'Both GL and Workers\' Comp', bothglandworkerscomp:'Both GL and Workers\' Comp'
-  };
-  var REGIONS = {
-    lv:'Las Vegas', lasvegas:'Las Vegas', southernnevada:'Las Vegas', southern:'Las Vegas', snv:'Las Vegas',
-    nnv:'Northern Nevada', northernnevada:'Northern Nevada', northern:'Northern Nevada', reno:'Northern Nevada'
-  };
-
-  try {
-    var doc = DOCS[norm(q.get('doc'))];
-    if (doc) clickIf('#stepDoc .pick[data-doc="' + doc.replace(/"/g,'') + '"]');
-
-    if (SEL.doc === 'Certificate of Insurance') {
-      var cov = COVS[norm(q.get('cov'))];
-      if (cov) {
-        var covBtns = document.querySelectorAll('#coiSub .pick[data-cov]');
-        for (var i = 0; i < covBtns.length; i++) {
-          if (covBtns[i].getAttribute('data-cov') === cov) { covBtns[i].click(); break; }
-        }
-      }
-    }
-
-    /* Only skip ahead to the region once everything before it is actually
-       answered. A half-good link leaves the visitor on the question they still
-       need to answer instead of jumping past a hidden step. */
-    var readyForRegion = SEL.doc && (SEL.doc !== 'Certificate of Insurance' || SEL.cov);
-    var region = REGIONS[norm(q.get('region'))];
-    if (region && readyForRegion) {
-      showRegion();
-      clickIf('#stepRegion .pick[data-region="' + region + '"]');
-    }
-
-    var company = (q.get('company') || '').replace(/[<>]/g, '').trim();
-    if (company) {
-      var cf = document.getElementById('company');
-      if (cf) cf.value = company.slice(0, 120);
-    }
-
-    /* Land the visitor on the first thing still left to do rather than the top. */
-    var target = null;
-    if (!SEL.doc) target = 'stepDoc';
-    else if (SEL.doc === 'Certificate of Insurance' && !SEL.cov) target = 'coiSub';
-    else if (!SEL.region) target = 'stepRegion';
-    else target = 'stepForm';
-    var t = document.getElementById(target);
-    if (t && t.style.display !== 'none') {
-      setTimeout(function(){ t.scrollIntoView({behavior:'smooth', block:'start'}); }, 250);
-    }
-  } catch (e) {
-    /* A bad link must never break the page. Fall back to the normal manual flow. */
-  }
-})();
 </script>
 </body></html>
