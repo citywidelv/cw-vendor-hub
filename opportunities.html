@@ -328,6 +328,7 @@ td .note{display:block;font-weight:400;color:var(--cw-grey);font-size:12px;margi
 .kit-flag b.kf-head{text-transform:uppercase;letter-spacing:.06em;font-size:10.5px;display:block;margin-bottom:2px}
 .fsm-strip{display:flex;align-items:center;gap:12px;border-top:1px solid var(--cw-border);margin-top:8px;padding-top:12px}
 .fsm-strip img{width:46px;height:50px;border-radius:6px;object-fit:cover;flex:none;background:var(--cw-light)}
+.fsm-strip .fsm-ini{width:46px;height:50px;border-radius:6px;flex:none;display:flex;align-items:center;justify-content:center;background:var(--cw-black,#2D2A26);color:#fff;font-size:16px;font-weight:700;letter-spacing:.5px}
 .fsm-strip .who{font-size:12.5px;line-height:1.4}
 .fsm-strip .who b{display:block;font-size:13.5px}
 .fsm-strip .who span{color:var(--cw-grey);font-size:11.5px;display:block}
@@ -394,7 +395,9 @@ function showKit(o){return isC(o)&&/janitorial|day porter|post-construction|spec
 function respondMeta(o){var m=o.pay_type==="quote"?"quote":"interest";try{var f=JSON.parse(o.response_form||"");if(f&&f.mode)m=f.mode;}catch(e){}return{href:"respond.html?id="+encodeURIComponent(o.id),label:m==="quote"?"Submit Your Quote":"I’m Interested: Submit a Letter of Interest"};}
 function kv(l,v){return v?'<div class="kv"><b>'+l+'</b><p>'+esc(v)+'</p></div>':"";}
 function fact(l,v,wrap){return '<div><b>'+l+'</b><span class="'+(wrap?'wrap2':'')+'" title="'+esc(v||"")+'">'+(v?esc(v):"<span style=\"color:#999;font-weight:400\">n/a</span>")+'</span></div>';}
-function fsmStrip(o){var f=o.fsm_info;if(f&&f.name)return '<div class="fsm-strip"><img src="'+esc(f.photo)+'" alt=""><div class="who"><b>'+esc(f.name)+'</b><span>'+esc(f.title)+'</span><span>City Wide Facility Solutions &middot; '+esc(f.region)+'</span></div><span class="ptag">Posted by</span></div>';
+function fsmIni(n){return String(n||"").split(/\s+/).filter(Boolean).slice(0,2).map(function(w){return w.charAt(0).toUpperCase();}).join("");}
+function fsmFace(f){return f.photo?'<img src="'+esc(f.photo)+'" alt="">':'<span class="fsm-ini" aria-hidden="true">'+esc(fsmIni(f.name))+'</span>';}
+function fsmStrip(o){var f=o.fsm_info;if(f&&f.name)return '<div class="fsm-strip">'+fsmFace(f)+'<div class="who"><b>'+esc(f.name)+'</b><span>'+esc(f.title)+'</span><span>City Wide Facility Solutions &middot; '+esc(f.region)+'</span></div><span class="ptag">Posted by</span></div>';
   if(o.contact_name)return '<div class="fsm-strip"><div class="who"><b>'+esc(o.contact_name)+'</b><span>City Wide Facility Solutions</span></div><span class="ptag">Posted by</span></div>';return"";}
 function card(o){
   var m=respondMeta(o), age=ageDays(o), isNew=age!==null&&age<=3;

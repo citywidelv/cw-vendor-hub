@@ -279,6 +279,7 @@ td .note{display:block;font-weight:400;color:var(--cw-grey);font-size:12px;margi
 .fsm-strip{display:flex;align-items:center;gap:14px;border-top:1px solid var(--cw-border);
   margin-top:16px;padding-top:14px}
 .fsm-strip img{width:54px;height:58px;border-radius:8px;object-fit:cover;flex:none;margin:0}
+.fsm-strip .fsm-ini{width:54px;height:58px;border-radius:8px;flex:none;margin:0;display:flex;align-items:center;justify-content:center;background:#2D2A26;color:#fff;font-size:18px;font-weight:700;letter-spacing:.5px}
 .fsm-strip .who{font-size:13px;line-height:1.45}
 .fsm-strip .who b{display:block;font-size:14px;color:var(--cw-black)}
 .fsm-strip .who span{color:var(--cw-grey);font-size:12px;display:block;font-weight:400}
@@ -336,7 +337,10 @@ function kitFlag(o){
 function fsmStrip(o){
   var f = o.fsm_info;
   if (f && f.name){
-    return '<div class="fsm-strip"><img src="' + esc(f.photo) + '" alt="' + esc(f.name) + '">'
+    var face = f.photo
+      ? '<img src="' + esc(f.photo) + '" alt="' + esc(f.name) + '">'
+      : '<span class="fsm-ini" aria-hidden="true">' + esc(String(f.name||"").split(/\s+/).filter(Boolean).slice(0,2).map(function(w){return w.charAt(0).toUpperCase();}).join("")) + '</span>';
+    return '<div class="fsm-strip">' + face
       + '<div class="who"><b>' + esc(f.name) + '</b><span>' + esc(f.title) + '</span>'
       + '<span>City Wide Facility Solutions &middot; ' + esc(f.region) + '</span></div>'
       + '<span class="ptag">Posted by</span></div>';
