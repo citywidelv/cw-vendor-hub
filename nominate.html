@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Nominate a Vendor of the Month | City Wide Vendor Hub</title>
+<meta name="description" content="Nominate a City Wide vendor crew for Vendor of the Month, or a City Wide team member for G.O.A.T. of the Month. Las Vegas and Northern Nevada.">
+<link rel="canonical" href="https://citywidelv.github.io/cw-vendor-hub/nominate.html">
+<style>
+:root{
+  --cw-red:#D22730; --cw-red-dark:#B01F27; --cw-black:#2D2A26; --cw-grey:#636466;
+  --cw-white:#FFFFFF; --cw-light:#F5F5F5; --cw-border:#E5E5E5; --cw-teal:#0AA6A9; --cw-gold:#E5B423;
+  --radius:12px; --shadow:0 1px 3px rgba(45,42,38,.08),0 4px 14px rgba(45,42,38,.06);
+  --shadow-lift:0 4px 10px rgba(45,42,38,.10),0 14px 34px rgba(45,42,38,.14);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{font-family:Verdana,'Liberation Sans','DejaVu Sans',Geneva,Tahoma,sans-serif;color:var(--cw-black);background:var(--cw-white);line-height:1.6;font-size:15px}
+img{max-width:100%;display:block}
+a{color:var(--cw-red);font-weight:700}
+a:hover{color:var(--cw-red-dark)}
+.wrap{max-width:1120px;margin:0 auto;padding:0 22px}
+.kicker{display:inline-flex;align-items:center;gap:8px;font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--cw-red)}
+.kicker::before{content:"";width:22px;height:3px;background:var(--cw-red);border-radius:2px}
+
+/* header */
+.site-head{position:sticky;top:0;z-index:50;background:var(--cw-white);border-bottom:1px solid var(--cw-border);box-shadow:0 1px 2px rgba(45,42,38,.05)}
+.site-head .bar{display:flex;align-items:center;gap:16px;height:64px}
+.site-head .bar>a:first-child{flex:none;display:block;line-height:0}
+.site-head img.logo{height:38px;width:auto;max-width:none;object-fit:contain}
+.site-head nav{margin-left:auto;display:flex;gap:4px;align-items:center}
+.site-head nav a{font-size:12.5px;font-weight:700;color:var(--cw-black);text-decoration:none;padding:8px 10px;border-radius:6px;white-space:nowrap}
+.site-head nav a:hover{background:var(--cw-light);color:var(--cw-red)}
+.site-head nav a.active{color:var(--cw-red)}
+.site-head nav a.btn-order{background:var(--cw-red);color:#fff;padding:9px 16px}
+.site-head nav a.btn-order:hover{background:var(--cw-red-dark);color:#fff}
+.site-head nav a.nav-opps{color:var(--cw-red);position:relative}
+.site-head nav a.nav-opps::after{content:"";display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--cw-red);margin-left:6px;vertical-align:2px;animation:oppPulse 2s infinite}
+@keyframes oppPulse{0%,100%{opacity:1}50%{opacity:.35}}
+.dd{position:relative}
+.dd>a.dd-label::after{content:" \25BE";font-size:10px;color:var(--cw-grey)}
+.dd-menu{display:none;position:absolute;top:100%;left:0;min-width:230px;background:#fff;border:1px solid var(--cw-border);border-radius:10px;box-shadow:var(--shadow-lift);padding:8px;z-index:60}
+.dd:hover .dd-menu,.dd:focus-within .dd-menu{display:block}
+.dd-menu a{display:block;padding:9px 12px;border-radius:6px;font-size:13px}
+.dd-menu .dd-head{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--cw-teal);padding:8px 12px 4px}
+.menu-toggle{display:none;margin-left:auto;background:none;border:1px solid var(--cw-border);border-radius:6px;padding:8px 10px;cursor:pointer;font-size:16px;line-height:1;color:var(--cw-black)}
+@media(max-width:1080px){
+  .menu-toggle{display:block}
+  .site-head nav{display:none;position:absolute;top:64px;left:0;right:0;background:#fff;flex-direction:column;align-items:stretch;padding:10px 16px 16px;gap:2px;border-bottom:1px solid var(--cw-border);box-shadow:0 12px 24px rgba(45,42,38,.12);max-height:calc(100vh - 64px);overflow:auto}
+  .site-head nav.open{display:flex}
+  .site-head nav a{padding:12px 10px;border-radius:8px}
+  .site-head nav a.btn-order{text-align:center;margin-top:8px}
+  .dd{display:contents}
+  .dd>a.dd-label{display:none}
+  .dd-menu{display:block;position:static;border:none;box-shadow:none;padding:0;min-width:0}
+  .dd-menu a{padding:12px 10px;font-size:13px}
+  .dd-menu .dd-head{padding:10px 10px 2px}
+}
+
+/* buttons */
+.btn{display:inline-flex;align-items:center;gap:8px;font-family:inherit;font-size:14px;font-weight:700;text-decoration:none;border-radius:8px;padding:13px 22px;cursor:pointer;border:2px solid transparent;transition:all .15s}
+.btn-red{background:var(--cw-red);color:#fff}
+.btn-red:hover{background:var(--cw-red-dark);color:#fff;transform:translateY(-1px);box-shadow:var(--shadow)}
+.btn-ghost{background:#fff;color:var(--cw-black);border-color:var(--cw-border)}
+.btn-ghost:hover{border-color:var(--cw-black);color:var(--cw-black)}
+
+/* hero */
+.hero{position:relative;overflow:hidden;background:var(--cw-black);color:#fff}
+.hero .bg{position:absolute;inset:0;background:url('images/bldg-commercial-palms.jpg') center 40%/cover no-repeat;filter:grayscale(100%);opacity:.34}
+.hero .scrim{position:absolute;inset:0;background:linear-gradient(95deg,rgba(24,22,20,.97) 0%,rgba(24,22,20,.9) 42%,rgba(24,22,20,.55) 100%)}
+.hero .wrap{position:relative;z-index:2;display:grid;grid-template-columns:1.15fr .85fr;gap:48px;align-items:center;padding-top:72px;padding-bottom:72px}
+.hero .kicker{color:#fff}
+.hero h1{font-size:clamp(30px,4.8vw,50px);font-weight:700;line-height:1.12;letter-spacing:.01em;margin-top:16px}
+.hero h1 em{font-style:normal;color:var(--cw-red)}
+.hero p.lede{margin-top:18px;font-size:clamp(15px,1.8vw,17.5px);color:#e6e4e1;max-width:560px}
+.hero .cta-row{margin-top:30px;display:flex;gap:12px;flex-wrap:wrap}
+.hero .btn-ghost{background:transparent;color:#fff;border-color:rgba(255,255,255,.55)}
+.hero .btn-ghost:hover{border-color:#fff;color:#fff}
+.hero .quick{margin-top:30px;display:flex;gap:22px;flex-wrap:wrap;font-size:12.5px;color:#cfcdca}
+.hero .quick a{color:#fff;text-decoration:none;border-bottom:1px solid rgba(255,255,255,.35);font-weight:700}
+.hero .quick a:hover{border-color:#fff}
+.hero-art{position:relative;min-height:420px}
+.hero-art .photo{position:absolute;right:0;top:0;width:86%;aspect-ratio:4/3;border-radius:16px;overflow:hidden;box-shadow:0 30px 70px rgba(0,0,0,.5);border:1px solid rgba(255,255,255,.12)}
+.hero-art .photo img{width:100%;height:100%;object-fit:cover}
+.hero-art .photo2{position:absolute;left:0;bottom:0;width:46%;aspect-ratio:1/1;border-radius:14px;overflow:hidden;box-shadow:0 24px 50px rgba(0,0,0,.5);border:4px solid var(--cw-black)}
+.hero-art .photo2 img{width:100%;height:100%;object-fit:cover;object-position:55% 35%}
+.hero-art .stamp{position:absolute;right:-6px;bottom:34px;background:var(--cw-red);color:#fff;font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;padding:10px 14px;border-radius:8px;box-shadow:0 10px 24px rgba(0,0,0,.4)}
+@media(max-width:900px){
+  .hero .wrap{grid-template-columns:1fr;padding-top:52px;padding-bottom:56px}
+  .hero-art{min-height:0;margin-top:8px}
+  .hero-art .photo{position:relative;width:100%}
+  .hero-art .photo2,.hero-art .stamp{display:none}
+}
+
+/* opportunities band */
+.opps-band{background:#fff;border-bottom:1px solid var(--cw-border);border-top:4px solid var(--cw-red)}
+.opps-band .inner{display:flex;align-items:center;gap:18px;flex-wrap:wrap;padding:18px 22px}
+.opps-band .dot{width:10px;height:10px;border-radius:50%;background:var(--cw-red);flex:none;animation:oppPulse 2s infinite}
+.opps-band .txt{flex:1;min-width:240px}
+.opps-band .txt b{display:block;font-size:15px}
+.opps-band .txt span{font-size:13px;color:var(--cw-grey)}
+.opps-band .links{display:flex;gap:8px;flex-wrap:wrap}
+.opps-band .links a.btn{padding:10px 16px;font-size:13px}
+
+/* recognition wall */
+.recog{background:#fff;padding:56px 0}
+.recog .wrap{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center}
+.recog .lead .kicker{color:var(--cw-red)}
+.recog .lead h2{font-size:clamp(24px,3.2vw,34px);line-height:1.2;margin-top:12px}
+.recog .lead p{color:var(--cw-grey);font-size:15px;margin-top:14px;max-width:520px}
+.recog .now{margin-top:26px;border-left:4px solid var(--cw-red);padding:6px 0 6px 18px}
+.recog .now .when{font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--cw-grey)}
+.recog .now .who{font-size:clamp(22px,2.6vw,28px);font-weight:700;line-height:1.2;margin-top:4px}
+.recog .now .why{font-size:14px;color:var(--cw-grey);margin-top:8px;max-width:480px}
+.recog .cta-row{margin-top:26px;display:flex;gap:12px;flex-wrap:wrap}
+.recog .cta-row .btn-ghost{border-color:var(--cw-border)}
+.recog .switch{display:flex;gap:8px;flex-wrap:wrap;margin-top:24px}
+.recog .switch button{font-family:inherit;font-size:12px;font-weight:700;border:1.5px solid var(--cw-border);background:#fff;color:var(--cw-grey);border-radius:20px;padding:7px 14px;cursor:pointer}
+.recog .switch button.on{background:var(--cw-black);border-color:var(--cw-black);color:#fff}
+.recog .switch button:hover:not(.on){border-color:var(--cw-black);color:var(--cw-black)}
+.recog .switch .sep{width:1px;background:var(--cw-border);margin:0 4px}
+.plaque{background:#1a1816;border-radius:6px;padding:14px;box-shadow:0 24px 60px rgba(45,42,38,.28),inset 0 0 0 1px rgba(255,255,255,.06);max-width:440px;margin:0 auto;width:100%}
+.plaque.silver{background:linear-gradient(135deg,#cfcfcf,#9c9c9c 40%,#d9d9d9 60%,#a8a8a8)}
+.plaque .felt{background:#7d1a20;background-image:radial-gradient(circle at 30% 20%,rgba(255,255,255,.07),transparent 55%),repeating-linear-gradient(45deg,rgba(0,0,0,.05) 0 2px,transparent 2px 4px);padding:20px 18px 22px;border-radius:2px;box-shadow:inset 0 2px 10px rgba(0,0,0,.45)}
+.pl{background:linear-gradient(180deg,#f4f4f4 0%,#d9d9d9 45%,#efefef 55%,#c9c9c9 100%);border-radius:2px;box-shadow:0 1px 0 rgba(255,255,255,.7) inset,0 2px 4px rgba(0,0,0,.45);color:#2a2724;text-align:center;font-family:Georgia,'Times New Roman',Times,serif;font-weight:700}
+.plaque .title{padding:14px 12px;display:grid;grid-template-columns:auto 1fr;gap:12px;align-items:center;margin-bottom:22px}
+.plaque .title .mark{text-align:left;line-height:1;padding-left:4px}
+.plaque .title .mark b{display:block;font-family:Verdana,sans-serif;font-size:26px;letter-spacing:-.04em;color:#3a3734}
+.plaque .title .mark span{display:block;font-family:Verdana,sans-serif;font-size:9.5px;letter-spacing:.22em;margin-top:5px;color:#3a3734}
+.plaque .title .tt{font-size:19px;line-height:1.2}
+.plaque .title .tt small{display:block;font-size:17px;margin-top:4px}
+.plaque .grid{display:grid;grid-template-columns:1fr 1fr;gap:12px 14px}
+.plaque .pl.m{padding:9px 6px;min-height:52px;display:flex;flex-direction:column;justify-content:center;font-size:12px;line-height:1.25}
+.plaque .pl.m b{display:block;font-size:11.5px}
+.plaque .pl.m span{display:block;font-weight:700;overflow-wrap:anywhere}
+.plaque .pl.m.blank{background:#141210;box-shadow:0 1px 0 rgba(255,255,255,.08) inset,0 2px 4px rgba(0,0,0,.5)}
+.plaque .pl.m.blank b,.plaque .pl.m.blank span{visibility:hidden}
+.plaque .pl.m.now{outline:2px solid var(--cw-gold);outline-offset:2px}
+.recog .empty{margin-top:16px;font-size:13px;color:var(--cw-grey)}
+@media(max-width:900px){.recog .wrap{grid-template-columns:1fr;gap:34px}.plaque{max-width:420px}}
+@media(max-width:420px){.plaque .grid{grid-template-columns:1fr}.plaque .title .tt{font-size:16px}.plaque .title .tt small{font-size:14px}}
+
+/* sections */
+.section{padding:56px 0}
+.section.alt{background:var(--cw-light)}
+.section-head{max-width:720px;margin-bottom:26px}
+.section-head h2{font-size:clamp(22px,3vw,30px);font-weight:700;line-height:1.25;margin-top:10px}
+.section-head p{color:var(--cw-grey);font-size:15px;margin-top:10px}
+
+/* steps */
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.step{position:relative;background:#fff;border:1px solid var(--cw-border);border-radius:var(--radius);padding:26px 24px 24px;box-shadow:var(--shadow);display:flex;flex-direction:column}
+.step .num{width:40px;height:40px;border-radius:50%;background:var(--cw-red);color:#fff;font-weight:700;font-size:16px;display:flex;align-items:center;justify-content:center;margin-bottom:16px}
+.step h3{font-size:17px;margin-bottom:8px}
+.step p{font-size:13.5px;color:var(--cw-grey);flex:1}
+.step .act{margin-top:16px;display:flex;gap:8px;flex-wrap:wrap}
+.step .act a{font-size:13px;text-decoration:none}
+.step .act a.btn{padding:10px 14px;font-size:13px}
+@media(max-width:860px){.steps{grid-template-columns:1fr}}
+
+/* feature tiles */
+.tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.tile{position:relative;display:flex;flex-direction:column;min-height:300px;border-radius:var(--radius);overflow:hidden;text-decoration:none;color:#fff;background:var(--cw-black);box-shadow:var(--shadow);transition:transform .15s,box-shadow .15s}
+.tile img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform .4s}
+.tile.mono img{filter:grayscale(100%)}
+.tile .sc{position:absolute;inset:0;background:linear-gradient(180deg,rgba(20,18,16,.05) 0%,rgba(20,18,16,.55) 50%,rgba(20,18,16,.94) 100%)}
+.tile .tx{position:relative;margin-top:auto;padding:22px}
+.tile .tx .kicker{color:#fff;font-size:10px}
+.tile h3{font-size:19px;margin-top:8px;line-height:1.25}
+.tile p{font-size:13px;color:#e6e4e1;margin-top:6px;font-weight:400}
+.tile .go{margin-top:12px;font-size:13px;font-weight:700;color:#fff}
+.tile .go::after{content:" \2192"}
+.tile:hover{transform:translateY(-3px);box-shadow:var(--shadow-lift);color:#fff}
+.tile:hover img{transform:scale(1.04)}
+.tile.solid{background:var(--cw-red)}
+.tile.solid .sc{display:none}
+.tile.solid .tx{margin-top:0;padding:26px;display:flex;flex-direction:column;flex:1}
+.tile.solid .big{font-size:44px;font-weight:700;line-height:1;margin-top:8px}
+.tile.solid .big small{display:block;font-size:13px;font-weight:400;margin-top:6px;opacity:.9}
+.tile.solid .go{margin-top:auto;padding-top:20px}
+@media(max-width:960px){.tiles{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:600px){.tiles{grid-template-columns:1fr}.tile{min-height:240px}}
+
+/* card grid */
+.card-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:18px}
+.card{position:relative;display:flex;flex-direction:column;background:#fff;border:1px solid var(--cw-border);border-radius:var(--radius);padding:22px;text-decoration:none;color:var(--cw-black);transition:all .15s;box-shadow:var(--shadow)}
+.card:hover{box-shadow:var(--shadow-lift);transform:translateY(-2px);border-color:#d8d8d8;color:var(--cw-black)}
+.card .icon{width:44px;height:44px;border-radius:10px;background:var(--cw-light);display:flex;align-items:center;justify-content:center;margin-bottom:14px;color:var(--cw-red)}
+.card.flag .icon{background:var(--cw-red);color:#fff}
+.card h3{font-size:15px;font-weight:700;margin-bottom:6px}
+.card p{font-size:13px;color:var(--cw-grey);font-weight:400;flex:1}
+.card .go{margin-top:14px;font-size:13px;font-weight:700;color:var(--cw-red)}
+.card .go::after{content:" \2192"}
+
+/* guides split */
+.split{display:grid;grid-template-columns:1fr 1.4fr;gap:40px;align-items:start}
+.split .photo{border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow-lift);position:sticky;top:88px}
+.split .photo img{aspect-ratio:4/5;object-fit:cover;width:100%}
+.split .photo figcaption{background:var(--cw-black);color:#cfcdca;font-size:12px;padding:12px 16px}
+.split .photo figcaption b{color:#fff;display:block;font-size:13px}
+.guide-list{display:grid;gap:12px}
+.guide{display:flex;gap:16px;align-items:flex-start;background:#fff;border:1px solid var(--cw-border);border-radius:10px;padding:16px 18px;text-decoration:none;color:var(--cw-black);box-shadow:var(--shadow);transition:all .15s}
+.guide:hover{border-color:var(--cw-black);color:var(--cw-black);transform:translateX(3px)}
+.guide .ic{flex:none;width:40px;height:40px;border-radius:8px;background:var(--cw-light);display:flex;align-items:center;justify-content:center;color:var(--cw-red)}
+.guide h3{font-size:14.5px}
+.guide p{font-size:13px;color:var(--cw-grey);font-weight:400;margin-top:3px}
+.guide .pdf{margin-left:auto;flex:none;font-size:10px;font-weight:700;letter-spacing:.08em;color:#8a6a0e;border:1px solid var(--cw-gold);background:#FFFDF4;border-radius:4px;padding:2px 7px;text-transform:uppercase}
+@media(max-width:860px){.split{grid-template-columns:1fr}.split .photo{position:static}}
+
+/* contact band */
+.contact{background:var(--cw-black);color:#fff}
+.contact .wrap{display:grid;grid-template-columns:1.1fr 1fr 1fr;gap:36px;padding:52px 22px}
+.contact h2{font-size:24px;line-height:1.25}
+.contact p{color:#cfcdca;font-size:14px;margin-top:10px}
+.contact .region{border-left:3px solid var(--cw-red);padding-left:18px}
+.contact .region b{display:block;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--cw-red);margin-bottom:8px}
+.contact .region a{color:#fff;text-decoration:none;font-weight:700;display:block;font-size:16px;margin-top:4px}
+.contact .region a:hover{text-decoration:underline}
+.contact .region span{display:block;color:#cfcdca;font-size:13px}
+@media(max-width:860px){.contact .wrap{grid-template-columns:1fr;gap:26px}}
+
+/* footer */
+.site-foot{background:#1f1d1a;color:#cfcdca;padding:28px 0;font-size:13px}
+.site-foot .cols{display:flex;flex-wrap:wrap;gap:18px;justify-content:space-between;align-items:center}
+.site-foot a{color:#fff;text-decoration:none}
+.site-foot a:hover{text-decoration:underline}
+.site-foot .fine{margin-top:14px;font-size:11.5px;color:#8b8985}
+</style>
+<link rel="icon" href="favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+<link rel="manifest" href="site.webmanifest">
+<link rel="stylesheet" href="https://citywidelv.github.io/cw-base.css">
+</head><body>
+
+<header class="site-head"><div class="wrap bar">
+<a href="index.html"><img class="logo" src="https://emailer.emfluence.com/clients/citywide/uploadedfiles/signature_logo.png" alt="City Wide Facility Solutions"></a>
+<button class="menu-toggle" aria-label="Menu">&#9776;</button>
+<nav>
+<a href="index.html">Home</a>
+<a href="opportunities.html" class="nav-opps">Open Opportunities</a>
+<div class="dd"><a class="dd-label" href="new-vendors.html">New Vendors</a><div class="dd-menu"><a href="new-vendors.html?region=lv">Las Vegas</a><a href="new-vendors.html?region=nnv">Northern Nevada</a></div></div>
+<div class="dd"><a class="dd-label" href="#guides" onclick="return false;">Guides</a><div class="dd-menu"><div class="dd-head">Crew Guides</div><a href="planner.html">New Building Planner</a><a href="workloading.html">Workloading &amp; Crew Sizing</a><a href="equipment.html">Choosing Your Equipment</a><a href="color-coding.html">Color Coding System</a><a href="medical.html">Medical Facility Cleaning</a><a href="cleanroom.html">Clean Room Cleaning</a><a href="gmp.html">GMP &amp; Food Facility Cleaning</a></div></div>
+<div class="dd"><a class="dd-label" href="invoice.html">Invoices &amp; Paperwork</a><div class="dd-menu"><div class="dd-head">Get Paid</div><a href="invoice.html">Submit Your Monthly Invoice</a><div class="dd-head">Orders</div><a href="building-supplies.html">Order Building Supplies</a><a href="shop/">Shop Supplies &amp; Uniforms</a><a href="card-authorization.html">Pay by Credit Card</a><a href="kit-builder.html">Build a New Building Kit</a><div class="dd-head">Paperwork</div><a href="cleaner-roster.html">Add or Remove a Cleaner</a><a href="upload.html">Upload Insurance &amp; Compliance Docs</a><a href="profile-update.html">Update Your Company Profile</a><a href="work-order.html">Maintenance Work Ticket</a><a href="snow-report.html">Snow Service Report</a><a href="https://form.asana.com/?k=FRCnQmbTGjAVPieFt4bnWQ&amp;d=13140959242873" target="_blank" rel="noopener">Background Check &amp; Name Badge</a><a href="https://www.onlinecprcertification.net/bloodborne-pathogens-training-certification.php" target="_blank" rel="noopener">Bloodborne Pathogens Certification</a></div></div>
+<div class="dd"><a class="dd-label active" href="index.html#recognition">Recognition</a><div class="dd-menu"><a href="index.html#recognition">Vendor of the Month Wall</a><div class="dd-head">Nominate</div><a href="nominate.html">Nominate a Vendor of the Month</a><a href="nominate.html?type=goat">Nominate a City Wide G.O.A.T.</a></div></div>
+<a class="btn-order" href="shop/">Order Supplies</a>
+</nav></div></header>
+<style>
+.nom-hero{background:var(--cw-black);color:#fff;padding:44px 0 36px}
+.nom-hero .wrap{max-width:900px}
+.nom-hero h1{font-size:clamp(24px,4vw,34px);line-height:1.15;margin-top:12px}
+.nom-hero h1::after{content:"";display:block;width:52px;height:4px;background:var(--cw-red);border-radius:2px;margin-top:12px}
+.nom-hero p{color:#cfcdca;font-size:14.5px;max-width:620px;margin-top:12px}
+.nom-hero .kicker{color:#fff}
+.nom-wrap{max-width:900px;margin:0 auto;padding:26px 22px 60px}
+.pick{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:18px}
+.pick button{font-family:inherit;text-align:left;background:#fff;border:2px solid var(--cw-border);border-radius:14px;padding:18px 20px;cursor:pointer;box-shadow:var(--shadow);transition:all .15s;color:var(--cw-black)}
+.pick button:hover{border-color:var(--cw-black)}
+.pick button.on{border-color:var(--cw-red);box-shadow:0 0 0 3px rgba(210,39,48,.12)}
+.pick b{display:block;font-size:16px}
+.pick span{display:block;font-size:12.5px;color:var(--cw-grey);margin-top:5px;font-weight:400}
+.nom-card{background:#fff;border:1px solid var(--cw-border);border-radius:14px;padding:24px;box-shadow:var(--shadow)}
+.nom-card h2{font-size:16px;margin:0 0 16px;padding-bottom:8px;border-bottom:2px solid var(--cw-red)}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.f{display:flex;flex-direction:column;gap:5px;margin-bottom:14px}
+.f label{font-size:12px;font-weight:700}
+.f label .req{color:var(--cw-red)}
+.f input,.f select,.f textarea{width:100%;font-family:inherit;font-size:14px;color:var(--cw-black);border:1.5px solid var(--cw-border);border-radius:8px;padding:10px 12px;background:#fff;box-sizing:border-box}
+.f textarea{min-height:96px;resize:vertical}
+.f input:focus,.f select:focus,.f textarea:focus{outline:none;border-color:var(--cw-red)}
+.f .hint{font-size:12px;color:var(--cw-grey)}
+.submit{display:block;width:100%;background:var(--cw-red);color:#fff;border:none;border-radius:10px;padding:15px;font-family:inherit;font-size:15.5px;font-weight:700;cursor:pointer;margin-top:6px}
+.submit:hover{background:var(--cw-red-dark)}
+.submit:disabled{background:#C9C7C4;cursor:wait}
+.err{display:none;background:#FDECEC;border:1px solid var(--cw-red);color:#8f1a20;border-radius:10px;padding:12px 14px;font-size:13px;margin-bottom:14px}
+.done{display:none;background:#fff;border:1px solid var(--cw-border);border-radius:14px;padding:44px 30px;text-align:center;box-shadow:var(--shadow)}
+.done .big{width:64px;height:64px;border-radius:50%;background:#EAF6EC;color:#2E7D32;display:flex;align-items:center;justify-content:center;font-size:30px;margin:0 auto 16px}
+.done h2{font-size:20px;margin:0 0 8px}
+.done p{font-size:13.5px;color:var(--cw-grey);max-width:520px;margin:0 auto 6px;line-height:1.6}
+.done .cta-row{margin-top:18px;display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.fine{font-size:12px;color:var(--cw-grey);margin-top:14px;line-height:1.6}
+.hp{position:absolute;left:-6000px;top:-6000px}
+@media(max-width:700px){.pick,.g2{grid-template-columns:1fr}}
+</style>
+<section class="nom-hero"><div class="wrap">
+<span class="kicker">Recognition</span>
+<h1>Nominate someone who earned it</h1>
+<p>A crew that made a building shine, or a City Wide team member who went out of their way for you. Nominations are read by the City Wide admin team and the winners go on the wall. They are not anonymous, but all we need from you is your first name.</p>
+</div></section>
+
+<div class="nom-wrap">
+<div class="pick" id="pick">
+<button type="button" data-t="vendor" class="on"><b>Vendor of the Month</b><span>A vendor crew doing standout work in a City Wide building.</span></button>
+<button type="button" data-t="goat"><b>G.O.A.T. of the Month</b><span>Greatest of All Time. A City Wide team member who has your back.</span></button>
+</div>
+
+<div class="nom-card" id="card">
+<form id="frm" novalidate>
+<h2 id="cardTitle">Nominate a Vendor of the Month</h2>
+<div class="err" id="err"></div>
+<div class="g2">
+<div class="f"><label>Region <span class="req">*</span></label><select id="region"><option>Las Vegas</option><option>Northern Nevada</option></select></div>
+<div class="f" id="vendorF"><label>Vendor or crew name <span class="req">*</span></label><input id="nominee" maxlength="120" placeholder="The company name as you know it"></div>
+<div class="f" id="staffF" style="display:none"><label>City Wide team member <span class="req">*</span></label><select id="staff"><option value="">Loading the team...</option></select></div>
+</div>
+<div class="f"><label>Why they earned it <span class="req">*</span></label><textarea id="reason" maxlength="1500" placeholder="What did they do? A sentence or two is plenty."></textarea></div>
+<div class="g2">
+<div class="f"><label>Your first name <span class="req">*</span></label><input id="first" maxlength="60" autocomplete="given-name" placeholder="First name only is fine"></div>
+<div class="f"><label>Your company <span style="font-weight:400;color:var(--cw-grey)">(optional)</span></label><input id="company" maxlength="120" autocomplete="organization"></div>
+</div>
+<div class="hp" aria-hidden="true"><label>Website</label><input id="website" tabindex="-1" autocomplete="off"></div>
+<button class="submit" id="send" type="submit">Send the nomination</button>
+<div class="fine">Nominations go to the City Wide admin team. Winners are announced monthly and added to the wall on the <a href="index.html#recognition">Vendor Hub home page</a>.</div>
+</form>
+</div>
+
+<div class="done" id="done">
+<div class="big">&#10003;</div>
+<h2>Nomination sent</h2>
+<p id="doneMsg"></p>
+<div class="cta-row"><a class="btn btn-red" href="index.html#recognition">See the wall</a><a class="btn btn-ghost" href="#" id="again">Nominate someone else</a></div>
+</div>
+</div>
+
+<footer class="site-foot"><div class="wrap"><div class="cols"><div><b style="color:#fff">City Wide Facility Solutions</b> &middot; Las Vegas &amp; Northern Nevada<br>Vendor Resource Hub</div><div><a href="shop/">Order Supplies</a> &nbsp;&nbsp; <a href="opportunities.html">Open Opportunities</a> &nbsp;&nbsp; <a href="new-vendors.html">New Vendors</a> &nbsp;&nbsp; <a href="#recognition">Vendor of the Month</a> &nbsp;&nbsp; <a href="https://www.gocitywide.com" target="_blank" rel="noopener">GoCityWide.com</a></div></div><div class="fine">For crew and vendor reference. Quantities and methods are guidance; your account scope of work always comes first. Questions? Contact your City Wide Facility Solutions representative.</div></div></footer>
+
+<script>
+(function(){
+  var t=document.querySelector('.menu-toggle'),n=document.querySelector('.site-head nav');
+  if(t&&n){t.addEventListener('click',function(){n.classList.toggle('open');});}
+  var WEBHOOK='https://script.google.com/macros/s/AKfycbzfNnrpidCbWB1DeUNgXvRhDFMQgApfpn-3C9GU45wMEHcJpWFl8ZQVo6PUBSRfEVfRdg/exec';
+  function $(id){return document.getElementById(id);}
+  function esc(s){return String(s==null?"":s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");}
+  var TYPE='vendor';
+  function setType(t){
+    TYPE=t;
+    Array.prototype.forEach.call($('pick').querySelectorAll('button'),function(b){b.classList.toggle('on',b.getAttribute('data-t')===t);});
+    $('vendorF').style.display=t==='vendor'?'':'none';
+    $('staffF').style.display=t==='goat'?'':'none';
+    $('cardTitle').textContent=t==='goat'?'Nominate a City Wide G.O.A.T. of the Month':'Nominate a Vendor of the Month';
+    $('reason').placeholder=t==='goat'?'What did they do for you or your crew? A sentence or two is plenty.':'What did they do? A sentence or two is plenty.';
+  }
+  $('pick').addEventListener('click',function(e){var b=e.target.closest('button');if(b)setType(b.getAttribute('data-t'));});
+  if(/[?&]type=goat/.test(location.search))setType('goat');
+  var STAFF=[];
+  function loadStaff(){
+    fetch(WEBHOOK,{method:'POST',headers:{'Content-Type':'text/plain'},body:JSON.stringify({kind:'rec_staff'})}).then(function(r){return r.json();}).then(function(r){
+      if(!r||!r.ok)throw 0;
+      STAFF=r.staff||[];
+      renderStaff();
+    }).catch(function(){$('staff').innerHTML='<option value="">Could not load the team list. Try again in a minute.</option>';});
+  }
+  function renderStaff(){
+    var reg=$('region').value;
+    var list=STAFF.filter(function(s){return !s.market||s.market==='Both'||s.market===reg;});
+    if(!list.length)list=STAFF;
+    $('staff').innerHTML='<option value="">Pick a team member</option>'+list.map(function(s){return '<option value="'+esc(s.name)+'">'+esc(s.name)+(s.role?' ('+esc(s.role)+')':'')+'</option>';}).join('');
+  }
+  $('region').addEventListener('change',renderStaff);
+  loadStaff();
+  $('frm').addEventListener('submit',function(e){
+    e.preventDefault();
+    var nominee=TYPE==='goat'?$('staff').value:$('nominee').value.trim();
+    var first=$('first').value.trim(), reason=$('reason').value.trim();
+    var err=$('err');
+    var msg=!nominee?(TYPE==='goat'?'Pick the team member you are nominating.':'Type the vendor or crew name.'):!reason?'Tell us why in a sentence or two.':!first?'Add your first name. Nominations are not anonymous.':'';
+    if(msg){err.textContent=msg;err.style.display='block';err.scrollIntoView({block:'center'});return;}
+    err.style.display='none';
+    var btn=$('send');btn.disabled=true;btn.textContent='Sending...';
+    var data={kind:'rec_nominate',type:TYPE,region:$('region').value,nominee:nominee,nominator_first:first,nominator_company:$('company').value.trim(),reason:reason,source:'vendor-hub',website:$('website').value};
+    fetch(WEBHOOK,{method:'POST',headers:{'Content-Type':'text/plain'},body:JSON.stringify(data)}).then(function(r){return r.json();}).then(function(r){
+      if(!r||!r.ok)throw new Error(r&&r.error||'Could not send');
+      $('doneMsg').textContent='Thanks, '+first+'. '+nominee+' is in front of the admin team for '+(TYPE==='goat'?'G.O.A.T.':'Vendor')+' of the Month.';
+      $('card').style.display='none';$('pick').style.display='none';$('done').style.display='block';window.scrollTo({top:0,behavior:'smooth'});
+    }).catch(function(x){err.textContent=(x&&x.message)||'Could not send. Check your connection and try again.';err.style.display='block';btn.disabled=false;btn.textContent='Send the nomination';});
+  });
+  $('again').addEventListener('click',function(e){e.preventDefault();$('nominee').value='';$('staff').value='';$('reason').value='';$('done').style.display='none';$('card').style.display='';$('pick').style.display='';$('send').disabled=false;$('send').textContent='Send the nomination';});
+})();
+</script>
+</body></html>
