@@ -298,7 +298,7 @@ a:hover{color:var(--cw-red-dark)}
 <div class="err" id="err"></div>
 <div class="g2">
 <div class="f"><label>Region <span class="req">*</span></label><select id="region"><option>Las Vegas</option><option>Northern Nevada</option></select></div>
-<div class="f" id="vendorF"><label>Vendor or crew name <span class="req">*</span></label><input id="nominee" maxlength="120" placeholder="The company name as you know it"></div>
+<div class="f" id="vendorF"><label>Vendor or crew name <span class="req">*</span></label><input id="nominee" maxlength="120" list="vendorHints" autocomplete="off" placeholder="The company name as you know it"><datalist id="vendorHints"></datalist><span class="hint">Type most of the name and it finishes for you.</span></div>
 <div class="f" id="staffF" style="display:none"><label>City Wide team member <span class="req">*</span></label><select id="staff"><option value="">Loading the team...</option></select></div>
 </div>
 <div class="f"><label>Why they earned it <span class="req">*</span></label><textarea id="reason" maxlength="1500" placeholder="What did they do? A sentence or two is plenty."></textarea></div>
@@ -355,6 +355,19 @@ a:hover{color:var(--cw-red-dark)}
     $('staff').innerHTML='<option value="">Pick a team member</option>'+list.map(function(s){return '<option value="'+esc(s.name)+'">'+esc(s.name)+(s.role?' ('+esc(s.role)+')':'')+'</option>';}).join('');
   }
   $('region').addEventListener('change',renderStaff);
+  var hintTimer=null, lastQ='';
+  $('nominee').addEventListener('input',function(){
+    var q=$('nominee').value.trim();
+    clearTimeout(hintTimer);
+    if(q.length<4){$('vendorHints').innerHTML='';return;}
+    hintTimer=setTimeout(function(){
+      if(q===lastQ)return; lastQ=q;
+      fetch(WEBHOOK,{method:'POST',headers:{'Content-Type':'text/plain'},body:JSON.stringify({kind:'rec_vendor_hint',q:q})}).then(function(r){return r.json();}).then(function(r){
+        if(!r||!r.ok)return;
+        $('vendorHints').innerHTML=(r.names||[]).map(function(n){return '<option value="'+esc(n)+'">';}).join('');
+      }).catch(function(){});
+    },250);
+  });
   loadStaff();
   $('frm').addEventListener('submit',function(e){
     e.preventDefault();
