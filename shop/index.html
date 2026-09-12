@@ -98,7 +98,16 @@ main{max-width:1200px; margin:0 auto; padding:16px;}
 .qty button{width:28px; height:34px; border:none; background:var(--cw-light-grey); font-size:15px; font-weight:700;}
 .qty input{width:38px; border:none; text-align:center; outline:none; -moz-appearance:textfield;}
 .qty input::-webkit-outer-spin-button,.qty input::-webkit-inner-spin-button{-webkit-appearance:none;}
-.size-sel{flex:1; padding:8px 6px; border:1.5px solid var(--cw-border); border-radius:6px; min-width:0;}
+.size-sel,.color-sel{flex:1; padding:8px 6px; border:1.5px solid var(--cw-border); border-radius:6px; min-width:0; background:#fff;}
+.size-sel:focus,.color-sel:focus{border-color:var(--cw-red); outline:none;}
+.opts{display:flex; flex-direction:column; gap:6px; margin-bottom:8px;}
+.optrow{display:flex; align-items:center; gap:8px; font-size:11px;}
+.optrow .ol{color:var(--cw-grey); width:42px; flex-shrink:0; font-weight:700; font-size:10px;}
+.logoline{display:block; font-size:10.5px; color:var(--cw-black); background:var(--cw-light-grey); border-radius:6px; padding:6px 8px; margin-bottom:8px; line-height:1.35;}
+.logoline b{color:var(--cw-red);}
+.catnote{border:1.5px solid var(--cw-border); border-left:4px solid var(--cw-red); border-radius:8px; padding:12px 14px; margin-bottom:14px; font-size:11.5px; line-height:1.55; display:none;}
+.catnote b{display:block; font-size:12.5px; margin-bottom:2px;}
+.catnote a{color:var(--cw-red); font-weight:700;}
 .add-btn{
   flex:1; background:var(--cw-black); color:#fff; border:none; border-radius:6px;
   padding:9px 0; font-weight:700; font-size:12px;
@@ -162,6 +171,12 @@ footer b{color:var(--cw-black);}
   .hdr-title{display:none;}
   .hdr-search{order:3; max-width:none; width:100%;}
   .grid{grid-template-columns:repeat(auto-fill,minmax(160px,1fr));}
+  .card .controls{flex-wrap:wrap;}
+  .card .add-btn{flex-basis:100%; padding:10px 0;}
+  .card .price small{display:block;}
+  .filterbar-inner{flex-wrap:nowrap; overflow-x:auto; -webkit-overflow-scrolling:touch; scrollbar-width:none; padding-right:24px;}
+  .filterbar-inner::-webkit-scrollbar{display:none;}
+  .sort-sel{margin-left:8px; flex-shrink:0;}
 }
 </style>
   <link rel="icon" href="favicon.ico" sizes="any">
@@ -204,6 +219,8 @@ footer b{color:var(--cw-black);}
   <div class="section-title" id="gridTitle">All Products</div>
   <div class="section-sub" id="gridCount"></div>
   <div class="accent"></div>
+  <div class="catnote" id="uniNote"><b>Uniforms come with the Independent Contractor logo.</b>
+    Every uniform item here is embroidered with the Independent Contractor logo and ordered for you through Bennett Uniform. Pick your color and size on each item. Sizes 2XL and up cost a little more, and the price shown updates when you pick a size. Special order items usually take 2 to 3 weeks.</div>
   <div class="grid" id="grid"></div>
   <div class="empty" id="empty" style="display:none">No products match your search. Try fewer words or check the category filter.</div>
 </main>
@@ -300,6 +317,9 @@ async function load(){
       sizes:(r[idx("sizes")]||"").split(",").map(s=>s.trim()).filter(Boolean),
       size_prices:sp,
       image:r[idx("image")], description:r[idx("description")],
+      colors:idx("colors")>=0?(r[idx("colors")]||"").split("|").map(s=>s.trim()).filter(Boolean):[],
+      logo:idx("logo")>=0?(r[idx("logo")]||"").trim():"",
+      supplier_sku:idx("supplier_sku")>=0?(r[idx("supplier_sku")]||"").trim():"",
       featured:r[idx("featured")]==="1", active:r[idx("active")]!=="0",
     };
   }).filter(p=>p.active);
@@ -365,9 +385,12 @@ function filtered(){
 
 // ---------- Rendering ----------
 function cardHTML(p){
-  const sizes=p.sizes.length?`<select class="size-sel" id="size-${p.id}">${p.sizes.map(s=>{
+  const sizes=p.sizes.length?`<div class="optrow"><span class="ol">Size</span><select class="size-sel" id="size-${p.id}" onchange="livePrice('${p.id}')">${p.sizes.map(s=>{
       const extra=p.size_prices[s]?` (${fmt(p.size_prices[s])})`:"";
-      return `<option value="${s}">${s}${extra}</option>`;}).join("")}</select>`:"";
+      return `<option value="${s}">${s}${extra}</option>`;}).join("")}</select></div>`:"";
+  const colors=p.colors.length>1?`<div class="optrow"><span class="ol">Color</span><select class="color-sel" id="color-${p.id}">${p.colors.map(c=>`<option value="${esc(c)}">${esc(c)}</option>`).join("")}</select></div>`
+    :(p.colors.length===1?`<div class="optrow"><span class="ol">Color</span><input type="hidden" id="color-${p.id}" value="${esc(p.colors[0])}"><span>${esc(p.colors[0])}</span></div>`:"");
+  const logo=p.logo?`<div class="logoline"><b>${esc(p.logo)}</b> logo, embroidered</div>`:"";
   const oos = p.fulfillment==="Warehouse" && p.stock!==null && p.stock<=0;
   let badge;
   if(p.fulfillment!=="Warehouse") badge='<span class="badge so">Special Order</span>';
@@ -382,16 +405,15 @@ function cardHTML(p){
     <div class="sku">SKU ${esc(p.sku)}</div>
     <div class="desc" id="desc-${p.id}">${esc(p.description)}</div>
     ${needsMore?`<button class="more-link" onclick="toggleDesc('${p.id}',this)">More</button>`:""}
-    <div class="price">${fmt(displayPrice(p))}${p.size_prices&&Object.keys(p.size_prices).length?' <small>base price, larger sizes vary</small>':''}</div>
+    ${logo}
+    <div class="price" id="price-${p.id}">${fmt(displayPrice(p))}${p.size_prices&&Object.keys(p.size_prices).length?' <small>larger sizes cost more</small>':''}</div>
+    ${sizes||colors?`<div class="opts">${sizes}${colors}</div>`:""}
     <div class="controls">
       <div class="qty">
         <button onclick="stepQty('${p.id}',-1)">&minus;</button>
         <input id="qty-${p.id}" type="number" value="1" min="1" max="999">
         <button onclick="stepQty('${p.id}',1)">+</button>
       </div>
-      ${sizes}
-    </div>
-    <div class="controls" style="margin-top:8px">
       ${oos
         ?'<button class="add-btn" disabled style="background:var(--cw-grey);cursor:not-allowed">Out of Stock</button>'
         :`<button class="add-btn" onclick="addToCart('${p.id}',this)">Add to Cart</button>`}
@@ -416,6 +438,17 @@ function render(){
     activeCat==="All" ? (q?`Results for "${q}"`:"All Products")
     : activeCat==="__WH__" ? "Warehouse Items" : activeCat;
   document.getElementById("gridCount").textContent=`${items.length} product${items.length===1?"":"s"}`;
+  const uniNote=document.getElementById("uniNote");
+  if(uniNote) uniNote.style.display=(activeCat==="Uniforms")?"block":"none";
+}
+function livePrice(id){
+  const p=PRODUCTS.find(x=>x.id===id); if(!p) return;
+  const sizeEl=document.getElementById("size-"+id);
+  const size=sizeEl?sizeEl.value:"";
+  const unit=sizePrice(p,size);
+  const el=document.getElementById("price-"+id); if(!el) return;
+  const up=size&&p.size_prices[size]!==undefined&&p.size_prices[size]>displayPrice(p);
+  el.innerHTML=fmt(unit)+(up?' <small>includes size upcharge</small>':(Object.keys(p.size_prices).length?' <small>larger sizes cost more</small>':''));
 }
 function toggleDesc(id,btn){
   const d=document.getElementById("desc-"+id);
@@ -439,8 +472,10 @@ function addToCart(id,btn){
   const qty=parseInt(document.getElementById("qty-"+id).value)||1;
   const sizeEl=document.getElementById("size-"+id);
   const size=sizeEl?sizeEl.value:"";
-  const ex=cart.find(c=>c.id===id&&c.size===size);
-  if(ex)ex.qty+=qty; else cart.push({id,size,qty});
+  const colorEl=document.getElementById("color-"+id);
+  const color=colorEl?colorEl.value:"";
+  const ex=cart.find(c=>c.id===id&&c.size===size&&(c.color||"")===color);
+  if(ex)ex.qty+=qty; else cart.push({id,size,color,qty});
   saveCart();
   if(btn){btn.textContent="Added";btn.classList.add("added");
     setTimeout(()=>{btn.textContent="Add to Cart";btn.classList.remove("added");},900);}
@@ -448,7 +483,8 @@ function addToCart(id,btn){
 function cartLines(){
   return cart.map(c=>{
     const p=PRODUCTS.find(x=>x.id===c.id);
-    return {...c,p,unit:sizePrice(p,c.size),line:sizePrice(p,c.size)*c.qty};
+    const spec=[c.size?"Size "+c.size:"",c.color||"",p.logo?p.logo+" logo":""].filter(Boolean).join(" / ");
+    return {...c,p,spec,unit:sizePrice(p,c.size),line:sizePrice(p,c.size)*c.qty};
   });
 }
 function cartTotal(){return cartLines().reduce((s,l)=>s+l.line,0);}
@@ -474,16 +510,16 @@ function renderDrawer(){
         <img src="${l.p.image}" alt="" onerror="this.style.visibility='hidden'">
         <div>
           <div class="ci-name">${esc(l.p.name)}</div>
-          <div class="ci-meta">SKU ${esc(l.p.sku)}${l.size?" &middot; Size "+esc(l.size):""} &middot; ${fmt(l.unit)} each</div>
+          <div class="ci-meta">SKU ${esc(l.p.sku)}${l.spec?" &middot; "+esc(l.spec):""} &middot; ${fmt(l.unit)} each</div>
           <div class="qty">
-            <button onclick="chQty('${l.id}','${l.size}',-1)">&minus;</button>
+            <button onclick="chQty('${l.id}','${esc(l.size)}','${esc(l.color||"")}',-1)">&minus;</button>
             <input value="${l.qty}" readonly>
-            <button onclick="chQty('${l.id}','${l.size}',1)">+</button>
+            <button onclick="chQty('${l.id}','${esc(l.size)}','${esc(l.color||"")}',1)">+</button>
           </div>
         </div>
         <div class="ci-right">
           <div class="ci-price">${fmt(l.line)}</div>
-          <button class="rm" onclick="rmItem('${l.id}','${l.size}')">Remove</button>
+          <button class="rm" onclick="rmItem('${l.id}','${esc(l.size)}','${esc(l.color||"")}')">Remove</button>
         </div>
       </div>`).join("");
     const sub=cartTotal();
@@ -546,18 +582,18 @@ function setPay(v){
     ? 'I understand prices are estimates. I authorize this order to be charged to the card I have on file, at the total City Wide confirms and I approve. <span class="req">*</span>'
     : 'I understand prices are estimates, and I authorize this order to be settled by pay deduction. <span class="req">*</span>';
 }
-function chQty(id,size,d){
-  const c=cart.find(x=>x.id===id&&x.size===size);
+function chQty(id,size,color,d){
+  const c=cart.find(x=>x.id===id&&x.size===size&&(x.color||"")===(color||""));
   if(!c)return; c.qty+=d;
   if(c.qty<1)cart=cart.filter(x=>x!==c);
   saveCart();renderDrawer();
 }
-function rmItem(id,size){cart=cart.filter(x=>!(x.id===id&&x.size===size));saveCart();renderDrawer();}
+function rmItem(id,size,color){cart=cart.filter(x=>!(x.id===id&&x.size===size&&(x.color||"")===(color||"")));saveCart();renderDrawer();}
 
 // ---------- Submit ----------
 function orderText(info){
   const lines=cartLines().map(l=>
-    `${l.qty} x ${l.p.name}${l.size?" ["+l.size+"]":""} (SKU ${l.p.sku}) @ ${fmt(l.unit)} = ${fmt(l.line)} [${l.p.fulfillment}]`);
+    `${l.qty} x ${l.p.name}${l.spec?" ["+l.spec+"]":""} (SKU ${l.p.sku}${l.p.supplier_sku?" / Bennett "+l.p.supplier_sku:""}) @ ${fmt(l.unit)} = ${fmt(l.line)} [${l.p.fulfillment}]`);
   return [
     `VENDOR ORDER - ${new Date().toLocaleString()}`,
     `Name: ${info.name}`, `Company: ${info.company}`, `Email: ${info.email}`,
@@ -577,7 +613,7 @@ function logOrderToSheet(info){
       headers:{"Content-Type":"text/plain"},
       body:JSON.stringify({
         vendor:info, total:+cartTotal().toFixed(2),
-        items:cartLines().map(l=>({sku:l.p.sku,name:l.p.name,size:l.size,qty:l.qty,unit:l.unit})),
+        items:cartLines().map(l=>({sku:l.p.sku+(l.p.supplier_sku?" / Bennett "+l.p.supplier_sku:""),name:l.p.name,size:l.spec,qty:l.qty,unit:l.unit})),
       }),
     });
   }catch(e){ /* logging must never block an order */ }
@@ -605,7 +641,7 @@ async function submitOrder(){
           _subject:`Vendor Order: ${info.company} (${fmt(cartTotal())})`,
           _replyto:info.email,
           email:info.email, order:text,
-          items:cartLines().map(l=>({id:l.id,sku:l.p.sku,name:l.p.name,size:l.size,qty:l.qty,unit:l.unit,line:+l.line.toFixed(2)})),
+          items:cartLines().map(l=>({id:l.id,sku:l.p.sku,supplier_sku:l.p.supplier_sku,name:l.p.name,size:l.size,color:l.color||"",logo:l.p.logo||"",spec:l.spec,qty:l.qty,unit:l.unit,line:+l.line.toFixed(2)})),
           vendor:info, total:+cartTotal().toFixed(2),
         }),
       });
