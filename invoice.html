@@ -386,7 +386,7 @@ payment then lands on the following 10th.</p></div>
 <div class="f"><label>Email <span class="req">*</span></label><input id="up_email" type="email" placeholder="you@company.com"></div>
 <div class="f"><label>Phone</label><input id="up_phone" type="tel" placeholder="(702) 555-1234"></div>
 <div class="f"><label>Region <span class="req">*</span></label>
-<select id="up_region"><option>Las Vegas</option><option>Northern Nevada</option></select></div>
+<select id="up_region" required><option value="">Select your region</option><option value="Las Vegas">Las Vegas</option><option value="Northern Nevada">Northern Nevada (Reno, Sparks, Carson City)</option></select></div>
 </div>
 </div>
 
@@ -434,7 +434,7 @@ payment then lands on the following 10th.</p></div>
 <div class="f"><label>Email <span class="req">*</span></label><input id="email" type="email" placeholder="you@company.com"></div>
 <div class="f"><label>Phone</label><input id="phone" type="tel" placeholder="(702) 555-1234"></div>
 <div class="f"><label>Region <span class="req">*</span></label>
-<select id="region"><option>Las Vegas</option><option>Northern Nevada</option></select></div>
+<select id="region" required><option value="">Select your region</option><option value="Las Vegas">Las Vegas</option><option value="Northern Nevada">Northern Nevada (Reno, Sparks, Carson City)</option></select></div>
 <div class="f" style="grid-column:1/-1"><label>Your Logo (optional)</label>
 <input id="logo_file" type="file" accept="image/png,image/jpeg,image/webp">
 <span style="font-size:11.5px;color:#636466">This is your invoice to City Wide, so it carries
@@ -549,6 +549,7 @@ function submitUpload(){
   var em = v('up_email');
   if (!em || em.indexOf('@') < 1) return upFail('A valid email is required.');
   var region = v('up_region');
+  if (!region) return upFail('Pick your region: Las Vegas or Northern Nevada.');
   var month = v('up_month') + ' ' + v('up_year');
   var tot = Number(String(v('up_total')).replace(/[$,\s]/g, ''));
   if (!tot || isNaN(tot)) return upFail('Please enter the invoice total so Accounts Payable can match it.');
@@ -663,6 +664,7 @@ function submitInvoice(){
   if (!v('contact_name')) return fail('Your name is required.');
   var em = v('email');
   if (!em || em.indexOf('@') < 1) return fail('A valid email is required so we can send your confirmation copy.');
+  if (!v('region')) return fail('Pick your region: Las Vegas or Northern Nevada.');
   var lines = [];
   document.querySelectorAll('.line-row').forEach(function(r){
     var acct = r.querySelector('.li-acct').value.trim();
