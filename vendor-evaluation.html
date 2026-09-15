@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Vendor Evaluation | City Wide Vendor Hub</title>
+<meta name="description" content="Tell City Wide Facility Solutions what your crew does. One form, five minutes, and your services drive the work you hear about in Las Vegas and Northern Nevada.">
+<link rel="icon" href="favicon.ico" sizes="any"><link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png"><link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+<!-- build 2026-09-15a: native replacement for the Jotform Vendor Evaluation (260075886659069).
+     Static page. Nothing is fetched on load. One POST (kind vd_eval) on submit. -->
+<style>
+
+:root{
+  --cw-red:#D22730; --cw-red-dark:#B01F27; --cw-black:#2D2A26; --cw-grey:#636466;
+  --cw-white:#FFFFFF; --cw-light:#F5F5F5; --cw-border:#E5E5E5; --cw-teal:#0AA6A9;
+  --sp-xs:4px; --sp-sm:8px; --sp-md:16px; --sp-lg:24px; --sp-xl:32px; --sp-2xl:48px;
+  --radius:10px; --shadow:0 1px 3px rgba(45,42,38,.08),0 4px 14px rgba(45,42,38,.06);
+  --shadow-lift:0 4px 10px rgba(45,42,38,.10),0 10px 28px rgba(45,42,38,.10);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{font-family:Verdana,'Liberation Sans','DejaVu Sans',Geneva,Tahoma,sans-serif;
+  color:var(--cw-black);background:var(--cw-white);line-height:1.6;font-size:15px}
+img{max-width:100%;display:block}
+a{color:var(--cw-red);font-weight:700}
+a:hover{color:var(--cw-red-dark)}
+.wrap{max-width:1080px;margin:0 auto;padding:0 20px}
+.content-wrap{max-width:860px;margin:0 auto;padding:0 20px}
+
+/* ---------- header ---------- */
+.site-head{position:sticky;top:0;z-index:50;background:var(--cw-white);
+  border-bottom:1px solid var(--cw-border);box-shadow:0 1px 2px rgba(45,42,38,.05)}
+.site-head .bar{display:flex;align-items:center;gap:16px;height:64px}
+.site-head .bar>a:first-child{flex:none;display:block;line-height:0}
+.site-head img.logo{height:38px;width:auto;max-width:none;object-fit:contain}
+.site-head .site-name{font-size:13px;font-weight:700;color:var(--cw-grey);
+  border-left:2px solid var(--cw-border);padding-left:14px;letter-spacing:.02em;
+  text-transform:uppercase;white-space:nowrap}
+.site-head nav{margin-left:auto;display:flex;gap:4px;align-items:center}
+.site-head nav a{font-size:12.5px;font-weight:700;color:var(--cw-black);text-decoration:none;
+  padding:8px 10px;border-radius:6px;white-space:nowrap}
+.site-head nav a:hover{background:var(--cw-light);color:var(--cw-red)}
+.site-head nav a.active{color:var(--cw-red)}
+.site-head nav a.btn-order{background:var(--cw-red);color:#fff;padding:9px 16px}
+.site-head nav a.btn-order:hover{background:var(--cw-red-dark);color:#fff}
+.site-head nav a.nav-opps{color:var(--cw-red);position:relative}
+.site-head nav a.nav-opps::after{content:"";display:inline-block;width:7px;height:7px;
+  border-radius:50%;background:var(--cw-red);margin-left:6px;vertical-align:2px;
+  animation:oppPulse 2s infinite}
+@keyframes oppPulse{0%,100%{opacity:1}50%{opacity:.35}}
+.dd{position:relative}
+.dd>a.dd-label::after{content:" \25BE";font-size:10px;color:var(--cw-grey)}
+.dd-menu{display:none;position:absolute;top:100%;left:0;min-width:210px;background:#fff;
+  border:1px solid var(--cw-border);border-radius:10px;box-shadow:var(--shadow-lift);
+  padding:8px;z-index:60}
+.dd:hover .dd-menu,.dd:focus-within .dd-menu{display:block}
+.dd-menu a{display:block;padding:9px 12px;border-radius:6px;font-size:13px}
+.dd-menu .dd-head{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--cw-grey);padding:8px 12px 4px}
+.menu-toggle{display:none;margin-left:auto;background:none;border:1px solid var(--cw-border);
+  border-radius:6px;padding:8px 10px;cursor:pointer;font-size:16px;line-height:1;color:var(--cw-black)}
+@media(max-width:1080px){
+  .site-head .site-name{display:none}
+  .menu-toggle{display:block}
+  .site-head nav{display:none;position:absolute;top:64px;left:0;right:0;background:#fff;
+    flex-direction:column;align-items:stretch;padding:10px 16px 16px;gap:2px;
+    border-bottom:1px solid var(--cw-border);box-shadow:0 12px 24px rgba(45,42,38,.12)}
+  .site-head nav.open{display:flex}
+  .site-head nav a{padding:12px 10px;border-radius:8px}
+  .site-head nav a.btn-order{text-align:center;margin-top:8px}
+  .dd{display:contents}
+  .dd>a.dd-label{display:none}
+  .dd-menu{display:block;position:static;border:none;box-shadow:none;padding:0;min-width:0}
+  .dd-menu a{padding:12px 10px;font-size:13px}
+  .dd-menu .dd-head{padding:10px 10px 2px}
+}
+
+/* ---------- buttons ---------- */
+.btn{display:inline-flex;align-items:center;gap:8px;font-family:inherit;font-size:14px;
+  font-weight:700;text-decoration:none;border-radius:8px;padding:12px 20px;cursor:pointer;
+  border:2px solid transparent;transition:all .15s}
+.btn-red{background:var(--cw-red);color:#fff}
+.btn-red:hover{background:var(--cw-red-dark);color:#fff;transform:translateY(-1px);box-shadow:var(--shadow)}
+.btn-ghost{background:#fff;color:var(--cw-black);border-color:var(--cw-border)}
+.btn-ghost:hover{border-color:var(--cw-black);color:var(--cw-black)}
+.btn-pdf{background:#fff;color:var(--cw-red);border-color:var(--cw-red)}
+.btn-pdf:hover{background:var(--cw-red);color:#fff}
+.btn svg{flex:none}
+
+/* footer */
+.site-foot{margin-top:56px;background:var(--cw-black);color:#cfcdca;padding:34px 0 30px;font-size:13px}
+.site-foot .cols{display:flex;flex-wrap:wrap;gap:24px;justify-content:space-between;align-items:center}
+.site-foot a{color:#fff;text-decoration:none}
+.site-foot a:hover{color:#fff;text-decoration:underline}
+.site-foot .fine{margin-top:14px;font-size:11.5px;color:#8b8985}
+.next-link{display:flex;justify-content:space-between;gap:12px;margin:44px 0 10px;flex-wrap:wrap}
+
+/* ---------- page ---------- */
+.ev-hero{background:var(--cw-black);color:#fff;padding:40px 0 34px}
+.ev-hero h1{font-size:28px;line-height:1.2;margin:6px 0 10px}
+.ev-hero p{color:#cfcdca;max-width:720px;font-size:15px}
+.ev-hero .kick{font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#ff8a90}
+.ev-wrap{max-width:860px;margin:0 auto;padding:22px 20px 0}
+.card{background:#fff;border:1px solid var(--cw-border);border-radius:var(--radius);box-shadow:var(--shadow);padding:22px 22px 20px;margin-bottom:18px}
+.card h2{font-size:17px;margin:0 0 4px}
+.card .lead{color:var(--cw-grey);font-size:13.5px;margin:0 0 16px}
+.step{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--cw-red);margin-bottom:6px}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:12px 16px}
+.row .full{grid-column:1/-1}
+@media(max-width:640px){.row{grid-template-columns:1fr}}
+label.f{display:block;font-size:12.5px;font-weight:700;color:var(--cw-black)}
+label.f small{font-weight:400;color:var(--cw-grey)}
+.f input,.f textarea,.f select{display:block;width:100%;margin-top:5px;font:inherit;font-size:15px;padding:10px 12px;border:1px solid #cfcdca;border-radius:8px;background:#fff;color:var(--cw-black)}
+.f textarea{min-height:92px;resize:vertical}
+.f input:focus,.f textarea:focus,.f select:focus{outline:none;border-color:var(--cw-red);box-shadow:0 0 0 3px rgba(210,39,48,.12)}
+.req::after{content:" *";color:var(--cw-red)}
+/* region cards */
+.regions{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:640px){.regions{grid-template-columns:1fr}}
+.rg{text-align:left;font:inherit;background:#fff;border:2px solid var(--cw-border);border-radius:10px;padding:16px 16px 14px;cursor:pointer;transition:border-color .12s,box-shadow .12s}
+.rg:hover{border-color:var(--cw-black)}
+.rg.on{border-color:var(--cw-red);box-shadow:0 0 0 3px rgba(210,39,48,.12)}
+.rg h3{font-size:16px;margin:0 0 4px}
+.rg p{font-size:13px;color:var(--cw-grey);margin:0;line-height:1.5}
+.rg p b{color:var(--cw-black)}
+.rg.both{grid-column:1/-1;border-style:dashed}
+.rg .no{display:block;margin-top:8px;font-size:12px;color:var(--cw-red);font-weight:700}
+.warn{display:none;margin-top:12px;background:#FFF4F4;border-left:4px solid var(--cw-red);padding:12px 14px;border-radius:0 8px 8px 0;font-size:13.5px}
+.warn.show{display:block}
+.warn b{color:var(--cw-red)}
+.note{background:var(--cw-light);border-left:4px solid var(--cw-teal);padding:12px 14px;border-radius:0 8px 8px 0;font-size:13.5px;margin-top:14px}
+/* checklist */
+.grp{border:1px solid var(--cw-border);border-radius:10px;margin-bottom:10px;background:#fff}
+.grp summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:12px;padding:14px 16px;font-weight:700}
+.grp summary::-webkit-details-marker{display:none}
+.grp summary::before{content:"";width:9px;height:9px;border-right:2px solid var(--cw-black);border-bottom:2px solid var(--cw-black);transform:rotate(-45deg);transition:transform .15s;flex:none}
+.grp[open] summary::before{transform:rotate(45deg)}
+.grp .gt{font-size:15px}
+.grp .gs{font-weight:400;font-size:12.5px;color:var(--cw-grey);flex:1}
+.grp .gc{font-size:12px;color:#fff;background:var(--cw-red);border-radius:999px;padding:2px 9px;display:none}
+.grp .gc.on{display:inline-block}
+.opts{display:grid;grid-template-columns:1fr 1fr;gap:2px 14px;padding:4px 14px 14px}
+@media(max-width:640px){.opts{grid-template-columns:1fr}.grp .gs{display:none}}
+.opt{display:flex;align-items:flex-start;gap:9px;padding:7px 6px;border-radius:6px;font-size:13.5px;cursor:pointer;line-height:1.35}
+.opt:hover{background:var(--cw-light)}
+.opt input{width:17px;height:17px;margin:1px 0 0;accent-color:var(--cw-red);flex:none}
+.picked{font-size:13px;color:var(--cw-grey);margin-top:8px}
+.picked b{color:var(--cw-black)}
+/* yes/no */
+.yn{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:10px 0;border-bottom:1px solid var(--cw-border);font-size:14px}
+.yn:last-child{border-bottom:none}
+.pills{display:flex;gap:6px;flex:none}
+.pills button{font:inherit;font-size:13px;font-weight:700;padding:7px 16px;border-radius:999px;border:1.5px solid #cfcdca;background:#fff;cursor:pointer;color:var(--cw-black)}
+.pills button.on{background:var(--cw-black);border-color:var(--cw-black);color:#fff}
+.pills button.on[data-v="Yes"]{background:var(--cw-red);border-color:var(--cw-red)}
+/* submit */
+.submitbar{display:flex;flex-wrap:wrap;align-items:center;gap:14px;margin:6px 0 0}
+.submitbar .btn{font-size:15px;padding:14px 26px}
+.submitbar .btn[disabled]{opacity:.6;cursor:wait;transform:none}
+.err{display:none;background:#FFF4F4;border:1px solid #f3c4c7;color:#8a1d23;padding:12px 14px;border-radius:8px;font-size:13.5px;margin-top:12px}
+.err.show{display:block}
+.done{display:none;text-align:center;padding:44px 20px}
+.done.show{display:block}
+.done .tick{width:64px;height:64px;border-radius:50%;background:var(--cw-red);color:#fff;font-size:34px;line-height:64px;margin:0 auto 16px;font-weight:700}
+.done h2{font-size:24px;margin:0 0 8px}
+.done p{color:var(--cw-grey);max-width:560px;margin:0 auto 10px;font-size:15px}
+.done .acts{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:20px}
+.hp{position:absolute;left:-5000px;top:0;height:0;overflow:hidden}
+.saved{font-size:12px;color:var(--cw-grey)}
+</style></head>
+<body>
+<header class="site-head"><div class="wrap bar"><a href="index.html"><img class="logo" src="https://emailer.emfluence.com/clients/citywide/uploadedfiles/signature_logo.png" alt="City Wide Facility Solutions"></a><button class="menu-toggle" aria-label="Menu">&#9776;</button><nav><a href="index.html">Home</a><a href="opportunities.html" class="nav-opps">Open Opportunities</a><div class="dd"><a class="dd-label" href="new-vendors.html">New Vendors</a><div class="dd-menu"><a href="new-vendors.html?region=lv">Las Vegas</a><a href="new-vendors.html?region=nnv">Northern Nevada</a></div></div><div class="dd"><a class="dd-label" href="#" onclick="return false;">Guides</a><div class="dd-menu"><div class="dd-head">Crew Guides</div><a href="planner.html">New Building Planner</a><a href="workloading.html">Workloading & Crew Sizing</a><a href="equipment.html">Choosing Your Equipment</a><a href="color-coding.html">Color Coding System</a><a href="medical.html">Medical Facility Cleaning</a><a href="cleanroom.html">Clean Room Cleaning</a><a href="gmp.html">GMP & Food Facility Cleaning</a></div></div><div class="dd"><a class="dd-label" href="invoice.html">Invoices &amp; Paperwork</a><div class="dd-menu"><div class="dd-head">Get Paid</div><a href="invoice.html">Submit Your Monthly Invoice</a><div class="dd-head">Orders</div><a href="building-supplies.html">Order Building Supplies</a><a href="shop/">Shop Supplies &amp; Uniforms</a><a href="card-authorization.html">Pay by Credit Card</a><div class="dd-head">Paperwork</div><a href="cleaner-roster.html">Add or Remove a Cleaner</a><a href="upload.html">Upload Insurance &amp; Compliance Docs</a><a href="profile-update.html">Update Your Company Profile</a><a href="work-order.html">Maintenance Work Ticket</a><a href="https://form.asana.com/?k=FRCnQmbTGjAVPieFt4bnWQ&amp;d=13140959242873" target="_blank" rel="noopener">Background Check &amp; Name Badge</a><a href="https://www.onlinecprcertification.net/bloodborne-pathogens-training-certification.php" target="_blank" rel="noopener">Bloodborne Pathogens Certification</a></div></div><div class="dd"><a class="dd-label" href="index.html#recognition">Recognition</a><div class="dd-menu"><a href="index.html#recognition">Vendor of the Month Wall</a><div class="dd-head">Nominate</div><a href="nominate.html">Nominate a Vendor of the Month</a><a href="nominate.html?type=goat">Nominate a City Wide G.O.A.T.</a></div></div>
+<a class="btn-order" href="shop/">Order Supplies</a></nav></div></header>
+<script src="nav.js" defer></script>
+<script src="https://citywidelv.github.io/cw-ops-desk/cw-nav.js" defer onload="if(window.CWNav)CWNav.vendor()"></script>
+
+<section class="ev-hero"><div class="ev-wrap" style="padding-top:0">
+<div class="kick">Vendor Evaluation</div>
+<h1>Tell Us What Your Crew Does</h1>
+<p>One form, about five minutes. The services you pick are what we use to reach out when work opens that matches your crew. Fill it out once; you can send it again any time your services change.</p>
+</div></section>
+
+<form id="ev" class="ev-wrap" novalidate autocomplete="on">
+<div class="hp" aria-hidden="true"><label>Company fax<input type="text" name="company_fax" tabindex="-1" autocomplete="off"></label></div>
+
+<!-- 1 region -->
+<div class="card" id="cRegion">
+<div class="step">Step 1 of 5</div>
+<h2>Where does your crew work?</h2>
+<p class="lead">City Wide runs two separate offices in Nevada. Pick the one your crew can actually show up for.</p>
+<div class="regions">
+<button type="button" class="rg" data-region="Las Vegas"><h3>Las Vegas and Southern Nevada</h3><p><b>Las Vegas, North Las Vegas, Henderson, Summerlin, Boulder City, Pahrump.</b><br>Served from our Las Vegas office.</p><span class="no">North Las Vegas is here, not in Northern Nevada.</span></button>
+<button type="button" class="rg" data-region="Northern Nevada"><h3>Northern Nevada</h3><p><b>Reno, Sparks, Carson City, Minden, Gardnerville, Fernley, Lake Tahoe.</b><br>Served from our Reno office, 440 miles north of Las Vegas.</p><span class="no">Not North Las Vegas.</span></button>
+<button type="button" class="rg both" data-region="Both"><h3>Both offices</h3><p>Only if your crew is set up to work in <b>both Las Vegas and Reno</b>, with people in each city. Most crews should pick one.</p></button>
+</div>
+<div class="warn" id="regionWarn"></div>
+<div class="row" style="margin-top:14px"><label class="f full">Which cities does your crew work in? <small>List them so we can match you to the right buildings.</small><input type="text" name="metro_areas" placeholder="Example: Henderson, Las Vegas, North Las Vegas"></label></div>
+</div>
+
+<!-- 2 contact + business -->
+<div class="card">
+<div class="step">Step 2 of 5</div>
+<h2>Your business</h2>
+<div class="row">
+<label class="f"><span class="req">Business name (DBA)</span><input type="text" name="dba_name" required autocomplete="organization"></label>
+<label class="f">Legal name <small>if different, as it appears on your W-9</small><input type="text" name="legal_name"></label>
+<label class="f"><span class="req">Your name</span><input type="text" name="contact_name" required autocomplete="name"></label>
+<label class="f"><span class="req">Email</span><input type="email" name="email" required autocomplete="email" inputmode="email"></label>
+<label class="f"><span class="req">Mobile phone</span><input type="tel" name="phone" required autocomplete="tel" inputmode="tel"></label>
+<label class="f">Business phone <small>if different</small><input type="tel" name="business_phone" inputmode="tel"></label>
+<label class="f full"><span class="req">Business address</span><input type="text" name="business_address" required autocomplete="street-address" placeholder="Street, city, state, zip"></label>
+<label class="f">Website<input type="url" name="website" placeholder="https://" inputmode="url"></label>
+<label class="f">Years in business<input type="text" name="years_in_business" inputmode="numeric"></label>
+<label class="f">Nevada business license or contractor license number<input type="text" name="license_no"></label>
+</div>
+</div>
+
+<!-- 3 services -->
+<div class="card" id="cServices">
+<div class="step">Step 3 of 5</div>
+<h2>What can your crew do without subcontracting?</h2>
+<p class="lead">Check everything that applies. Only pick work your own people perform. 178 services in five groups; open a group to see them.</p>
+<details class="grp" open><summary><span class="gt">Janitorial and Cleaning Services</span><span class="gs">Nightly janitorial, day porter, deep cleans, specialty cleaning.</span><span class="gc" data-count></span></summary><div class="opts">
+<label class="opt"><input type="checkbox" name="svc" value="Nightly or recurring janitorial" data-slugs="janitorial"><span>Nightly or recurring janitorial</span></label>
+<label class="opt"><input type="checkbox" name="svc" value="Day porter or matron service" data-slugs="janitorial"><span>Day porter or matron service</span></label>
+<label class="opt"><input type="checkbox" name="svc" value="General office cleaning" data-slugs="janitorial"><span>General office cleaning</span></label>
+<label class="opt"><input type="checkbox" name="svc" value="Restroom deep cleaning and disinfection" data-slugs="janitorial"><span>Restroom deep cleaning and disinfection</span></label>
+<label class="opt"><input type="checkbox" name="svc" value="Disinfection or electrostatic fogging" data-slugs="janitorial"><span>Disinfection or electrostatic fogging</span></label>
+<label class="opt"><input type="checkbox" name="svc" value="Construction cleanup (rough clean)" data-slugs="janitorial"><span>Construction cleanup (rough clean)</span></label>
+<label class="opt"><input type="checkbox" name="svc" value="Post-construction final detail clean" data-slugs="janitorial"><span>Post-construction final detail clean</span></label>
+<label class="opt"><input type="checkbox" name="svc" value="Move-in or move-out cleaning" data-slugs="janitorial"><span>Move-in or move-out cleaning</span></label>
+<label class="opt"><input type="checkbox" name="svc" value="Make-ready or turnover cleaning" data-slugs="janitorial"><span>Make-ready or turnover cleaning</span></label>
+<label class="opt"><input type="checkbox" name="svc" value="Kitchen or commissary deep cleaning" data-slugs="janitorial"><span>Kitchen or commissary deep cleaning</span></label>
+<label class="opt"><input type="checkbox" name="svc" value="Kitchen hood and exhaust duct cleaning" data-slugs="janitorial"><span>Kitchen hood and exhaust duct cleaning</span></label>
+<label class="opt"><input type="checkbox" name="svc" value="Trash-out, junk removal and hauling" data-slugs="waste"><span>Trash-out, junk removal and hauling</span></label>
+<label class="opt"><input type="checkbox" name="svc" value="Warehouse cleaning and ride-on scrubbing" data-slugs="janitorial,floor-care"><span>Warehouse cleaning and ride-on scrubbing</span></label>
+<label class="opt"><input type="checkbox" name="svc" value="Medical or clinical facility cleaning" data-slugs="janitorial"><span>Medical or clinical facility cleaning</span></label>
+<label class="opt"><input type="checkbox" name="svc" value="Biohazard or bloodborne pathogen cleanup" data-slugs="restoration"><span>Biohazard or bloodborne pathogen cleanup</span></label>
+<label class="opt"><input type="checkbox" name="svc" value="Janitorial supply and consumables stocking" data-slugs="janitorial"><span>Janitorial supply and consumables stocking</span></label>
+<label class="opt"><input type="checkbox" name="svc" value="Green or eco-friendly cleaning" data-slugs="janitorial"><span>Green or eco-friendly cleaning</span></label>
+<label class="opt"><input type="checkbox" name="svc" value="High dusting and wall washing" data-slugs="janitorial"><span>High dusting and wall washing</span></label>
+<label class="opt"><input type="checkbox" name="svc" value="Light fixture and air vent cleaning" data-slugs="janitorial"><span>Light fixture and air vent cleaning</span></label>
+<label class="opt"><input type="checkbox" name="svc" value="Window blind cleaning" data-slugs="janitorial"><span>Window blind cleaning</span></label>
+<label class="opt"><input type="checkbox" name="svc" value="Entrance mat and floor mat service" data-slugs="janitorial"><span>Entrance mat and floor mat service</span></label>
+<label class="opt"><input type="checkbox" name="svc" value="Gym or fitness facility cleaning" data-slugs="janitorial"><span>Gym or fitness facility cleaning</span></label>
+<label class="opt"><input type="checkbox" name="svc" value="School or educational facility cleaning" data-slugs="janitorial"><span>School or educational facility cleaning</span></label>
+<label class="opt"><input type="checkbox" name="svc" value="Church or place of worship cleaning" data-slugs="janitorial"><span>Church or place of worship cleaning</span></label>
+<label class="opt"><input type="checkbox" name="svc" value="Event and post-event cleaning" data-slugs="janitorial"><span>Event and post-event cleaning</span></label>
+<label class="opt"><input type="checkbox" name="svc" value="Cleanroom or data center cleaning" data-slugs="janitorial"><span>Cleanroom or data center cleaning</span></label>
+<label class="opt"><input type="checkbox" name="svc" value="Cold storage or freezer cleaning" data-slugs="janitorial"><span>Cold storage or freezer cleaning</span></label>
+<label class="opt"><input type="checkbox" name="svc" value="Cannabis facility cleaning" data-slugs="janitorial"><span>Cannabis facility cleaning</span></label>
+<label class="opt"><input type="checkbox" name="svc" value="Recycling collection and waste removal" data-slugs="waste"><span>Recycling collection and waste removal</span></label>
+<label class="opt"><input type="checkbox" name="svc" value="Restroom hygiene and sanitary bin service" data-slugs="janitorial"><span>Restroom hygiene and sanitary bin service</span></label>
+<label class="opt"><input type="checkbox" name="svc" value="Pressure washing (interior hard surfaces)" data-slugs="pressure-washing"><span>Pressure washing (interior hard surfaces)</span></label>
+</div></details>
+<details class="grp" ><summary><span class="gt">Floor and Surface Care</span><span class="gs">Carpet, hard floor, stone, coatings.</span><span class="gc" data-count></span></summary><div class="opts">
+<label class="opt"><input type="checkbox" name="svc" value="Carpet cleaning: hot water extraction (steam)" data-slugs="floor-care"><span>Carpet cleaning: hot water extraction (steam)</span></label>
+<label class="opt"><input type="checkbox" name="svc" value="Carpet cleaning: encapsulation" data-slugs="floor-care"><span>Carpet cleaning: encapsulation</span></label>
+<label class="opt"><input type="checkbox" name="svc" value="Carpet cleaning: bonnet" data-slugs="floor-care"><span>Carpet cleaning: bonnet</span></label>
+<label class="opt"><input type="checkbox" name="svc" value="Carpet cleaning: low moisture" data-slugs="floor-care"><span>Carpet cleaning: low moisture</span></label>
+<label class="opt"><input type="checkbox" name="svc" value="Carpet cleaning: dry compound / dry powder" data-slugs="floor-care"><span>Carpet cleaning: dry compound / dry powder</span></label>
+<label class="opt"><input type="checkbox" name="svc" value="Carpet cleaning: shampoo" data-slugs="floor-care"><span>Carpet cleaning: shampoo</span></label>
+<label class="opt"><input type="checkbox" name="svc" value="Carpet spot and stain treatment" data-slugs="floor-care"><span>Carpet spot and stain treatment</span></label>
+<label class="opt"><input type="checkbox" name="svc" value="Carpet protector / stain guard application" data-slugs="floor-care"><span>Carpet protector / stain guard application</span></label>
+<label class="opt"><input type="checkbox" name="svc" value="Carpet deodorizing and pet odor treatment" data-slugs="floor-care"><span>Carpet deodorizing and pet odor treatment</span></label>
+<label class="opt"><input type="checkbox" name="svc" value="Carpet repair and re-stretching" data-slugs="floor-care"><span>Carpet repair and re-stretching</span></label>
+<label class="opt"><input type="checkbox" name="svc" value="Area rug cleaning" data-slugs="floor-care"><span>Area rug cleaning</span></label>
+<label class="opt"><input type="checkbox" name="svc" value="Upholstery and fabric panel cleaning" data-slugs="floor-care"><span>Upholstery and fabric panel cleaning</span></label>
+<label class="opt"><input type="checkbox" name="svc" value="Strip and wax / VCT refinishing" data-slugs="floor-care"><span>Strip and wax / VCT refinishing</span></label>
+<label class="opt"><input type="checkbox" name="svc" value="Deep scrub and recoat (top scrub)" data-slugs="floor-care"><span>Deep scrub and recoat (top scrub)</span></label>
+<label class="opt"><input type="checkbox" name="svc" value="Spray buff" data-slugs="floor-care"><span>Spray buff</span></label>
+<label class="opt"><input type="checkbox" name="svc" value="Side-by-side / dual buffer service" data-slugs="floor-care"><span>Side-by-side / dual buffer service</span></label>
+<label class="opt"><input type="checkbox" name="svc" value="Dry buffing and dust mopping" data-slugs="floor-care"><span>Dry buffing and dust mopping</span></label>
+<label class="opt"><input type="checkbox" name="svc" value="Floor burnishing (high-speed)" data-slugs="floor-care"><span>Floor burnishing (high-speed)</span></label>
+<label class="opt"><input type="checkbox" name="svc" value="Floor buffing (low-speed)" data-slugs="floor-care"><span>Floor buffing (low-speed)</span></label>
+<label class="opt"><input type="checkbox" name="svc" value="Floor machine scrubbing" data-slugs="floor-care"><span>Floor machine scrubbing</span></label>
+<label class="opt"><input type="checkbox" name="svc" value="Auto scrubber (walk-behind)" data-slugs="floor-care"><span>Auto scrubber (walk-behind)</span></label>
+<label class="opt"><input type="checkbox" name="svc" value="Auto scrubber (ride-on)" data-slugs="floor-care"><span>Auto scrubber (ride-on)</span></label>
+<label class="opt"><input type="checkbox" name="svc" value="Tile and grout cleaning and sealing" data-slugs="floor-care"><span>Tile and grout cleaning and sealing</span></label>
+<label class="opt"><input type="checkbox" name="svc" value="Concrete polishing, sealing or staining" data-slugs="floor-care"><span>Concrete polishing, sealing or staining</span></label>
+<label class="opt"><input type="checkbox" name="svc" value="Hardwood floor refinishing" data-slugs="floor-care"><span>Hardwood floor refinishing</span></label>
+<label class="opt"><input type="checkbox" name="svc" value="Marble, terrazzo or natural stone restoration" data-slugs="floor-care"><span>Marble, terrazzo or natural stone restoration</span></label>
+<label class="opt"><input type="checkbox" name="svc" value="Epoxy or resinous floor coating" data-slugs="floor-care"><span>Epoxy or resinous floor coating</span></label>
+<label class="opt"><input type="checkbox" name="svc" value="Anti-slip floor treatment" data-slugs="floor-care"><span>Anti-slip floor treatment</span></label>
+<label class="opt"><input type="checkbox" name="svc" value="Flooring installation or replacement" data-slugs="construction"><span>Flooring installation or replacement</span></label>
+</div></details>
+<details class="grp" ><summary><span class="gt">Building Maintenance and Skilled Trades</span><span class="gs">Handyman, plumbing, electrical, HVAC, doors, construction.</span><span class="gc" data-count></span></summary><div class="opts">
+<label class="opt"><input type="checkbox" name="svc" value="General handyman and punch list work" data-slugs="handyman"><span>General handyman and punch list work</span></label>
+<label class="opt"><input type="checkbox" name="svc" value="Scheduled preventive maintenance programs" data-slugs="handyman"><span>Scheduled preventive maintenance programs</span></label>
+<label class="opt"><input type="checkbox" name="svc" value="Emergency or after-hours call-out service" data-slugs="handyman"><span>Emergency or after-hours call-out service</span></label>
+<label class="opt"><input type="checkbox" name="svc" value="Drywall repair, patching and texture" data-slugs="handyman,painting"><span>Drywall repair, patching and texture</span></label>
+<label class="opt"><input type="checkbox" name="svc" value="Interior painting" data-slugs="painting"><span>Interior painting</span></label>
+<label class="opt"><input type="checkbox" name="svc" value="Exterior painting" data-slugs="painting"><span>Exterior painting</span></label>
+<label class="opt"><input type="checkbox" name="svc" value="Wall covering and wallpaper" data-slugs="painting"><span>Wall covering and wallpaper</span></label>
+<label class="opt"><input type="checkbox" name="svc" value="Plumbing repair and service" data-slugs="plumbing"><span>Plumbing repair and service</span></label>
+<label class="opt"><input type="checkbox" name="svc" value="Drain cleaning and hydro jetting" data-slugs="plumbing"><span>Drain cleaning and hydro jetting</span></label>
+<label class="opt"><input type="checkbox" name="svc" value="Water heater and boiler service" data-slugs="plumbing"><span>Water heater and boiler service</span></label>
+<label class="opt"><input type="checkbox" name="svc" value="Backflow testing and certification" data-slugs="plumbing"><span>Backflow testing and certification</span></label>
+<label class="opt"><input type="checkbox" name="svc" value="Grease trap and interceptor cleaning" data-slugs="plumbing"><span>Grease trap and interceptor cleaning</span></label>
+<label class="opt"><input type="checkbox" name="svc" value="Septic system pumping and service" data-slugs="plumbing"><span>Septic system pumping and service</span></label>
+<label class="opt"><input type="checkbox" name="svc" value="Electrical repair and service" data-slugs="electrical"><span>Electrical repair and service</span></label>
+<label class="opt"><input type="checkbox" name="svc" value="Lighting retrofits, lamp and ballast replacement" data-slugs="electrical"><span>Lighting retrofits, lamp and ballast replacement</span></label>
+<label class="opt"><input type="checkbox" name="svc" value="Low-voltage and structured data cabling" data-slugs="electrical"><span>Low-voltage and structured data cabling</span></label>
+<label class="opt"><input type="checkbox" name="svc" value="Audio-visual system installation" data-slugs="electrical"><span>Audio-visual system installation</span></label>
+<label class="opt"><input type="checkbox" name="svc" value="Solar panel installation" data-slugs="electrical"><span>Solar panel installation</span></label>
+<label class="opt"><input type="checkbox" name="svc" value="Security camera and CCTV installation" data-slugs="security,electrical"><span>Security camera and CCTV installation</span></label>
+<label class="opt"><input type="checkbox" name="svc" value="Alarm and access control systems" data-slugs="security"><span>Alarm and access control systems</span></label>
+<label class="opt"><input type="checkbox" name="svc" value="HVAC service and repair" data-slugs="hvac"><span>HVAC service and repair</span></label>
+<label class="opt"><input type="checkbox" name="svc" value="HVAC filter changes and preventive maintenance" data-slugs="hvac"><span>HVAC filter changes and preventive maintenance</span></label>
+<label class="opt"><input type="checkbox" name="svc" value="Commercial refrigeration" data-slugs="hvac"><span>Commercial refrigeration</span></label>
+<label class="opt"><input type="checkbox" name="svc" value="Carpentry, millwork and cabinetry" data-slugs="construction"><span>Carpentry, millwork and cabinetry</span></label>
+<label class="opt"><input type="checkbox" name="svc" value="Door, frame and hardware repair (including ADA closers)" data-slugs="doors-locks"><span>Door, frame and hardware repair (including ADA closers)</span></label>
+<label class="opt"><input type="checkbox" name="svc" value="Locksmith and access control" data-slugs="doors-locks"><span>Locksmith and access control</span></label>
+<label class="opt"><input type="checkbox" name="svc" value="Overhead and roll-up door service" data-slugs="doors-locks"><span>Overhead and roll-up door service</span></label>
+<label class="opt"><input type="checkbox" name="svc" value="Glass, glazing and window replacement" data-slugs="glass"><span>Glass, glazing and window replacement</span></label>
+<label class="opt"><input type="checkbox" name="svc" value="Window tinting and security film" data-slugs="glass"><span>Window tinting and security film</span></label>
+<label class="opt"><input type="checkbox" name="svc" value="Ceiling tile and grid repair" data-slugs="handyman"><span>Ceiling tile and grid repair</span></label>
+<label class="opt"><input type="checkbox" name="svc" value="Appliance repair" data-slugs="handyman"><span>Appliance repair</span></label>
+<label class="opt"><input type="checkbox" name="svc" value="Blinds, shades and window treatment installation" data-slugs="handyman"><span>Blinds, shades and window treatment installation</span></label>
+<label class="opt"><input type="checkbox" name="svc" value="Furniture assembly, installation and reconfiguration" data-slugs="handyman,moving"><span>Furniture assembly, installation and reconfiguration</span></label>
+<label class="opt"><input type="checkbox" name="svc" value="Welding and metal fabrication" data-slugs="welding"><span>Welding and metal fabrication</span></label>
+<label class="opt"><input type="checkbox" name="svc" value="Metal railing and handrail installation" data-slugs="welding"><span>Metal railing and handrail installation</span></label>
+<label class="opt"><input type="checkbox" name="svc" value="Roofing repair and maintenance" data-slugs="roofing"><span>Roofing repair and maintenance</span></label>
+<label class="opt"><input type="checkbox" name="svc" value="Waterproofing, caulking and sealants" data-slugs="roofing"><span>Waterproofing, caulking and sealants</span></label>
+<label class="opt"><input type="checkbox" name="svc" value="Fire sprinkler, fire alarm or extinguisher service" data-slugs="handyman"><span>Fire sprinkler, fire alarm or extinguisher service</span></label>
+<label class="opt"><input type="checkbox" name="svc" value="Pest control" data-slugs="pest-control"><span>Pest control</span></label>
+<label class="opt"><input type="checkbox" name="svc" value="Fencing, gates and gate operators" data-slugs="fencing"><span>Fencing, gates and gate operators</span></label>
+<label class="opt"><input type="checkbox" name="svc" value="Signage installation and repair" data-slugs="signage"><span>Signage installation and repair</span></label>
+<label class="opt"><input type="checkbox" name="svc" value="General construction and remodeling" data-slugs="construction"><span>General construction and remodeling</span></label>
+<label class="opt"><input type="checkbox" name="svc" value="General contracting" data-slugs="construction"><span>General contracting</span></label>
+<label class="opt"><input type="checkbox" name="svc" value="Tenant improvement and build-out" data-slugs="construction"><span>Tenant improvement and build-out</span></label>
+<label class="opt"><input type="checkbox" name="svc" value="Framing and rough carpentry" data-slugs="construction"><span>Framing and rough carpentry</span></label>
+<label class="opt"><input type="checkbox" name="svc" value="Masonry, brick and block work" data-slugs="construction"><span>Masonry, brick and block work</span></label>
+<label class="opt"><input type="checkbox" name="svc" value="Insulation installation" data-slugs="construction"><span>Insulation installation</span></label>
+<label class="opt"><input type="checkbox" name="svc" value="Elevator and escalator maintenance" data-slugs="handyman"><span>Elevator and escalator maintenance</span></label>
+</div></details>
+<details class="grp" ><summary><span class="gt">Exterior and Grounds</span><span class="gs">Landscaping, parking lots, pressure washing, windows, snow.</span><span class="gc" data-count></span></summary><div class="opts">
+<label class="opt"><input type="checkbox" name="svc" value="Landscaping and grounds maintenance" data-slugs="landscaping"><span>Landscaping and grounds maintenance</span></label>
+<label class="opt"><input type="checkbox" name="svc" value="Landscape design and installation" data-slugs="landscaping"><span>Landscape design and installation</span></label>
+<label class="opt"><input type="checkbox" name="svc" value="Irrigation install, repair and backflow testing" data-slugs="landscaping"><span>Irrigation install, repair and backflow testing</span></label>
+<label class="opt"><input type="checkbox" name="svc" value="Certified arborist and tree care (trimming, removal, health)" data-slugs="landscaping"><span>Certified arborist and tree care (trimming, removal, health)</span></label>
+<label class="opt"><input type="checkbox" name="svc" value="Palm tree trimming" data-slugs="landscaping"><span>Palm tree trimming</span></label>
+<label class="opt"><input type="checkbox" name="svc" value="Weed abatement and spraying" data-slugs="landscaping"><span>Weed abatement and spraying</span></label>
+<label class="opt"><input type="checkbox" name="svc" value="Desert landscaping, xeriscape, rock and gravel" data-slugs="landscaping"><span>Desert landscaping, xeriscape, rock and gravel</span></label>
+<label class="opt"><input type="checkbox" name="svc" value="Artificial turf install and maintenance" data-slugs="landscaping"><span>Artificial turf install and maintenance</span></label>
+<label class="opt"><input type="checkbox" name="svc" value="Playground and sports court maintenance" data-slugs="landscaping"><span>Playground and sports court maintenance</span></label>
+<label class="opt"><input type="checkbox" name="svc" value="Retention and detention pond maintenance" data-slugs="landscaping"><span>Retention and detention pond maintenance</span></label>
+<label class="opt"><input type="checkbox" name="svc" value="Erosion and dust control" data-slugs="landscaping"><span>Erosion and dust control</span></label>
+<label class="opt"><input type="checkbox" name="svc" value="Parking lot sweeping and power sweeping" data-slugs="parking-lot"><span>Parking lot sweeping and power sweeping</span></label>
+<label class="opt"><input type="checkbox" name="svc" value="Parking lot striping and pavement markings" data-slugs="parking-lot"><span>Parking lot striping and pavement markings</span></label>
+<label class="opt"><input type="checkbox" name="svc" value="Asphalt repair, seal coating and paving" data-slugs="parking-lot"><span>Asphalt repair, seal coating and paving</span></label>
+<label class="opt"><input type="checkbox" name="svc" value="Concrete repair, sidewalks and curbs" data-slugs="construction"><span>Concrete repair, sidewalks and curbs</span></label>
+<label class="opt"><input type="checkbox" name="svc" value="Pressure washing and power washing" data-slugs="pressure-washing"><span>Pressure washing and power washing</span></label>
+<label class="opt"><input type="checkbox" name="svc" value="Awning and canopy cleaning" data-slugs="pressure-washing"><span>Awning and canopy cleaning</span></label>
+<label class="opt"><input type="checkbox" name="svc" value="Graffiti removal" data-slugs="pressure-washing"><span>Graffiti removal</span></label>
+<label class="opt"><input type="checkbox" name="svc" value="Dumpster and trash enclosure cleaning" data-slugs="pressure-washing"><span>Dumpster and trash enclosure cleaning</span></label>
+<label class="opt"><input type="checkbox" name="svc" value="Exterior building and facade cleaning" data-slugs="pressure-washing"><span>Exterior building and facade cleaning</span></label>
+<label class="opt"><input type="checkbox" name="svc" value="Roof cleaning and moss removal" data-slugs="pressure-washing,roofing"><span>Roof cleaning and moss removal</span></label>
+<label class="opt"><input type="checkbox" name="svc" value="Window cleaning (ground level or interior)" data-slugs="window-cleaning"><span>Window cleaning (ground level or interior)</span></label>
+<label class="opt"><input type="checkbox" name="svc" value="High rise window cleaning (rope access or lift)" data-slugs="window-cleaning"><span>High rise window cleaning (rope access or lift)</span></label>
+<label class="opt"><input type="checkbox" name="svc" value="Solar panel cleaning" data-slugs="window-cleaning"><span>Solar panel cleaning</span></label>
+<label class="opt"><input type="checkbox" name="svc" value="Snow and ice removal (Northern Nevada)" data-slugs="snow-removal"><span>Snow and ice removal (Northern Nevada)</span></label>
+<label class="opt"><input type="checkbox" name="svc" value="Gutter cleaning and repair" data-slugs="roofing"><span>Gutter cleaning and repair</span></label>
+<label class="opt"><input type="checkbox" name="svc" value="Bird control, netting and deterrents" data-slugs="pest-control"><span>Bird control, netting and deterrents</span></label>
+<label class="opt"><input type="checkbox" name="svc" value="Pool and water feature maintenance" data-slugs="handyman"><span>Pool and water feature maintenance</span></label>
+<label class="opt"><input type="checkbox" name="svc" value="Flagpole installation and maintenance" data-slugs="handyman"><span>Flagpole installation and maintenance</span></label>
+<label class="opt"><input type="checkbox" name="svc" value="Holiday and event lighting installation and removal" data-slugs="electrical"><span>Holiday and event lighting installation and removal</span></label>
+<label class="opt"><input type="checkbox" name="svc" value="Grounds porter and litter pickup service" data-slugs="janitorial"><span>Grounds porter and litter pickup service</span></label>
+<label class="opt"><input type="checkbox" name="svc" value="Exterior trash and recycling collection" data-slugs="waste"><span>Exterior trash and recycling collection</span></label>
+</div></details>
+<details class="grp" ><summary><span class="gt">Specialty, Restoration and Support Services</span><span class="gs">Restoration, security, moving, staffing, supplies.</span><span class="gc" data-count></span></summary><div class="opts">
+<label class="opt"><input type="checkbox" name="svc" value="Water damage restoration and water extraction" data-slugs="restoration"><span>Water damage restoration and water extraction</span></label>
+<label class="opt"><input type="checkbox" name="svc" value="Fire and smoke damage restoration" data-slugs="restoration"><span>Fire and smoke damage restoration</span></label>
+<label class="opt"><input type="checkbox" name="svc" value="Mold remediation" data-slugs="restoration"><span>Mold remediation</span></label>
+<label class="opt"><input type="checkbox" name="svc" value="Asbestos or lead abatement" data-slugs="restoration"><span>Asbestos or lead abatement</span></label>
+<label class="opt"><input type="checkbox" name="svc" value="Storm damage response and board-up" data-slugs="restoration"><span>Storm damage response and board-up</span></label>
+<label class="opt"><input type="checkbox" name="svc" value="Crime scene or trauma cleanup" data-slugs="restoration"><span>Crime scene or trauma cleanup</span></label>
+<label class="opt"><input type="checkbox" name="svc" value="Hoarding cleanup" data-slugs="restoration,waste"><span>Hoarding cleanup</span></label>
+<label class="opt"><input type="checkbox" name="svc" value="Sewage cleanup and sewer line service" data-slugs="restoration,plumbing"><span>Sewage cleanup and sewer line service</span></label>
+<label class="opt"><input type="checkbox" name="svc" value="Contents cleaning and pack-out / pack-back" data-slugs="restoration,moving"><span>Contents cleaning and pack-out / pack-back</span></label>
+<label class="opt"><input type="checkbox" name="svc" value="Reconstruction and repairs after a loss" data-slugs="construction,restoration"><span>Reconstruction and repairs after a loss</span></label>
+<label class="opt"><input type="checkbox" name="svc" value="Vandalism repair" data-slugs="handyman"><span>Vandalism repair</span></label>
+<label class="opt"><input type="checkbox" name="svc" value="Odor removal and ozone treatment" data-slugs="restoration,air-care"><span>Odor removal and ozone treatment</span></label>
+<label class="opt"><input type="checkbox" name="svc" value="HVAC air duct cleaning" data-slugs="hvac"><span>HVAC air duct cleaning</span></label>
+<label class="opt"><input type="checkbox" name="svc" value="Dryer vent cleaning" data-slugs="hvac"><span>Dryer vent cleaning</span></label>
+<label class="opt"><input type="checkbox" name="svc" value="Chimney cleaning and inspection" data-slugs="hvac"><span>Chimney cleaning and inspection</span></label>
+<label class="opt"><input type="checkbox" name="svc" value="Indoor air quality testing" data-slugs="hvac"><span>Indoor air quality testing</span></label>
+<label class="opt"><input type="checkbox" name="svc" value="Security guard services" data-slugs="security"><span>Security guard services</span></label>
+<label class="opt"><input type="checkbox" name="svc" value="Facility relocation and moving services" data-slugs="moving"><span>Facility relocation and moving services</span></label>
+<label class="opt"><input type="checkbox" name="svc" value="Warehouse or logistics labor" data-slugs="moving"><span>Warehouse or logistics labor</span></label>
+<label class="opt"><input type="checkbox" name="svc" value="Document shredding" data-slugs="waste"><span>Document shredding</span></label>
+<label class="opt"><input type="checkbox" name="svc" value="Electronics and e-waste recycling" data-slugs="waste"><span>Electronics and e-waste recycling</span></label>
+<label class="opt"><input type="checkbox" name="svc" value="Recycling and composting program management" data-slugs="waste"><span>Recycling and composting program management</span></label>
+<label class="opt"><input type="checkbox" name="svc" value="Medical or hazardous waste disposal" data-slugs="waste"><span>Medical or hazardous waste disposal</span></label>
+<label class="opt"><input type="checkbox" name="svc" value="EV charging station install and service" data-slugs="electrical"><span>EV charging station install and service</span></label>
+<label class="opt"><input type="checkbox" name="svc" value="Backup generator service" data-slugs="electrical"><span>Backup generator service</span></label>
+<label class="opt"><input type="checkbox" name="svc" value="Interior plants and plantscaping" data-slugs="landscaping"><span>Interior plants and plantscaping</span></label>
+<label class="opt"><input type="checkbox" name="svc" value="Office coffee and breakroom services" data-slugs="water-ice"><span>Office coffee and breakroom services</span></label>
+<label class="opt"><input type="checkbox" name="svc" value="Janitorial or cleaning crew staffing" data-slugs="janitorial"><span>Janitorial or cleaning crew staffing</span></label>
+<label class="opt"><input type="checkbox" name="svc" value="Skilled trades staffing" data-slugs="handyman"><span>Skilled trades staffing</span></label>
+<label class="opt"><input type="checkbox" name="svc" value="Parking and valet management" data-slugs="parking-lot"><span>Parking and valet management</span></label>
+<label class="opt"><input type="checkbox" name="svc" value="Janitorial supplies distribution" data-slugs=""><span>Janitorial supplies distribution</span></label>
+<label class="opt"><input type="checkbox" name="svc" value="Uniform and linen services" data-slugs=""><span>Uniform and linen services</span></label>
+<label class="opt"><input type="checkbox" name="svc" value="Vending and micro-market services" data-slugs=""><span>Vending and micro-market services</span></label>
+<label class="opt"><input type="checkbox" name="svc" value="First aid and AED cabinet supply" data-slugs=""><span>First aid and AED cabinet supply</span></label>
+<label class="opt"><input type="checkbox" name="svc" value="Mailroom, courier and shipping services" data-slugs=""><span>Mailroom, courier and shipping services</span></label>
+<label class="opt"><input type="checkbox" name="svc" value="Reception and front desk staffing" data-slugs=""><span>Reception and front desk staffing</span></label>
+<label class="opt"><input type="checkbox" name="svc" value="Temporary and general labor staffing" data-slugs=""><span>Temporary and general labor staffing</span></label>
+<label class="opt"><input type="checkbox" name="svc" value="Event and hospitality staffing" data-slugs=""><span>Event and hospitality staffing</span></label>
+</div></details>
+<div class="picked" id="picked">Nothing picked yet.</div>
+<div class="row" style="margin-top:14px"><label class="f full">In your own words, what does your crew do best? <small>Anything not on the list goes here too.</small><textarea name="services_desc"></textarea></label></div>
+</div>
+
+<!-- 4 operations -->
+<div class="card">
+<div class="step">Step 4 of 5</div>
+<h2>How you operate</h2>
+<div id="yn">
+<div class="yn"><span class="q">Do you run background checks on crew members?</span><span class="pills" data-key="background_checks"><button type="button" data-v="Yes">Yes</button><button type="button" data-v="No">No</button></span></div>
+<div class="yn"><span class="q">Do you pay state unemployment tax?</span><span class="pills" data-key="sut_paid"><button type="button" data-v="Yes">Yes</button><button type="button" data-v="No">No</button></span></div>
+<div class="yn"><span class="q">Do you follow all wage and labor laws?</span><span class="pills" data-key="wage_compliance"><button type="button" data-v="Yes">Yes</button><button type="button" data-v="No">No</button></span></div>
+<div class="yn"><span class="q">Do you have a documented way of paying crew members?</span><span class="pills" data-key="documented_pay"><button type="button" data-v="Yes">Yes</button><button type="button" data-v="No">No</button></span></div>
+<div class="yn"><span class="q">Do you collect I-9 forms for crew members?</span><span class="pills" data-key="i9_collected"><button type="button" data-v="Yes">Yes</button><button type="button" data-v="No">No</button></span></div>
+<div class="yn"><span class="q">Does a supervisor check work quality daily?</span><span class="pills" data-key="daily_supervision"><button type="button" data-v="Yes">Yes</button><button type="button" data-v="No">No</button></span></div>
+<div class="yn"><span class="q">Do you carry Workers&#x27; Compensation insurance?</span><span class="pills" data-key="workers_comp"><button type="button" data-v="Yes">Yes</button><button type="button" data-v="No">No</button></span></div>
+<div class="yn"><span class="q">Do you carry General Liability insurance?</span><span class="pills" data-key="general_liability"><button type="button" data-v="Yes">Yes</button><button type="button" data-v="No">No</button></span></div>
+<div class="yn"><span class="q">Do you have marketing brochures?</span><span class="pills" data-key="has_brochures"><button type="button" data-v="Yes">Yes</button><button type="button" data-v="No">No</button></span></div>
+<div class="yn"><span class="q">Do you have business cards?</span><span class="pills" data-key="has_cards"><button type="button" data-v="Yes">Yes</button><button type="button" data-v="No">No</button></span></div>
+</div>
+<div class="row" style="margin-top:14px">
+<label class="f">Full time crew members<input type="text" name="crew_ft" inputmode="numeric"></label>
+<label class="f">Part time crew members<input type="text" name="crew_pt" inputmode="numeric"></label>
+<label class="f full">When a client has a concern or a job is at risk, what do you do?<textarea name="concern_process"></textarea></label>
+<label class="f full">How involved are you and your family in daily operations?<input type="text" name="family_involvement"></label>
+</div>
+</div>
+
+<!-- 5 references + notes -->
+<div class="card">
+<div class="step">Step 5 of 5</div>
+<h2>Two business references</h2>
+<p class="lead">Clients you have worked for. We may call them.</p>
+<div class="row">
+<label class="f">Reference 1: company<input type="text" name="ref1_company"></label>
+<label class="f">Contact name<input type="text" name="ref1_name"></label>
+<label class="f">Phone<input type="tel" name="ref1_phone" inputmode="tel"></label>
+<label class="f">Email<input type="email" name="ref1_email" inputmode="email"></label>
+<label class="f">Reference 2: company<input type="text" name="ref2_company"></label>
+<label class="f">Contact name<input type="text" name="ref2_name"></label>
+<label class="f">Phone<input type="tel" name="ref2_phone" inputmode="tel"></label>
+<label class="f">Email<input type="email" name="ref2_email" inputmode="email"></label>
+<label class="f full">Anything else you want us to know?<textarea name="additional_notes"></textarea></label>
+</div>
+<div class="note">Have a business card or brochure? Bring it to your walkthrough, or send it later from <a href="profile-update.html">Update Your Company Profile</a>. It is not needed to finish this form.</div>
+</div>
+
+<div class="card">
+<div class="submitbar"><button type="submit" class="btn btn-red" id="go">Send My Evaluation</button><span class="saved" id="saved"></span></div>
+<div class="err" id="err"></div>
+</div>
+</form>
+
+<div class="ev-wrap"><div class="card done" id="done"><div class="tick">&#10003;</div><h2>You are on file</h2><p id="doneMsg"></p><p>A copy went to your email. When work opens that matches what your crew does, you hear from us.</p><div class="acts"><a class="btn btn-red" id="doneNext" href="new-vendors.html">Finish Your Vendor Packet</a><a class="btn btn-ghost" href="opportunities.html">See Open Opportunities</a></div></div></div>
+
+<footer class="site-foot"><div class="wrap"><div class="cols"><div><b style="color:#fff">City Wide Facility Solutions</b> &middot; Las Vegas &amp; Northern Nevada<br>Vendor Resource Hub</div><div><a href="shop/">Order Supplies</a> &nbsp;&nbsp; <a href="index.html">Resource Center</a> &nbsp;&nbsp; <a href="https://www.gocitywide.com" target="_blank" rel="noopener">GoCityWide.com</a></div></div><div class="fine">Questions about this form? Las Vegas: lvcompliance@gocitywide.com &middot; Northern Nevada: rncompliance@gocitywide.com</div></div></footer>
+
+<script>
+(function(){
+var EXEC="https://script.google.com/macros/s/AKfycbzfNnrpidCbWB1DeUNgXvRhDFMQgApfpn-3C9GU45wMEHcJpWFl8ZQVo6PUBSRfEVfRdg/exec";
+var KEY='cwVendorEvalDraft';
+var form=document.getElementById('ev');
+var state={region:'', yn:{}};
+var $=function(s,r){return (r||document).querySelector(s)};
+var $$=function(s,r){return Array.prototype.slice.call((r||document).querySelectorAll(s))};
+
+/* ---- region ---- */
+var SNV=/\b(las vegas|north las vegas|henderson|summerlin|boulder city|pahrump|mesquite|laughlin|nlv)\b|\b(889|890|891)\d\d\b/i;
+var NNV=/\b(reno|sparks|carson city|carson|minden|gardnerville|fernley|dayton|tahoe|incline|fallon|elko|winnemucca)\b|\b(894|895|897)\d\d\b/i;
+function guessRegion(){
+  var t=($('[name=business_address]').value+' '+$('[name=metro_areas]').value);
+  var s=SNV.test(t), n=NNV.test(t) && !/north las vegas/i.test(t.replace(/reno|sparks|carson/ig,''));
+  n = NNV.test(t.replace(/north las vegas/ig,''));
+  if(s&&n) return 'Both'; if(s) return 'Las Vegas'; if(n) return 'Northern Nevada'; return '';
+}
+function regionCheck(){
+  var w=$('#regionWarn'); var g=guessRegion(); var r=state.region; w.className='warn'; w.innerHTML='';
+  if(!r||!g) return;
+  if(r==='Northern Nevada' && g==='Las Vegas') w.innerHTML='<b>Check this.</b> Your address or cities look like the Las Vegas area, but you picked Northern Nevada. Northern Nevada means Reno, Sparks and Carson City. If your crew is in North Las Vegas or Henderson, pick Las Vegas and Southern Nevada.';
+  else if(r==='Las Vegas' && g==='Northern Nevada') w.innerHTML='<b>Check this.</b> Your address or cities look like the Reno area, but you picked Las Vegas. If your crew is in Reno, Sparks or Carson City, pick Northern Nevada.';
+  else if(r==='Both' && g!=='Both') w.innerHTML='<b>Both offices?</b> Your address looks like '+(g==='Las Vegas'?'the Las Vegas area':'the Reno area')+' only. Reno and Las Vegas are 440 miles apart. Pick Both only if you have crew in each city.';
+  if(w.innerHTML) w.className='warn show';
+}
+$$('.rg').forEach(function(b){ b.addEventListener('click',function(){ state.region=b.getAttribute('data-region'); $$('.rg').forEach(function(x){x.classList.toggle('on',x===b)}); regionCheck(); save(); }); });
+$('[name=business_address]').addEventListener('input',regionCheck);
+$('[name=metro_areas]').addEventListener('input',regionCheck);
+
+/* ---- services ---- */
+var NAMES={"janitorial": "Janitorial", "floor-care": "Floor Care & Carpet", "window-cleaning": "Window Cleaning", "pressure-washing": "Pressure Washing", "parking-lot": "Parking Lot & Asphalt", "landscaping": "Landscaping", "snow-removal": "Snow Removal", "handyman": "Handyman & Facility Maintenance", "construction": "Construction & Renovation", "roofing": "Roofing & Waterproofing", "restoration": "Restoration & Emergency Services", "pest-control": "Pest Control", "waste": "Waste & Recycling", "equipment-rental": "Equipment Rental", "painting": "Painting", "electrical": "Electrical", "plumbing": "Plumbing", "hvac": "HVAC", "glass": "Glass & Mirror", "welding": "Welding & Ironwork", "security": "Security & Guard Services", "moving": "Moving & Hauling", "fencing": "Fencing & Gates", "doors-locks": "Doors, Locks & Hardware", "signage": "Signage", "air-care": "Air Care & Odor Control", "water-ice": "Water & Ice Equipment"};
+function picked(){ var labels=[],slugs=[]; $$('input[name=svc]:checked').forEach(function(c){ labels.push(c.value); (c.getAttribute('data-slugs')||'').split(',').forEach(function(s){ if(s&&slugs.indexOf(s)<0) slugs.push(s); }); }); return {labels:labels,slugs:slugs}; }
+function refreshPicked(){
+  var p=picked();
+  $$('.grp').forEach(function(g){ var n=$$('input:checked',g).length; var c=$('[data-count]',g); c.textContent=n; c.classList.toggle('on',n>0); });
+  var el=$('#picked');
+  if(!p.labels.length){ el.innerHTML='Nothing picked yet.'; return; }
+  var lists=p.slugs.map(function(s){return NAMES[s]||s});
+  el.innerHTML='<b>'+p.labels.length+' service'+(p.labels.length===1?'':'s')+' picked.</b> You will hear about: '+(lists.length?lists.join(', '):'work we sort by hand')+'.';
+}
+form.addEventListener('change',function(e){ if(e.target.name==='svc') refreshPicked(); save(); });
+
+/* ---- yes / no ---- */
+$$('.pills').forEach(function(p){ $$('button',p).forEach(function(b){ b.addEventListener('click',function(){ state.yn[p.getAttribute('data-key')]=b.getAttribute('data-v'); $$('button',p).forEach(function(x){x.classList.toggle('on',x===b)}); save(); }); }); });
+
+/* ---- draft ---- */
+var saveT;
+function fields(){ var o={}; $$('input[name],textarea[name]',form).forEach(function(i){ if(i.name==='svc'||i.name==='company_fax') return; o[i.name]=i.value; }); return o; }
+function save(){ clearTimeout(saveT); saveT=setTimeout(function(){ try{ localStorage.setItem(KEY, JSON.stringify({f:fields(), svc:picked().labels, region:state.region, yn:state.yn, t:Date.now()})); $('#saved').textContent='Draft saved on this device.'; }catch(e){} },400); }
+form.addEventListener('input',save);
+function restore(){
+  var d=null; try{ d=JSON.parse(localStorage.getItem(KEY)||'null'); }catch(e){}
+  if(!d||!d.f) return;
+  Object.keys(d.f).forEach(function(k){ var i=form.querySelector('[name="'+k+'"]'); if(i&&!i.value) i.value=d.f[k]; });
+  (d.svc||[]).forEach(function(v){ var c=form.querySelector('input[name=svc][value="'+v.replace(/"/g,'\\"')+'"]'); if(c) c.checked=true; });
+  if(d.region){ var b=$('.rg[data-region="'+d.region+'"]'); if(b) b.click(); }
+  Object.keys(d.yn||{}).forEach(function(k){ var b=$('.pills[data-key="'+k+'"] button[data-v="'+d.yn[k]+'"]'); if(b) b.click(); });
+  refreshPicked(); $('#saved').textContent='We restored your draft from last time.';
+}
+restore();
+/* ?region=lv|nnv from an invite link */
+try{ var q=new URLSearchParams(location.search).get('region'); if(q&&!state.region){ var m={lv:'Las Vegas',nnv:'Northern Nevada'}[q.toLowerCase()]; if(m) $('.rg[data-region="'+m+'"]').click(); } }catch(e){}
+
+/* ---- submit ---- */
+function fail(msg,el){ var e=$('#err'); e.textContent=msg; e.className='err show'; if(el){ el.scrollIntoView({behavior:'smooth',block:'center'}); if(el.focus) try{el.focus()}catch(x){} } }
+form.addEventListener('submit',function(ev){
+  ev.preventDefault(); $('#err').className='err';
+  var f=fields(); var p=picked();
+  if(!state.region) return fail('Pick where your crew works (Step 1).', $('#cRegion'));
+  if(!f.dba_name.trim()) return fail('Business name is required.', $('[name=dba_name]'));
+  if(!f.contact_name.trim()) return fail('Your name is required.', $('[name=contact_name]'));
+  if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(f.email.trim())) return fail('Enter a valid email address.', $('[name=email]'));
+  if(!f.phone.trim()) return fail('Mobile phone is required.', $('[name=phone]'));
+  if(!f.business_address.trim()) return fail('Business address is required.', $('[name=business_address]'));
+  if(!p.labels.length) return fail('Pick at least one service your crew provides (Step 3).', $('#cServices'));
+  var vendor={}; Object.keys(f).forEach(function(k){ vendor[k]=f[k].trim(); });
+  Object.keys(state.yn).forEach(function(k){ vendor[k]=state.yn[k]; });
+  vendor.trade_raw=p.labels.join('; ');
+  var body={ kind:'vd_eval', company_fax: form.company_fax.value, region: state.region, service_types: p.slugs.join(','), region_note: $('#regionWarn').classList.contains('show') ? 'page warned: '+$('#regionWarn').textContent.slice(0,160) : '', vendor: vendor };
+  var go=$('#go'); go.disabled=true; go.textContent='Sending...';
+  fetch(EXEC,{method:'POST',headers:{'Content-Type':'text/plain'},body:JSON.stringify(body)}).then(function(r){return r.json()}).then(function(r){
+    if(!r||!r.ok) throw new Error(r&&r.error?r.error:'Something went wrong.');
+    try{ localStorage.removeItem(KEY); }catch(e){}
+    form.style.display='none';
+    var d=$('#done'); d.className='card done show';
+    $('#doneMsg').textContent='Thanks, '+(vendor.contact_name.split(' ')[0]||'')+'. '+vendor.dba_name+' is on file with City Wide '+(state.region==='Both'?'in both markets':'of '+state.region)+' for: '+p.slugs.map(function(s){return NAMES[s]||s}).join(', ')+'.';
+    $('#doneNext').href='new-vendors.html'+(state.region==='Northern Nevada'?'?region=nnv':state.region==='Las Vegas'?'?region=lv':'');
+    d.scrollIntoView({behavior:'smooth',block:'start'});
+  }).catch(function(e){
+    go.disabled=false; go.textContent='Send My Evaluation';
+    fail((e&&e.message?e.message:'Could not send.')+' Your answers are still here. Try again, or email them to lvcompliance@gocitywide.com.', $('#go'));
+  });
+});
+})();
+</script>
+</body></html>

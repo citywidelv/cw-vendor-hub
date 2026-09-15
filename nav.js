@@ -17,6 +17,10 @@ window.CW_NAV = {
    "label": "New Vendors",
    "items": [
     {
+     "label": "Vendor Evaluation (start here)",
+     "href": "vendor-evaluation.html"
+    },
+    {
      "label": "Las Vegas",
      "href": "new-vendors.html?region=lv"
     },
