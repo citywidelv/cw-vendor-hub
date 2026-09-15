@@ -346,6 +346,12 @@ details.step.done .btn-done{background:#1E7B34;color:#fff}
 /* checklist section polish */
 .list-first{padding:46px 0 10px}
 .list-first .tbl-wrap{margin-top:16px}
+.packet-frame{scroll-margin-top:76px;margin:14px 0 6px;border:2px solid var(--cw-red);border-radius:10px;overflow:hidden;background:#fff}
+.packet-frame .pf-bar{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:10px 14px;background:var(--cw-black);color:#fff;font-size:13px}
+.packet-frame .pf-bar a{color:#fff;font-weight:700}
+.packet-frame iframe{display:block;width:100%;height:78vh;min-height:640px;border:0;background:#f7f5f2}
+.packet-frame .pf-note{margin:0;padding:10px 14px;font-size:12.5px;color:var(--cw-grey);background:var(--cw-light)}
+.card.packet.on{border-color:var(--cw-red);box-shadow:0 0 0 3px rgba(210,39,48,.12)}
 </style>  <link rel="icon" href="favicon.ico" sizes="any">
   <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
@@ -401,7 +407,7 @@ details.step.done .btn-done{background:#1E7B34;color:#fff}
 
 <details class="step" id="step3" data-step="3">
 <summary><span class="stepnum"><span>3</span></span><span class="s-title"><h2>Sign Your Vendor Packet</h2><span class="tag">Online &middot; Pick Your Region</span></span><span class="chev">&#9660;</span></summary>
-<div class="step-body"><div style="padding-top:18px"><p class="sub">Pick your region, then open the packet that matches your crew. You sign online and the packet submits itself the moment you finish. Your region panel also holds the two downloads you hand off: the insurance request and the waiver.</p><div class="reg-pick"><button class="reg-btn" id="btn-lv" type="button" onclick="showReg('lv')">Las Vegas</button><button class="reg-btn" id="btn-nnv" type="button" onclick="showReg('nnv')">Northern Nevada</button></div>
+<div class="step-body"><div style="padding-top:18px"><p class="sub">Pick your region, then open the packet that matches your crew. You sign online right here on this page, and the packet submits itself the moment you finish. Your region panel also holds the two downloads you hand off: the insurance request and the waiver.</p><div class="reg-pick"><button class="reg-btn" id="btn-lv" type="button" onclick="showReg('lv')">Las Vegas</button><button class="reg-btn" id="btn-nnv" type="button" onclick="showReg('nnv')">Northern Nevada</button></div>
 <p class="reg-hint" id="regHint">Pick your region above to see your packet and downloads.</p>
 <div class="reg-panel" id="reg-lv">
 <div class="rule-box"><span class="stepnum" style="background:var(--cw-black)">!</span><div>
@@ -409,9 +415,10 @@ details.step.done .btn-done{background:#1E7B34;color:#fff}
 <p>It covers everything, so crews that do janitorial plus other services fill out one packet, not two. The difference: janitorial crews hold keys and often work in buildings alone, so their packet adds agreements on building security, key and access responsibility, and how janitorial work runs. The packet walks you through each one.</p>
 </div></div>
 <div class="card-grid">
-<a class="card flag" href="https://form.pandadoc.com/form/QTrR2sJpKKSuYddrWMEFYA" target="_blank" rel="noopener"><span class="region-tag">Las Vegas</span><h3>My Crew Does Janitorial</h3><p>Janitorial or commercial cleaning, including crews that also offer other services. Includes the key, access, and building security agreements.</p><span class="go">Open the janitorial packet</span></a>
-<a class="card" href="https://form.pandadoc.com/form/orcStVWa5uC7hG6Z3DAa7d" target="_blank" rel="noopener"><span class="region-tag">Las Vegas</span><h3>My Crew Does Other Services Only</h3><p>Landscaping, handyman, HVAC, plumbing, electrical, windows, power washing, and the other trades, with no janitorial work at all.</p><span class="go">Open the other services packet</span></a>
+<a class="card flag packet" href="https://form.pandadoc.com/form/QTrR2sJpKKSuYddrWMEFYA" data-packet="QTrR2sJpKKSuYddrWMEFYA" data-title="JS IC Vendor Packet, Las Vegas" data-region="lv"><span class="region-tag">Las Vegas</span><h3>My Crew Does Janitorial</h3><p>Janitorial or commercial cleaning, including crews that also offer other services. Includes the key, access, and building security agreements.</p><span class="go">Sign the janitorial packet here</span></a>
+<a class="card packet" href="https://form.pandadoc.com/form/orcStVWa5uC7hG6Z3DAa7d" data-packet="orcStVWa5uC7hG6Z3DAa7d" data-title="OS IC Vendor Packet, Las Vegas" data-region="lv"><span class="region-tag">Las Vegas</span><h3>My Crew Does Other Services Only</h3><p>Landscaping, handyman, HVAC, plumbing, electrical, windows, power washing, and the other trades, with no janitorial work at all.</p><span class="go">Sign the other services packet here</span></a>
 </div>
+<div class="packet-frame" id="pf-lv" hidden><div class="pf-bar"><b id="pf-title-lv"></b><span><a id="pf-new-lv" href="#step3" target="_blank" rel="noopener">Open in a new tab</a> &nbsp;&middot;&nbsp; <a href="#step3" data-pfclose="lv">Close</a></span></div><iframe id="pf-if-lv" title="Vendor packet" loading="lazy" allow="clipboard-write"></iframe><p class="pf-note">Signing happens on PandaDoc inside this box. Scroll inside the box to move through the packet. When you finish signing, the packet submits itself and you are done with this step.</p></div>
 <h3 class="dl-head">Download &amp; Hand Off</h3>
 <p class="dl-sub">Two documents to download. One goes to your insurance agent, one gets notarized. Both come back to us.</p>
 <div class="card-grid">
@@ -425,9 +432,10 @@ details.step.done .btn-done{background:#1E7B34;color:#fff}
 <p>It covers everything, so crews that do janitorial plus other services fill out one packet, not two. The difference: janitorial crews hold keys and often work in buildings alone, so their packet adds agreements on building security, key and access responsibility, and how janitorial work runs. The packet walks you through each one.</p>
 </div></div>
 <div class="card-grid">
-<a class="card flag" href="https://form.pandadoc.com/form/uyVugBTcDqcGJWCXUPUXpM" target="_blank" rel="noopener"><span class="region-tag">Northern Nevada</span><h3>My Crew Does Janitorial</h3><p>Janitorial or commercial cleaning, including crews that also offer other services. Includes the key, access, and building security agreements.</p><span class="go">Open the janitorial packet</span></a>
-<a class="card" href="https://form.pandadoc.com/form/5FKqAU7yMqYtwa9Wui6wzf" target="_blank" rel="noopener"><span class="region-tag">Northern Nevada</span><h3>My Crew Does Other Services Only</h3><p>Landscaping, handyman, HVAC, plumbing, electrical, windows, power washing, and the other trades, with no janitorial work at all.</p><span class="go">Open the other services packet</span></a>
+<a class="card flag packet" href="https://form.pandadoc.com/form/uyVugBTcDqcGJWCXUPUXpM" data-packet="uyVugBTcDqcGJWCXUPUXpM" data-title="JS IC Vendor Packet, Northern Nevada" data-region="nnv"><span class="region-tag">Northern Nevada</span><h3>My Crew Does Janitorial</h3><p>Janitorial or commercial cleaning, including crews that also offer other services. Includes the key, access, and building security agreements.</p><span class="go">Sign the janitorial packet here</span></a>
+<a class="card packet" href="https://form.pandadoc.com/form/5FKqAU7yMqYtwa9Wui6wzf" data-packet="5FKqAU7yMqYtwa9Wui6wzf" data-title="OS IC Vendor Packet, Northern Nevada" data-region="nnv"><span class="region-tag">Northern Nevada</span><h3>My Crew Does Other Services Only</h3><p>Landscaping, handyman, HVAC, plumbing, electrical, windows, power washing, and the other trades, with no janitorial work at all.</p><span class="go">Sign the other services packet here</span></a>
 </div>
+<div class="packet-frame" id="pf-nnv" hidden><div class="pf-bar"><b id="pf-title-nnv"></b><span><a id="pf-new-nnv" href="#step3" target="_blank" rel="noopener">Open in a new tab</a> &nbsp;&middot;&nbsp; <a href="#step3" data-pfclose="nnv">Close</a></span></div><iframe id="pf-if-nnv" title="Vendor packet" loading="lazy" allow="clipboard-write"></iframe><p class="pf-note">Signing happens on PandaDoc inside this box. Scroll inside the box to move through the packet. When you finish signing, the packet submits itself and you are done with this step.</p></div>
 <h3 class="dl-head">Download &amp; Hand Off</h3>
 <p class="dl-sub">Two documents to download. One goes to your insurance agent, one gets notarized. Both come back to us.</p>
 <div class="card-grid">
@@ -516,4 +524,7 @@ details.step.done .btn-done{background:#1E7B34;color:#fff}
   paint();
 })();
 </script>
+<script>(function(){var cards=document.querySelectorAll('a.card.packet');function open(a){var rg=a.getAttribute('data-region'),id=a.getAttribute('data-packet'),url='https://form.pandadoc.com/form/'+id;var box=document.getElementById('pf-'+rg),f=document.getElementById('pf-if-'+rg);document.getElementById('pf-title-'+rg).textContent=a.getAttribute('data-title');document.getElementById('pf-new-'+rg).href=url;if(f.getAttribute('src')!==url)f.setAttribute('src',url);box.hidden=false;Array.prototype.forEach.call(cards,function(c){c.classList.toggle('on',c===a);});box.scrollIntoView({behavior:'smooth',block:'start'});}
+Array.prototype.forEach.call(cards,function(a){a.addEventListener('click',function(e){e.preventDefault();open(a);});});
+Array.prototype.forEach.call(document.querySelectorAll('[data-pfclose]'),function(x){x.addEventListener('click',function(e){e.preventDefault();var rg=x.getAttribute('data-pfclose');document.getElementById('pf-'+rg).hidden=true;document.getElementById('pf-if-'+rg).removeAttribute('src');Array.prototype.forEach.call(cards,function(c){c.classList.remove('on');});});});})();</script>
 </body></html>
