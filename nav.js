@@ -81,7 +81,7 @@ window.CW_NAV = {
      "ghead": "Orders"
     },
     {
-     "label": "Order Building Supplies",
+     "label": "Report Supplies Needed",
      "href": "building-supplies.html"
     },
     {
