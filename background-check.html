@@ -284,6 +284,29 @@ body.badgeonly .needchk{display:none}
 .done .cta-row{justify-content:center}
 .ca{display:none}
 .ca.show{display:block}
+/* company picker */
+.cowrap{position:relative}
+.sugg{position:absolute;left:0;right:0;top:100%;z-index:20;background:#fff;border:1.5px solid var(--cw-border);border-radius:10px;box-shadow:var(--shadow-lift);margin-top:4px;overflow:hidden;display:none}
+.sugg.show{display:block}
+.sugg button{display:block;width:100%;text-align:left;font-family:inherit;font-size:14px;background:#fff;border:none;border-bottom:1px solid var(--cw-border);padding:11px 14px;cursor:pointer}
+.sugg button:last-child{border-bottom:none}
+.sugg button:hover,.sugg button.on{background:#fff6f6}
+.sugg button b{display:block}
+.sugg button small{display:block;font-size:12px;color:var(--cw-grey);margin-top:2px}
+.sugg button.none{color:var(--cw-grey);font-size:13px}
+.match{font-size:12.5px;margin-top:6px;min-height:16px}
+.match.ok{color:#1E7B34;font-weight:700}
+.match.warn{color:var(--cw-grey)}
+.match a{color:var(--cw-red);font-weight:700;margin-left:6px}
+/* vendor-run report upload */
+.rep{display:none}
+body.badgeonly .rep{display:block}
+body.badgeonly.badgefirst .rep,body.badgeonly.badgereplace .rep{display:none}
+.rep .drop{border:2px dashed var(--cw-border);border-radius:10px;padding:14px;text-align:center;font-size:13px;color:var(--cw-grey);cursor:pointer;background:#fafafa}
+.rep .drop:hover{border-color:var(--cw-red)}
+.rep .drop b{color:var(--cw-black)}
+.rep .drop.has{border-style:solid;border-color:#1E7B34;background:#f2faf4;color:#1E7B34}
+.rep input[type=file]{display:none}
 @media(max-width:640px){.fstep{grid-template-columns:1fr;gap:8px}.fnum{width:30px;height:30px;font-size:13px}.fgrid,.pgrid{grid-template-columns:1fr}.pgrid .fld.w2{grid-column:auto}}
 </style>
 <link rel="stylesheet" href="https://citywidelv.github.io/cw-base.css">
@@ -306,7 +329,7 @@ body.badgeonly .needchk{display:none}
 
 <div class="fstep"><div class="fnum">1</div><div class="fbody">
 <h2>Where does this crew work?</h2>
-<p class="fhelp">Northern Nevada means Reno, Sparks, Carson City and the area around them. <b>North Las Vegas is Las Vegas.</b></p>
+<p class="fhelp">Northern Nevada means Reno, Sparks, Carson City and the area around them. <b>North Las Vegas is Las Vegas.</b> Pick the region first, then your company name can be matched to our records.</p>
 <div class="regs">
 <button type="button" class="reg" data-market="lv"><b>Las Vegas</b><small>Las Vegas, Henderson, North Las Vegas, Boulder City</small></button>
 <button type="button" class="reg" data-market="nnv"><b>Northern Nevada</b><small>Reno, Sparks, Carson City, Minden, Fernley</small></button>
@@ -316,7 +339,7 @@ body.badgeonly .needchk{display:none}
 <div class="fstep"><div class="fnum">2</div><div class="fbody">
 <h2>Your company</h2>
 <div class="fgrid">
-<div class="fld wide"><label for="company">Company name <span class="req">required</span></label><input id="company" name="company" placeholder="Exactly as it reads on your vendor packet" autocomplete="organization"></div>
+<div class="fld wide cowrap"><label for="company">Company name <span class="req">required</span></label><input id="company" name="company" placeholder="Start typing your company name and pick it from the list" autocomplete="off"><input type="hidden" id="vendor_id" name="vendor_id"><div class="sugg" id="sugg"></div><div class="match" id="match"></div></div>
 <div class="fld"><label for="sub_by">Your name <span class="req">required</span></label><input id="sub_by" name="submitted_by" autocomplete="name"></div>
 <div class="fld"><label for="sub_mail">Your email <span class="req">required</span></label><input id="sub_mail" name="submitter_email" type="email" autocomplete="email" placeholder="Where we send updates"></div>
 </div>
@@ -325,10 +348,10 @@ body.badgeonly .needchk{display:none}
 <div class="fstep"><div class="fnum">3</div><div class="fbody">
 <h2>What do you need?</h2>
 <div class="types">
-<label class="type"><input type="radio" name="request_type" value="Background check and name badge" checked><span><b>A background check, then a name badge</b><small>New crew member. Verified First emails them a consent form; results come to City Wide, never to you.</small></span></label>
-<label class="type"><input type="radio" name="request_type" value="Already checked, name badge only"><span><b>I already ran a background check, I just need a badge</b><small>Upload the passing report on the <a href="upload.html" target="_blank" rel="noopener">upload page</a> if you have not already.</small></span></label>
-<label class="type"><input type="radio" name="request_type" value="First name badge"><span><b>A first name badge (never received one)</b><small>For someone who is already cleared.</small></span></label>
-<label class="type"><input type="radio" name="request_type" value="Replacement name badge ($5)"><span><b>A replacement badge (lost or damaged, $5)</b><small>Billed against your next payment.</small></span></label>
+<label class="type"><input type="radio" name="request_type" value="Background check and name badge" data-kind="check" checked><span><b>A background check, then a name badge</b><small>New crew member. Verified First emails them a consent form; results come to City Wide, never to you.</small></span></label>
+<label class="type"><input type="radio" name="request_type" value="Already checked, name badge only" data-kind="already"><span><b>I already ran a background check, I just need a badge</b><small>Attach the passing report for each person below. We review it, file it, and mark them cleared through your platform.</small></span></label>
+<label class="type"><input type="radio" name="request_type" value="First name badge" data-kind="first"><span><b>A first name badge (never received one)</b><small>For someone who is already cleared.</small></span></label>
+<label class="type"><input type="radio" name="request_type" value="Replacement name badge ($5)" data-kind="replace"><span><b>A replacement badge (lost or damaged, $5)</b><small>Billed against your next payment.</small></span></label>
 </div>
 </div></div>
 
@@ -341,7 +364,7 @@ body.badgeonly .needchk{display:none}
 
 <div class="fstep"><div class="fnum">5</div><div class="fbody">
 <h2>Send it</h2>
-<p class="fhelp">We start the check within one business day. The crew member gets an email from Verified First to finish their part. You will hear from us when they are cleared, and badges are ready for pickup at your City Wide office.</p>
+<p class="fhelp">We start the check within one business day. The crew member gets an email from Verified First to finish their part. If you attached your own report, our compliance team reviews it instead. You will hear from us when they are cleared, and badges are ready for pickup at your City Wide office.</p>
 <div class="err" id="err"></div>
 <button type="submit" class="btn btn-red big" id="go">Send the Request</button>
 <p class="fine" style="margin-top:12px">Questions? Las Vegas: LVCompliance@gocitywide.com &middot; Northern Nevada: rncompliance@gocitywide.com</p>
@@ -389,6 +412,7 @@ function personHtml(i){
     '<div class="fld bconly"><label>Their mobile <span class="req">required</span></label><input data-k="mobile" type="tel" autocomplete="off" placeholder="(702) 555-0100"></div>' +
     '<div class="fld w3"><label>Is this for one specific client building?</label><select data-k="client_sel"><option value="">No, general crew</option><option value="yes">Yes, name it</option></select></div>' +
     '<div class="fld w3 ca"><label>Client account or building</label><input data-k="client_account" autocomplete="off" placeholder="Building or client name"></div>' +
+    '<div class="fld w3 rep"><label>Their background check report <span class="req">required</span></label><div class="drop" data-drop><b>Attach the report</b><br>PDF or a clear photo, up to 10 MB. It goes straight to our compliance team, never to the client.</div><input type="file" accept="application/pdf,image/png,image/jpeg" data-k="report"></div>' +
     '</div></div>';
 }
 function addPerson(vals){
@@ -402,10 +426,37 @@ function renumber(){ $$(".person").forEach(function(p, i){ $("b", p).textContent
 people.addEventListener("click", function(e){ var b = e.target.closest(".rm"); if(!b) return; b.closest(".person").remove(); renumber(); save(); });
 people.addEventListener("change", function(e){ if(e.target.dataset.k === "client_sel"){ var ca = $(".ca", e.target.closest(".person")); ca.classList.toggle("show", e.target.value === "yes"); if(e.target.value === "yes") $("input", ca).focus(); } save(); });
 people.addEventListener("input", save);
+people.addEventListener("click", function(e){ var d = e.target.closest("[data-drop]"); if(!d) return; $("input[type=file]", d.parentElement).click(); });
+people.addEventListener("change", function(e){ if(e.target.type !== "file") return; var d = $("[data-drop]", e.target.parentElement), f = e.target.files[0]; if(!f){ d.className = "drop"; d.innerHTML = "<b>Attach the report</b><br>PDF or a clear photo, up to 10 MB."; return; } if(f.size > 10*1024*1024){ e.target.value = ""; d.className = "drop"; d.innerHTML = "<b>That file is over 10 MB.</b><br>Compress it and attach it again."; return; } d.className = "drop has"; d.innerHTML = "<b>" + esc(f.name) + "</b><br>" + Math.round(f.size/1024) + " KB attached. Click to change."; });
 document.getElementById("addp").addEventListener("click", function(){ addPerson(); save(); });
 
 $$(".reg").forEach(function(b){ b.addEventListener("click", function(){ market = b.dataset.market; $$(".reg").forEach(function(x){ x.classList.toggle("on", x === b); }); b.closest(".fstep").classList.add("ok"); save(); }); });
-$$("input[name=request_type]").forEach(function(r){ r.addEventListener("change", function(){ document.body.classList.toggle("badgeonly", !needsCheck()); save(); }); });
+function syncKind(){ var k = (form.querySelector("input[name=request_type]:checked") || {}).dataset || {}; document.body.classList.toggle("badgeonly", !needsCheck()); document.body.classList.toggle("badgefirst", k.kind === "first"); document.body.classList.toggle("badgereplace", k.kind === "replace"); }
+function needsReport(){ return form.request_type.value === "Already checked, name badge only"; }
+$$("input[name=request_type]").forEach(function(r){ r.addEventListener("change", function(){ syncKind(); save(); }); });
+/* ---- company picker: matches only once most of the name is typed, at most three ---- */
+var sugg = $("#sugg"), matchEl = $("#match"), vidEl = $("#vendor_id"), sT = null, lastQ = "";
+function setMatch(v){ vidEl.value = v ? v.vendor_id : ""; matchEl.className = "match " + (v ? "ok" : "warn"); matchEl.innerHTML = v ? "Matched to our records: " + esc(v.name) + (v.contact ? " (" + esc(v.contact) + ")" : "") + ' <a href="#" data-unmatch>not you?</a>' : (form.company.value.trim().length >= 5 && market ? "No match yet. Keep typing your full company name, or continue and we will match it by hand." : ""); }
+function esc(s){ return String(s == null ? "" : s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;"); }
+function suggest(){
+  var q = form.company.value.trim();
+  sugg.className = "sugg"; sugg.innerHTML = "";
+  if(!market || q.length < 5){ setMatch(null); return; }
+  if(q === lastQ) return; lastQ = q;
+  fetch(EXEC, { method:"POST", headers:{ "Content-Type":"text/plain" }, body: JSON.stringify({ kind:"ob_vendor_suggest", market: market, q: q }) }).then(function(r){ return r.json(); }).then(function(r){
+    if(form.company.value.trim() !== q) return;
+    var ms = (r && r.ok && r.matches) || [];
+    if(!ms.length){ setMatch(null); return; }
+    sugg.innerHTML = ms.map(function(m){ return '<button type="button" data-pick="' + esc(m.vendor_id) + '"><b>' + esc(m.name) + '</b><small>' + (m.contact ? esc(m.contact) : "contact on file") + '</small></button>'; }).join("") + '<button type="button" class="none" data-pick="">None of these is my company</button>';
+    sugg.className = "sugg show";
+    window.__sugg = ms;
+  }).catch(function(){});
+}
+form.company.addEventListener("input", function(){ vidEl.value = ""; clearTimeout(sT); sT = setTimeout(suggest, 350); });
+form.company.addEventListener("focus", function(){ if(sugg.innerHTML && !vidEl.value) sugg.className = "sugg show"; });
+sugg.addEventListener("click", function(e){ var b = e.target.closest("button[data-pick]"); if(!b) return; var id = b.dataset.pick; sugg.className = "sugg"; if(!id){ setMatch(null); matchEl.textContent = "OK, we will match it by hand. Type it exactly as it reads on your vendor packet."; return; } var m = (window.__sugg || []).filter(function(x){ return x.vendor_id === id; })[0]; if(m){ form.company.value = m.name; setMatch(m); save(); } });
+matchEl.addEventListener("click", function(e){ if(e.target.dataset.unmatch !== undefined){ e.preventDefault(); setMatch(null); lastQ = ""; suggest(); } });
+document.addEventListener("click", function(e){ if(!e.target.closest(".cowrap")) sugg.className = "sugg"; });
 form.addEventListener("input", save);
 
 var saveT;
@@ -419,7 +470,8 @@ function restore(){
   if(!d){ addPerson(); return; }
   if(d.market){ var b = $('.reg[data-market="' + d.market + '"]'); if(b) b.click(); }
   ["company","submitted_by","submitter_email"].forEach(function(k){ if(d[k]) form[k].value = d[k]; });
-  if(d.request_type){ var r = $('input[name=request_type][value="' + d.request_type + '"]'); if(r){ r.checked = true; document.body.classList.toggle("badgeonly", !needsCheck()); } }
+  if(d.request_type){ var r = $('input[name=request_type][value="' + d.request_type + '"]'); if(r){ r.checked = true; } }
+  syncKind();
   if(d.people && d.people.length) d.people.forEach(function(p){ addPerson(p); }); else addPerson();
 }
 restore();
@@ -429,6 +481,7 @@ function fail(msg, el){ var e = $("#err"); e.textContent = msg; e.className = "e
 form.addEventListener("submit", function(ev){
   ev.preventDefault(); $("#err").className = "err"; $$(".bad").forEach(function(x){ x.classList.remove("bad"); });
   var d = collect();
+  d.vendor_id = vidEl.value;
   if(!d.market) return fail("Pick where the crew works (Step 1).", null);
   if(!d.company.trim()) return fail("Your company name is required.", form.company);
   if(!d.submitted_by.trim()) return fail("Your name is required.", form.submitted_by);
@@ -440,15 +493,17 @@ form.addEventListener("submit", function(ev){
     if(!p.last) return fail("Person " + (i + 1) + " needs a legal last name.", $('[data-k=last]', ps[i]));
     if(needsCheck() && !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(p.email)) return fail("Person " + (i + 1) + " needs a valid email. Verified First sends the consent form there.", $('[data-k=email]', ps[i]));
     if(needsCheck() && p.mobile.replace(/\D/g, "").length < 10) return fail("Person " + (i + 1) + " needs a mobile number.", $('[data-k=mobile]', ps[i]));
+    if(needsReport() && !($('input[type=file]', ps[i]).files[0])) return fail("Person " + (i + 1) + " needs their background check report attached.", null);
   }
   d.kind = "ob_bc_request"; d.company_fax = form.company_fax.value;
   var go = $("#go"); go.disabled = true; go.textContent = "Sending...";
-  fetch(EXEC, { method:"POST", headers:{ "Content-Type":"text/plain" }, body: JSON.stringify(d) }).then(function(r){ return r.json(); }).then(function(r){
+  var reads = ps.map(function(pEl, i){ var f = needsReport() ? $('input[type=file]', pEl).files[0] : null; if(!f) return Promise.resolve(null); return new Promise(function(res, rej){ var fr = new FileReader(); fr.onload = function(){ res({ name: f.name, type: f.type || "application/pdf", data: String(fr.result).split(",")[1] || "" }); }; fr.onerror = function(){ rej(new Error("Could not read " + f.name)); }; fr.readAsDataURL(f); }); });
+  Promise.all(reads).then(function(files){ files.forEach(function(f, i){ if(f) d.people[i].report = f; }); return fetch(EXEC, { method:"POST", headers:{ "Content-Type":"text/plain" }, body: JSON.stringify(d) }); }).then(function(r){ return r.json(); }).then(function(r){
     if(!r || !r.ok) throw new Error(r && r.error ? r.error : "Something went wrong.");
     try { localStorage.removeItem(KEY); } catch(e){}
     form.style.display = "none";
     var names = d.people.map(function(p){ return p.first + " " + p.last; });
-    $("#doneMsg").textContent = "Thanks, " + (d.submitted_by.split(" ")[0] || "") + ". " + (needsCheck() ? "We have the background check request for " : "We have the badge request for ") + names.join(", ") + " from " + d.company.trim() + " (" + (d.market === "nnv" ? "Northern Nevada" : "Las Vegas") + ").";
+    $("#doneMsg").textContent = "Thanks, " + (d.submitted_by.split(" ")[0] || "") + ". " + (needsReport() ? "We have the report for " : needsCheck() ? "We have the background check request for " : "We have the badge request for ") + names.join(", ") + " from " + d.company.trim() + " (" + (d.market === "nnv" ? "Northern Nevada" : "Las Vegas") + ")." + (needsReport() ? " Our compliance team reviews the report, files it, and marks them cleared." : "");
     $("#done").classList.add("show"); $("#done").scrollIntoView({ behavior:"smooth", block:"start" });
   }).catch(function(e){
     go.disabled = false; go.textContent = "Send the Request";
