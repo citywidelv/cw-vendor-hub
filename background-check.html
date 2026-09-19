@@ -447,7 +447,7 @@ function suggest(){
     if(form.company.value.trim() !== q) return;
     var ms = (r && r.ok && r.matches) || [];
     if(!ms.length){ setMatch(null); return; }
-    sugg.innerHTML = ms.map(function(m){ return '<button type="button" data-pick="' + esc(m.vendor_id) + '"><b>' + esc(m.name) + '</b><small>' + (m.contact ? esc(m.contact) : "contact on file") + '</small></button>'; }).join("") + '<button type="button" class="none" data-pick="">None of these is my company</button>';
+    sugg.innerHTML = ms.map(function(m){ return '<button type="button" data-pick="' + esc(m.vendor_id) + '"><b>' + esc(m.name) + '</b><small>' + (m.contact ? esc(m.contact) : "contact name not on file yet") + '</small></button>'; }).join("") + '<button type="button" class="none" data-pick="">None of these is my company</button>';
     sugg.className = "sugg show";
     window.__sugg = ms;
   }).catch(function(){});
