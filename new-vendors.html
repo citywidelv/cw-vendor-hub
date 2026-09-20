@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Become a City Wide Vendor | City Wide Vendor Hub</title><meta name="description" content="Join the City Wide Facility Solutions vendor network in Las Vegas and Northern Nevada. Follow the five steps: vendor evaluation, meet the team, sign your packet, banking and documents, and the janitorial background check."><style>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Become a City Wide Vendor | Who We Are and How You Get Paid | City Wide Vendor Hub</title><meta name="description" content="City Wide Facility Solutions is a facility management company in Las Vegas and Northern Nevada that coordinates commercial work through local independent vendors. Who we are, why vendors stay, how you get paid on the 10th, that there is no fee to join, and the five steps to get on file."><style>
 :root{
   --cw-red:#D22730; --cw-red-dark:#B01F27; --cw-black:#2D2A26; --cw-grey:#636466;
   --cw-white:#FFFFFF; --cw-light:#F5F5F5; --cw-border:#E5E5E5; --cw-teal:#0AA6A9;
@@ -352,6 +352,68 @@ details.step.done .btn-done{background:#1E7B34;color:#fff}
 .packet-frame iframe{display:block;width:100%;height:78vh;min-height:640px;border:0;background:#f7f5f2}
 .packet-frame .pf-note{margin:0;padding:10px 14px;font-size:12.5px;color:var(--cw-grey);background:var(--cw-light)}
 .card.packet.on{border-color:var(--cw-red);box-shadow:0 0 0 3px rgba(210,39,48,.12)}
+
+/* ---------- who we are / why vendors (Sep 2026) ---------- */
+.hero2 .wrap{padding-bottom:64px}
+.section.why{padding-top:48px}
+.why-grid{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:34px;align-items:start;margin-top:8px}
+.why-item{padding:16px 0;border-top:1px solid var(--cw-border)}
+.why-item:first-child{border-top:0;padding-top:0}
+.why-item b{display:block;font-size:15px;margin-bottom:5px;color:var(--cw-black)}
+.why-item p{font-size:14px;color:var(--cw-grey);max-width:62ch}
+.why-grid .media{position:relative}
+.why-grid .media img{border-radius:12px;box-shadow:var(--shadow-lift)}
+.why-grid .media .cap{font-size:11.5px;color:var(--cw-grey);margin-top:12px}
+@media(max-width:860px){.why-grid{grid-template-columns:1fr}.why-grid .media{max-width:480px}}
+@media(max-width:560px){.section-head{flex-wrap:wrap;gap:2px 12px}}
+.pay-band{background:linear-gradient(120deg,var(--cw-black) 0%,#3a3733 100%);color:#fff;border-top:4px solid var(--cw-red);padding:48px 0}
+.pay-grid{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(0,1fr);gap:36px;align-items:center}
+.pay-band .kicker{display:inline-flex;align-items:center;gap:8px;font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#ffb3b8;margin-bottom:12px}
+.pay-band .kicker::before{content:"";width:22px;height:3px;background:var(--cw-red);border-radius:2px}
+.pay-band h2{font-size:clamp(20px,3vw,27px);line-height:1.25;max-width:600px;margin-bottom:14px}
+.pay-band p{font-size:14.5px;color:#e6e4e1;max-width:62ch;margin-bottom:12px}
+.pay-band p b{color:#fff}
+.pay-card{background:#fff;color:var(--cw-black);border-radius:14px;padding:22px 24px;box-shadow:0 14px 34px rgba(0,0,0,.35);border-top:5px solid var(--cw-red)}
+.pay-card .pc-head{display:block;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--cw-red);margin-bottom:12px}
+.pay-card ul{list-style:none;margin:0;padding:0}
+.pay-card li{position:relative;padding:0 0 10px 24px;font-size:13.5px;color:var(--cw-grey)}
+.pay-card li b{color:var(--cw-black)}
+.pay-card li::before{content:"\2713";position:absolute;left:0;top:0;color:var(--cw-red);font-weight:700}
+.pay-card .pc-fine{font-size:11.5px;color:var(--cw-grey);margin:6px 0 0;padding-top:10px;border-top:1px dashed var(--cw-border)}
+@media(max-width:860px){.pay-grid{grid-template-columns:1fr}}
+.stay-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.stay-card{background:#fff;border:1px solid var(--cw-border);border-radius:var(--radius);padding:22px;box-shadow:var(--shadow)}
+.stay-card .icon{width:44px;height:44px;border-radius:10px;background:var(--cw-light);display:flex;align-items:center;justify-content:center;margin-bottom:14px;color:var(--cw-red)}
+.stay-card h3{font-size:15px;margin-bottom:6px}
+.stay-card p{font-size:13px;color:var(--cw-grey)}
+.stay-photo{border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow);min-height:220px}
+.stay-photo img{width:100%;height:100%;object-fit:cover}
+@media(max-width:900px){.stay-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:560px){.stay-grid{grid-template-columns:1fr}}
+.review-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:18px}
+.review{margin:0;background:#fff;border:1px solid var(--cw-border);border-radius:var(--radius);padding:22px 24px;box-shadow:var(--shadow);display:flex;flex-direction:column}
+.review .stars{color:#F2B01E;font-size:16px;letter-spacing:2px;margin-bottom:10px}
+.review blockquote{margin:0;font-size:14px;line-height:1.65;color:var(--cw-black);flex:1}
+.review blockquote::before{content:"\201C";color:var(--cw-red);font-weight:700;margin-right:2px}
+.review blockquote::after{content:"\201D";color:var(--cw-red);font-weight:700;margin-left:2px}
+.review figcaption{margin-top:14px;padding-top:12px;border-top:1px solid var(--cw-border);font-size:13px}
+.review figcaption b{display:block}
+.review figcaption span{color:var(--cw-grey);font-size:12px}
+.review.client{background:var(--cw-light);box-shadow:none}
+.rev-link{margin-top:18px;font-size:13.5px}
+.cost-grid{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:34px;align-items:center}
+.cost-grid p{font-size:14px;margin-bottom:12px;max-width:66ch}
+.cost-grid .media img{border-radius:12px;box-shadow:var(--shadow-lift)}
+@media(max-width:860px){.cost-grid{grid-template-columns:1fr}.cost-grid .media{max-width:480px}}
+.how-band{background:var(--cw-light);border-top:1px solid var(--cw-border);border-bottom:1px solid var(--cw-border);padding:44px 0}
+.how-steps{list-style:none;margin:8px 0 0;padding:0;display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
+.how-steps li{display:flex;gap:12px;align-items:flex-start;background:#fff;border:1px solid var(--cw-border);border-radius:var(--radius);padding:18px;box-shadow:var(--shadow)}
+.how-steps li b{display:block;font-size:14.5px;margin-bottom:4px}
+.how-steps li p{font-size:13px;color:var(--cw-grey);margin:0}
+@media(max-width:900px){.how-steps{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:560px){.how-steps{grid-template-columns:1fr}}
+.rail.rail-inline{margin-top:36px}
+.steps-wrap{padding-top:30px}
 </style>  <link rel="icon" href="favicon.ico" sizes="any">
   <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
@@ -364,13 +426,92 @@ details.step.done .btn-done{background:#1E7B34;color:#fff}
 <script src="https://citywidelv.github.io/cw-ops-desk/cw-nav.js"></script>
 <script>if(window.CWNav) CWNav.vendor();</script>
 <section class="hero2"><div class="bgimg"></div><div class="scrim"></div><div class="wrap">
-<span class="kicker">City Wide Vendor Hub</span>
-<h1>Become a City Wide Vendor</h1>
-<p class="lede">City Wide Facility Solutions manages the full service budget for commercial facilities across Las Vegas, Northern Nevada, and beyond. Joining the vendor network costs nothing, and City Wide guarantees vendor payments even when property owners pay late. Five steps get your crew eligible for work, and this page walks you through each one.</p>
-<div class="cta-row"><a class="btn btn-red" href="#step1">Start with Step 1</a><a class="btn btn-ghost" href="#checklist">See the Full Checklist</a></div>
+<span class="kicker">City Wide Vendor Hub &middot; Las Vegas &amp; Northern Nevada</span>
+<h1>Commercial properties. <em>On-time payments.</em> Local crews.</h1>
+<p class="lede">City Wide Facility Solutions is a facility management company. We hold the service contracts for commercial buildings across Las Vegas and Northern Nevada and coordinate the work through local, independent vendors. If you run a crew that does janitorial, floor care, landscaping, windows, or the trades, this page is who we are and what working with us looks like.</p>
+<div class="cta-row"><a class="btn btn-red" href="#why">See how it works</a><a class="btn btn-ghost" href="#checklist">Skip to the steps</a></div>
 </div></section>
 
-<div class="rail"><div class="wrap"><div class="track">
+<section class="section why" id="why"><div class="wrap">
+<div class="section-head"><h2>Who We Are</h2><span class="tag">Facility Management</span></div>
+<p class="sub">We do something different. Every building we serve has a signed service agreement with City Wide and a City Wide Facility Solutions Manager who owns that relationship for years. We do not run crews. We coordinate the work through vendors like you.</p>
+<div class="why-grid">
+<div class="why-copy">
+<div class="why-item"><b>What we do</b><p>We sell and manage commercial facility services, more than 20 of them, for office buildings, medical, schools, warehouses, and industrial sites in Las Vegas and Northern Nevada. The client signs with us. We handle the sales, the contract, the scope, the inspections, and the billing.</p></div>
+<div class="why-item"><b>How we do it</b><p>Each property gets a Facility Solutions Manager who walks the building, writes a scope that makes sense, sets the price, and stays on the account. A night manager checks janitorial work after hours. When the client needs something, they call us, not you.</p></div>
+<div class="why-item"><b>Where you fit</b><p>You are the expert in your trade. You do the work under your own business name, with your own people and equipment. We facilitate the contract, manage the client, and make sure you are paid on time. You invoice City Wide, never the client.</p></div>
+<div class="why-item"><b>Get to know us first</b><p>The fastest way to know if this fits your crew is 30 minutes at our office in Las Vegas or Reno. No paperwork needed to come by. <a href="#step2">Book a time in Step 2</a>.</p></div>
+</div>
+<div class="media"><img src="images/crew-portrait-close.jpg" alt="City Wide independent contractor smiling in a commercial building" loading="lazy"><p class="cap">Every vendor works under their own company name and wears the City Wide Independent Contractor logo in the building.</p></div>
+</div>
+</div></section>
+
+<section class="pay-band" id="paid"><div class="wrap"><div class="pay-grid">
+<div>
+<span class="kicker">Sound familiar?</span>
+<h2>Have you taken commercial work and then spent weeks chasing the check?</h2>
+<p>Most vendors have. The property manager is slow, the company above you is waiting on the owner, and your payroll does not wait on anyone. That is the part of commercial work that wears people out.</p>
+<p>Here is how it works with us. <b>You are paid on the 10th of the month for the previous month's service.</b> Two conditions, both in your control. The work was done, and your invoice reached us on time. That is it.</p>
+<p><b>Your pay does not depend on whether the property owner has paid us.</b> When a client pays late, that is our problem to handle, not yours. Our vendors bring this up more than anything else when they tell other crews about us.</p>
+</div>
+<div class="pay-card">
+<b class="pc-head">How you get paid</b>
+<ul>
+<li><b>ACH direct deposit</b> to your business bank account</li>
+<li><b>Monthly accounts:</b> invoice by the 1st business day, paid on the 10th</li>
+<li><b>One-time projects:</b> invoice when the job is done, same cutoff schedule</li>
+<li><b>Set monthly pay</b> per building, agreed in writing before you start</li>
+</ul>
+<p class="pc-fine">Full schedule is in the Invoicing Guidelines you receive with your packet.</p>
+</div>
+</div></div></section>
+
+<section class="section" id="why-stay"><div class="wrap">
+<div class="section-head"><h2>Why Vendors Stay</h2><span class="tag">What They Tell Us</span></div>
+<p class="sub">Vendors who have been with us for years tell us the same five things.</p>
+<div class="stay-grid">
+<div class="stay-card"><span class="icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18"/><path d="M5 7h14"/><path d="M3 12l2-5 2 5a2 2 0 0 1-4 0z"/><path d="M17 12l2-5 2 5a2 2 0 0 1-4 0z"/></svg></span><h3>Always fair</h3><p>A City Wide manager writes every scope and walks every building before it is awarded. If the scope and the pay do not line up, we fix the scope or the pay. Nobody wins when a crew is set up to fail.</p></div>
+<div class="stay-card"><span class="icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></span><h3>Good communication</h3><p>You have one Facility Solutions Manager and one night manager, and you know how to reach both. Client requests, scope changes, and problems come to you through people who know the building, not through a ticket queue.</p></div>
+<div class="stay-card"><span class="icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg></span><h3>Constant new opportunities</h3><p>New buildings and one-time projects post to the <a href="opportunities.html">Open Opportunities board</a> as they open. Your manager is also in your buildings regularly, looking for services the client needs and does not have yet. That is more work for you without another sales call.</p></div>
+<div class="stay-card"><span class="icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><circle cx="4" cy="6" r="2"/><circle cx="20" cy="6" r="2"/><circle cx="4" cy="18" r="2"/><circle cx="20" cy="18" r="2"/><path d="M6 7l4 3M14 10l4-3M6 17l4-3M14 14l4 3"/></svg></span><h3>A network, not just a job</h3><p>You get connected to the other trades we work with, to training, and to the people who can help you take on bigger buildings and add services. Growing your business is good for ours.</p></div>
+<div class="stay-card"><span class="icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg></span><h3>Tools and education</h3><p>Crew guides on workloading, equipment, color coding, medical and clean room work, a supply shop with vendor pricing, and help adding services you do not offer yet. We want you to be able to say yes to more.</p></div>
+<div class="stay-photo"><img src="images/trade-landscape.jpg" alt="Landscaping vendor in a City Wide vest, smiling on a commercial property" loading="lazy"></div>
+</div>
+</div></section>
+
+<section class="section reviews" id="reviews"><div class="wrap">
+<div class="section-head"><h2>What Our Vendors Say</h2><span class="tag">Public Google Reviews</span></div>
+<p class="sub">Public reviews on our Google Business page, quoted as written.</p>
+<div class="review-grid">
+<figure class="review"><div class="stars" aria-label="5 stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div><blockquote>We have been working with Citywide now for more than two years, TJ and Robert been very helpful they are really professional, Nick Ennis the night manager is been really helpful we appreciated him helping out. Professional and reliable company to work with.</blockquote><figcaption><b>C&amp;M Cleaning Service LLC</b><span>Janitorial vendor</span></figcaption></figure>
+<figure class="review"><div class="stars" aria-label="5 stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div><blockquote>I've had the pleasure of working with City Wide Facility Solutions. Their team is excellent and professional at what they do. They are easy to work with and pay on time. We will definitely continue to do work together.</blockquote><figcaption><b>Christian Osiecki</b><span>Vendor</span></figcaption></figure>
+</div>
+<p class="rev-link">Read all of our Google reviews: <a href="https://www.google.com/maps/search/City+Wide+Facility+Solutions+Las+Vegas" target="_blank" rel="noopener">Las Vegas</a> &nbsp;&middot;&nbsp; <a href="https://www.google.com/maps/search/City+Wide+Facility+Solutions+Reno" target="_blank" rel="noopener">Northern Nevada</a></p>
+</div></section>
+
+<section class="section cost" id="cost"><div class="wrap"><div class="cost-grid">
+<div>
+<div class="section-head"><h2>What It Costs to Join</h2><span class="tag">The Honest Answer</span></div>
+<p class="sub" style="margin-bottom:14px">A lot of vendors assume a network like this charges a fee to get in. Some do. We do not.</p>
+<p><b>There is no fee to join.</b> Nobody at City Wide will ask you for money to get on file or to be considered for work. Getting on file is paperwork and compliance, nothing more.</p>
+<p>What you do need is what any commercial contractor already carries to do the job. A business bank account in your company name. General liability insurance that names City Wide. Workers' compensation if you have employees. For janitorial crews, a background check on each person who will be inside a client building. If your services are regulated, any applicable licenses need to be in place. Those are the costs of running your business. None of them are paid to us.</p>
+<p>The vendor packet also spells out how a missed service is handled and what you are agreeing to. Read it before you sign. We would rather you know now than be surprised later.</p>
+</div>
+<div class="media"><img src="images/crew-window.jpg" alt="Window cleaning vendor in a City Wide vest working on a commercial storefront" loading="lazy"></div>
+</div></div></section>
+
+<section class="how-band" id="how"><div class="wrap">
+<div class="section-head"><h2>How Work Reaches You</h2><span class="tag">Start to First Invoice</span></div>
+<ol class="how-steps">
+<li><span class="stepnum"><span>1</span></span><div><b>Get on file</b><p>Finish the paperwork below. It takes most vendors a few days, mostly waiting on the insurance agent.</p></div></li>
+<li><span class="stepnum"><span>2</span></span><div><b>Hear about work</b><p>Opportunities post to the board and your manager calls when a building fits your crew. You say yes or no. No obligation to take anything.</p></div></li>
+<li><span class="stepnum"><span>3</span></span><div><b>Walk the building</b><p>You and the Facility Solutions Manager walk it together. You see the scope, the schedule, and the monthly pay before you commit.</p></div></li>
+<li><span class="stepnum"><span>4</span></span><div><b>Get awarded and get paid</b><p>An Exhibit A puts the building, the scope, and the pay in writing. You start, you invoice City Wide monthly, and you are paid on the 10th.</p></div></li>
+</ol>
+<div class="cta-row" style="margin-top:26px;display:flex;gap:12px;flex-wrap:wrap"><a class="btn btn-red" href="#checklist">Start the steps</a><a class="btn btn-ghost" href="opportunities.html">See what is open right now</a></div>
+</div></section>
+
+<div class="rail rail-inline"><div class="wrap"><div class="track">
 <div class="prog-note" id="progNote"><b>Your progress:</b> 0 of 5 steps done</div>
 <div class="bar"><i id="progBar"></i></div>
 <ol id="railList">
@@ -382,15 +523,9 @@ details.step.done .btn-done{background:#1E7B34;color:#fff}
 </ol>
 </div></div></div>
 
-<section class="section list-first" id="checklist"><div class="wrap">
-<div class="section-head"><h2>First, the List</h2><span class="tag">What We Need On File</span></div>
-<p class="sub">Four documents put your crew on file, five if you do janitorial. This is everything, in one place. The steps below walk you through them in order, and you can skip ahead if you have already done a portion.</p>
-<div class="tbl-wrap"><table><thead><tr><th>Document</th><th>Who Handles It</th><th>How It Reaches Us</th></tr></thead><tbody><tr><td class="item">1. Vendor packet, signed online<span class="note">Includes your ACH payment authorization for direct deposit.</span></td><td>You</td><td>Submits automatically when you finish signing</td></tr><tr><td class="item">2. Voided business check or bank letter<span class="note">Verifies the account on your ACH authorization. Company name, never personal. <a href="#banking">Banking rules</a>.</span></td><td>You and your bank</td><td>Upload inside the packet, or <a href="upload.html">upload it here</a></td></tr><tr><td class="item">3. Certificate of insurance<span class="note">Must name the exact City Wide entity. Download the request below and hand it to your agent.</span></td><td>Your insurance agent</td><td>Your agent emails it to us directly, or either of you can <a href="upload.html">upload it here</a></td></tr><tr><td class="item">4. Waiver of Agreement, notarized<span class="note">Sign in front of a notary, never ahead of time.</span></td><td>You and a notary</td><td>Return it with your packet, bring it to the office, or <a href="upload.html">upload it here</a></td></tr><tr><td class="item">5. Background check<span class="note">Janitorial crews only. Required before your crew&#39;s first shift. <a href="#bgcheck">How it works</a>.</span></td><td>You</td><td>Start it online and results come to us</td></tr></tbody></table></div>
-</div></section>
-
-<section class="steps-wrap"><div class="wrap">
-<div class="section-head"><h2>Then, the Steps</h2><span class="tag">In Order, At Your Pace</span></div>
-<p class="sub">Work top to bottom, or jump straight to where you left off. Mark each step done as you go and this page remembers your progress on this device.</p>
+<section class="steps-wrap" id="checklist"><div class="wrap">
+<div class="section-head"><h2>Get On File in Five Steps</h2><span class="tag">In Order, At Your Pace</span></div>
+<p class="sub">Four documents put your crew on file, five if you do janitorial. Work top to bottom, or jump to where you left off. Mark each step done and this page remembers your progress on this device.</p>
 
 <details class="step" id="step1" data-step="1">
 <summary><span class="stepnum"><span>1</span></span><span class="s-title"><h2>Tell Us What Your Crew Does</h2><span class="tag">Vendor Evaluation &middot; About 5 Minutes</span></span><span class="chev">&#9660;</span></summary>
@@ -463,7 +598,7 @@ details.step.done .btn-done{background:#1E7B34;color:#fff}
 <div><h3 class="dl-head">The Five Things That Slow Vendors Down</h3><p class="dl-sub">Nearly every onboarding delay is one of these five. Dodge them all and you are on file and eligible for work in days.</p><ul class="expect"><li><b>A personal name on the banking.</b> The check, the bank letter, and the ACH authorization all need your company name. We pay businesses, not individuals.</li><li><b>Names that almost match.</b> Desert Cleaning on the check and Desert Cleaning Group LLC on the packet sends us back to you. Letter for letter, everywhere.</li><li><b>Starter checks and stale letters.</b> Temporary checks, screenshots, and bank letters older than 90 days cannot be accepted.</li><li><b>A certificate naming the wrong entity.</b> City Wide alone is not enough. Your agent needs the exact certificate holder shown on the request form.</li><li><b>Signing the waiver early.</b> The notary must watch you sign. A waiver signed at the kitchen table has to be redone.</li></ul></div>
 <div><img src="images/walkthrough.jpg" alt="Walkthrough on a job site" loading="lazy"></div>
 </div></div></section>
-<section class="opps-band"><div class="wrap inner"><span class="dot"></span><span class="txt"><b>Paperwork done?</b><span>New contracts and one-time projects post to the Open Opportunities board the moment they open. First qualified answers get the walkthrough.</span></span><a class="btn btn-red" href="opportunities.html">View the Board</a></div></section><footer class="site-foot"><div class="wrap"><div class="cols"><div><b style="color:#fff">City Wide Facility Solutions</b> &middot; Las Vegas &amp; Northern Nevada<br>Vendor Resource Hub</div><div><a href="shop/">Order Supplies</a> &nbsp;&nbsp; <a href="index.html">Resource Center</a> &nbsp;&nbsp; <a href="https://www.gocitywide.com" target="_blank" rel="noopener">GoCityWide.com</a></div></div><div class="fine">For crew and vendor reference. Joining the vendor network is free. Questions? Contact your City Wide Facility Solutions representative.</div></div></footer>
+<section class="opps-band"><div class="wrap inner"><span class="dot"></span><span class="txt"><b>Paperwork done?</b><span>New contracts and one-time projects post to the Open Opportunities board the moment they open. First qualified answers get the walkthrough.</span></span><a class="btn btn-red" href="opportunities.html">View the Board</a></div></section><footer class="site-foot"><div class="wrap"><div class="cols"><div><b style="color:#fff">City Wide Facility Solutions</b> &middot; Las Vegas &amp; Northern Nevada<br>Vendor Resource Hub</div><div><a href="shop/">Order Supplies</a> &nbsp;&nbsp; <a href="index.html">Resource Center</a> &nbsp;&nbsp; <a href="https://www.gocitywide.com" target="_blank" rel="noopener">GoCityWide.com</a></div></div><div class="fine">For crew and vendor reference. There is no fee to join the vendor network. Questions? Contact your City Wide Facility Solutions representative.</div></div></footer>
 <script>
 (function(){
   var t=document.querySelector('.menu-toggle'),n=document.querySelector('.site-head nav');
@@ -515,12 +650,13 @@ details.step.done .btn-done{background:#1E7B34;color:#fff}
     a.addEventListener('click',function(){openFor(a.getAttribute('href'));});
   });
   var m=location.search.match(/region=(lv|nnv)/);
-  if(m){var s3=document.getElementById('step3');if(s3){s3.open=true;}showReg(m[1]);
-    setTimeout(function(){var el=document.getElementById('step3');if(el){el.scrollIntoView();}},60);}
+  if(m){showReg(m[1]);var s3=document.getElementById('step3');if(s3){s3.open=true;}
+    if(location.hash==='#step3'||location.hash==='#packet'){setTimeout(function(){var el=document.getElementById('step3');if(el){el.scrollIntoView();}},60);}}
   if(location.hash){openFor(location.hash);}
   var first=document.querySelector('details.step[data-step="1"]');
   var done=load();
   if(first&&!done.filter(Boolean).length&&!m&&!location.hash){first.open=true;}
+  if(location.hash==='#why'){setTimeout(function(){var w=document.getElementById('why');if(w){w.scrollIntoView();}},60);}
   paint();
 })();
 </script>
