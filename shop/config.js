@@ -27,6 +27,11 @@ window.CW_CONFIG = {
   // Picked Up checkboxes). Leave blank ("") to disable sheet logging.
   ORDERS_WEBHOOK: "https://script.google.com/macros/s/AKfycbzXd26tryRxa_W_DRRzDIkBoUgzzNe5As2p8LJqcg-9-sY89AmH_GaV-68nbHd0wqBS/exec",
 
+  // Coupon codes (Vendor of the Month, $150 off one order). Checked and redeemed on the
+  // CW Solicitations Apps Script (kinds rec_coupon_check / rec_coupon_redeem), never in
+  // page code, so no code is ever visible in the source. Leave blank ("") to hide the field.
+  COUPON_WEBHOOK: "https://script.google.com/macros/s/AKfycbzfNnrpidCbWB1DeUNgXvRhDFMQgApfpn-3C9GU45wMEHcJpWFl8ZQVo6PUBSRfEVfRdg/exec",
+
   // Fallback / notification address for orders (used if the endpoint is unreachable)
   ORDER_EMAIL: "LVservicecall@gocitywide.com",
   // CC on fallback order emails

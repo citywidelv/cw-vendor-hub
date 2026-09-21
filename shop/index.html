@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>City Wide Vendor Shop</title>
+<!-- build 2026-09-21: Vendor of the Month award codes at checkout (server-checked, one-time, up to $150). -->
 <script src="config.js"></script>
 <style>
 :root{
@@ -192,6 +193,33 @@ main{max-width:1200px; margin:0 auto; padding:16px;}
 .cc-note a{color:var(--cw-red); font-weight:700;}
 .ack{display:flex; gap:10px; align-items:flex-start; font-size:var(--fs-ui); line-height:1.5; margin-bottom:14px;}
 .ack input{margin-top:3px; width:20px; height:20px; flex-shrink:0;}
+/* Coupon code + the Vendor of the Month award state */
+.coupon-row{display:flex; gap:8px;}
+.coupon-row input{flex:1; text-transform:uppercase; letter-spacing:.06em; font-weight:700;}
+.coupon-row button{flex:0 0 auto; background:var(--cw-black); color:#fff; border:none; border-radius:var(--r-ctl); padding:0 16px; min-height:44px; font-weight:700; font-size:var(--fs-ui);}
+.coupon-row button:disabled{background:var(--cw-grey); cursor:wait;}
+.coupon-msg{font-size:var(--fs-ui); line-height:1.5; margin-top:6px; color:var(--cw-grey);}
+.coupon-msg.bad{color:var(--cw-red); font-weight:700;}
+.award{position:relative; overflow:hidden; border:2px solid #0AA6A9; border-radius:var(--r-card); background:linear-gradient(135deg,#F2FBFB 0%,#FFFFFF 55%,#FDF3F3 100%); padding:18px 16px 14px; margin-bottom:14px; text-align:center; animation:awardIn .5s ease-out;}
+.award::before{content:""; position:absolute; inset:-60% -30%; background:conic-gradient(from 0deg,transparent 0 40%,rgba(10,166,169,.10) 45%,transparent 50%,transparent 90%,rgba(210,39,48,.08) 95%,transparent 100%); animation:awardSpin 9s linear infinite; pointer-events:none;}
+.award>*{position:relative;}
+.award .k{font-size:var(--fs-caption); font-weight:700; letter-spacing:.16em; text-transform:uppercase; color:#067679;}
+.award h3{font-size:var(--fs-lead); line-height:1.3; margin:6px 0 4px; color:var(--cw-black);}
+.award p{font-size:var(--fs-ui); color:var(--cw-grey); margin:0 0 10px;}
+.award .code{display:inline-flex; align-items:center; gap:10px; background:#fff; border:1.5px dashed var(--cw-red); border-radius:var(--r-ctl); padding:8px 12px; font-size:var(--fs-ui); font-weight:700; letter-spacing:.06em; color:var(--cw-red);}
+.award .code button{background:none; border:none; color:var(--cw-grey); font-size:var(--fs-caption); font-weight:700; text-decoration:underline; padding:0; letter-spacing:0;}
+.award .spark{position:absolute; width:10px; height:10px; color:#0AA6A9; opacity:0; animation:sparkPop 1.6s ease-out infinite;}
+.award .spark::before,.award .spark::after{content:""; position:absolute; left:50%; top:50%; background:currentColor; border-radius:2px;}
+.award .spark::before{width:10px; height:2px; transform:translate(-50%,-50%);}
+.award .spark::after{width:2px; height:10px; transform:translate(-50%,-50%);}
+.award .spark.s1{left:8%; top:18%;} .award .spark.s2{right:10%; top:22%; animation-delay:.4s; color:var(--cw-red);}
+.award .spark.s3{left:16%; bottom:16%; animation-delay:.8s; color:var(--cw-red);} .award .spark.s4{right:14%; bottom:20%; animation-delay:1.1s;}
+.totrow.award-row{color:#067679; font-weight:700;}
+.award-note{background:#FFF4D6; border:1px solid #E5B423; border-radius:var(--r-ctl); padding:10px 12px; font-size:var(--fs-ui); line-height:1.5; margin:8px 0 2px; text-align:left;}
+@keyframes awardIn{from{transform:scale(.96); opacity:0;} to{transform:none; opacity:1;}}
+@keyframes awardSpin{to{transform:rotate(360deg);}}
+@keyframes sparkPop{0%{transform:scale(.2); opacity:0;} 30%{opacity:1;} 100%{transform:scale(1.4); opacity:0;}}
+@media(prefers-reduced-motion:reduce){.award,.award::before,.award .spark{animation:none;} .award .spark{opacity:.7;}}
 .success{padding:32px 16px; text-align:center;}
 .success .check{font-size:var(--fs-h1); color:#1a7f37; line-height:1;}
 .success h3{font-size:var(--fs-lead); margin:12px 0;}
@@ -317,6 +345,9 @@ let activeCat = "All";
 let activeGroup = null;
 let sortMode = "featured";
 let checkoutMode = false;
+// Vendor of the Month award code, once the server has said it is valid. {code, amount, name, label, month, year}
+let coupon = null;
+try{ coupon = JSON.parse(sessionStorage.getItem("cw_coupon")||"null"); }catch(e){ coupon = null; }
 
 // ---------- CSV loading ----------
 function parseCSV(text){
@@ -611,6 +642,16 @@ function cartLines(){
   });
 }
 function cartTotal(){return cartLines().reduce((s,l)=>s+l.line,0);}
+function couponDiscount(){ return coupon ? Math.min(Number(coupon.amount)||0, cartTotal()) : 0; }
+function orderTotal(){ return Math.max(0, cartTotal()-couponDiscount()); }
+function totalsHTML(){
+  const sub=cartTotal(), disc=couponDiscount();
+  const tax=sub*((CFG.TAX_RATE_PCT||0)/100);
+  return `<div class="totrow"><span>Subtotal</span><span>${fmt(sub)}</span></div>`+
+    (disc?`<div class="totrow award-row"><span>Vendor of the Month award</span><span>&minus;${fmt(disc)}</span></div>`:"")+
+    (tax?`<div class="totrow"><span>Estimated tax</span><span>${fmt(tax)}</span></div>`:"")+
+    `<div class="totrow grand"><span>Estimated Total</span><span>${fmt(Math.max(0,sub-disc)+tax)}</span></div>`;
+}
 
 function openCart(){checkoutMode=false;renderDrawer();
   document.getElementById("drawer").classList.add("show");
@@ -645,12 +686,7 @@ function renderDrawer(){
           <button class="rm" onclick="rmItem('${l.id}','${esc(l.size)}','${esc(l.color||"")}')">Remove</button>
         </div>
       </div>`).join("");
-    const sub=cartTotal();
-    const tax=sub*((CFG.TAX_RATE_PCT||0)/100);
-    foot.innerHTML=`
-      <div class="totrow"><span>Subtotal</span><span>${fmt(sub)}</span></div>
-      ${tax?`<div class="totrow"><span>Estimated tax</span><span>${fmt(tax)}</span></div>`:""}
-      <div class="totrow grand"><span>Estimated Total</span><span>${fmt(sub+tax)}</span></div>
+    foot.innerHTML=totalsHTML()+`
       <button class="checkout-btn" onclick="checkoutMode=true;renderDrawer()">Continue to Checkout</button>`;
   } else {
     const saved=JSON.parse(localStorage.getItem("cw_vendor")||"{}");
@@ -663,6 +699,7 @@ function renderDrawer(){
         <input id="f-account" placeholder="Building or account name" value="${esc(saved.account||"")}">
       </div>
       <div class="form-grp"><label>Special Requests / Name Badge Names</label><textarea id="f-notes" rows="3"></textarea></div>
+      ${couponHTML()}
       <div class="notice"><b>Pricing Notice:</b> ${esc(CFG.PRICING_NOTICE||"")}</div>
       <div class="form-grp"><label>How would you like to pay? <span class="req">*</span></label>
         <div class="paymethods">
@@ -685,12 +722,57 @@ function renderDrawer(){
         <label for="f-ack" id="f-ack-lab">I understand prices are estimates, and I authorize this order to be settled by pay deduction. <span class="req">*</span></label>
       </div>
       <div id="f-err" style="color:var(--cw-red);font-size:var(--fs-ui);font-weight:700;line-height:1.5;"></div>`;
-    const sub=cartTotal();
-    foot.innerHTML=`
-      <div class="totrow grand"><span>Estimated Total</span><span>${fmt(sub)}</span></div>
+    foot.innerHTML=totalsHTML()+`
       <button class="checkout-btn" id="submitBtn" onclick="submitOrder()">Submit Order</button>`;
   }
 }
+
+// ---------- Vendor of the Month award code ----------
+// The code is checked and spent on the server (CW Solicitations, Recognition.gs). This page
+// only ever sees "valid" or "not valid", so no code is in the page source.
+function couponHTML(){
+  if(!CFG.COUPON_WEBHOOK) return "";
+  if(coupon){
+    const disc=couponDiscount(), left=Math.max(0,(Number(coupon.amount)||0)-disc);
+    return `
+      <div class="award" id="award" role="status">
+        <span class="spark s1"></span><span class="spark s2"></span><span class="spark s3"></span><span class="spark s4"></span>
+        <div class="k">${esc(coupon.label||"Vendor of the Month")}</div>
+        <h3>Congratulations on winning Vendor of the Month!</h3>
+        <p>${esc(coupon.name||"")}${coupon.name?", your":"Your"} ${fmt(coupon.amount)} award is applied to this order.</p>
+        <div class="code">${esc(coupon.code)} <button type="button" onclick="removeCoupon()">Remove</button></div>
+        ${left>0?`<div class="award-note"><b>Heads up:</b> this order comes to ${fmt(cartTotal())}, so it uses ${fmt(disc)} of your ${fmt(coupon.amount)} award. The code works one time only. The other ${fmt(left)} does not carry over to another order. Want to use the whole award? Add more items before you submit.</div>`:""}
+      </div>`;
+  }
+  return `
+      <div class="form-grp">
+        <label>Coupon or award code</label>
+        <div class="coupon-row"><input id="f-coupon" placeholder="VOTM-0826-XXXXX" autocomplete="off" autocapitalize="characters" spellcheck="false" onkeydown="if(event.key==='Enter'){event.preventDefault();applyCoupon();}"><button type="button" id="applyBtn" onclick="applyCoupon()">Apply</button></div>
+        <div class="coupon-msg" id="coupon-msg">Vendor of the Month? Enter the code from your award email.</div>
+      </div>`;
+}
+function couponPost(payload){
+  return fetch(CFG.COUPON_WEBHOOK,{method:"POST",headers:{"Content-Type":"text/plain"},body:JSON.stringify(payload)}).then(r=>r.json());
+}
+async function applyCoupon(){
+  const inp=document.getElementById("f-coupon"), msg=document.getElementById("coupon-msg"), btn=document.getElementById("applyBtn");
+  const code=(inp.value||"").trim().toUpperCase();
+  if(code.replace(/[^A-Z0-9]/g,"").length<8){ msg.className="coupon-msg bad"; msg.textContent="Type the whole code, like VOTM-0826-XXXXX."; return; }
+  btn.disabled=true; btn.textContent="Checking..."; msg.className="coupon-msg"; msg.textContent="Checking your code...";
+  try{
+    const r=await couponPost({kind:"rec_coupon_check", code});
+    if(!r||!r.ok){ throw new Error(r&&r.error||"no reply"); }
+    if(!r.valid){ msg.className="coupon-msg bad"; msg.textContent=r.reason||"That code is not valid."; btn.disabled=false; btn.textContent="Apply"; return; }
+    coupon={code:r.code, amount:Number(r.amount)||0, name:r.name||"", label:r.label||"", month:r.month, year:r.year};
+    try{ sessionStorage.setItem("cw_coupon",JSON.stringify(coupon)); }catch(e){}
+    renderDrawer();
+    const a=document.getElementById("award"); if(a) a.scrollIntoView({behavior:"smooth",block:"center"});
+  }catch(e){
+    msg.className="coupon-msg bad"; msg.textContent="Could not check the code right now. Check your connection and try again.";
+    btn.disabled=false; btn.textContent="Apply";
+  }
+}
+function removeCoupon(){ coupon=null; try{ sessionStorage.removeItem("cw_coupon"); }catch(e){} renderDrawer(); }
 function payMethod(){
   const el=document.querySelector('input[name="paymethod"]:checked');
   return el ? el.value : "deduct";
@@ -714,7 +796,7 @@ function chQty(id,size,color,d){
 function rmItem(id,size,color){cart=cart.filter(x=>!(x.id===id&&x.size===size&&(x.color||"")===(color||"")));saveCart();renderDrawer();}
 
 // ---------- Submit ----------
-function orderText(info){
+function orderText(info, award){
   const lines=cartLines().map(l=>
     `${l.qty} x ${l.p.name}${l.spec?" ["+l.spec+"]":""} (SKU ${l.p.sku}${l.p.supplier_sku?" / Bennett "+l.p.supplier_sku:""}) @ ${fmt(l.unit)} = ${fmt(l.line)} [${l.p.fulfillment}]`);
   return [
@@ -723,19 +805,23 @@ function orderText(info){
     `Primary Account: ${info.account}`,
     info.notes?`Notes: ${info.notes}`:null,
     ``, `ITEMS:`, ...lines, ``,
-    `Estimated Total: ${fmt(cartTotal())}`,
+    award ? `Subtotal: ${fmt(cartTotal())}` : null,
+    award ? `VENDOR OF THE MONTH AWARD (${award.code}, ${award.label}): -${fmt(award.discount)}${award.forfeited>0?` (unused ${fmt(award.forfeited)} forfeited, one-time code)`:""}` : null,
+    `Estimated Total${award?" after award":""}: ${fmt(award?Math.max(0,cartTotal()-award.discount):cartTotal())}`,
     info.pay==="card" ? `Payment: CREDIT CARD on file (vendor approves the total before we charge)` : `Payment: Pay deduction (authorized at checkout)`,
   ].filter(x=>x!==null).join("\n");
 }
-function logOrderToSheet(info){
+function logOrderToSheet(info, award){
   // Fire-and-forget append to the Orders tab of the master Google Sheet.
   if(!CFG.ORDERS_WEBHOOK) return;
   try{
+    const v=Object.assign({}, info);
+    if(award) v.notes=(v.notes?v.notes+" | ":"")+`Vendor of the Month award ${award.code} applied: -${fmt(award.discount)}`;
     fetch(CFG.ORDERS_WEBHOOK,{
       method:"POST", mode:"no-cors",
       headers:{"Content-Type":"text/plain"},
       body:JSON.stringify({
-        vendor:info, total:+cartTotal().toFixed(2),
+        vendor:v, total:+(award?Math.max(0,cartTotal()-award.discount):cartTotal()).toFixed(2), coupon:award?award.code:"", discount:award?award.discount:0,
         items:cartLines().map(l=>({sku:l.p.sku+(l.p.supplier_sku?" / Bennett "+l.p.supplier_sku:""),name:l.p.name,size:l.spec,qty:l.qty,unit:l.unit})),
       }),
     });
@@ -753,7 +839,29 @@ async function submitOrder(){
   localStorage.setItem("cw_vendor",JSON.stringify(info));
   const btn=document.getElementById("submitBtn");
   btn.disabled=true;btn.textContent="Submitting...";
-  const text=orderText(info);
+
+  // Spend the award code first, on the server, so two orders can never use one code.
+  // If the order service then fails, the code is handed back (rec_coupon_release).
+  let award=null;
+  if(coupon&&CFG.COUPON_WEBHOOK){
+    btn.textContent="Applying your award...";
+    let r=null;
+    try{ r=await couponPost({kind:"rec_coupon_redeem", code:coupon.code, name:info.name, company:info.company, email:info.email, account:info.account,
+      subtotal:+cartTotal().toFixed(2), items:cartLines().map(l=>l.qty+" x "+l.p.name).join("; ")}); }catch(e){ r=null; }
+    if(!r||!r.ok){
+      const msg=(r&&r.error)?r.error+" Your order was not submitted.":"Could not apply your award code right now. Your order was not submitted. Try again in a moment.";
+      if(r&&r.error&&/already used|not valid/i.test(r.error)){
+        // drop the dead code; the form re-renders, so put back what was typed
+        removeCoupon();
+        document.getElementById("f-notes").value=info.notes; document.getElementById("f-ack").checked=true;
+      } else { btn.disabled=false;btn.textContent="Submit Order"; }
+      document.getElementById("f-err").textContent=msg;
+      return;
+    }
+    award={code:r.code, label:r.label, amount:r.amount, discount:Number(r.discount)||0, forfeited:Number(r.forfeited)||0, token:r.token};
+    btn.textContent="Submitting...";
+  }
+  const text=orderText(info, award);
 
   if(CFG.ORDER_ENDPOINT){
     try{
@@ -761,26 +869,31 @@ async function submitOrder(){
         method:"POST",
         headers:{"Content-Type":"application/json","Accept":"application/json"},
         body:JSON.stringify({
-          _subject:`Vendor Order: ${info.company} (${fmt(cartTotal())})`,
+          _subject:`Vendor Order: ${info.company} (${fmt(award?Math.max(0,cartTotal()-award.discount):cartTotal())})${award?" - Vendor of the Month award applied":""}`,
           _replyto:info.email,
           email:info.email, order:text,
           items:cartLines().map(l=>({id:l.id,sku:l.p.sku,supplier_sku:l.p.supplier_sku,name:l.p.name,size:l.size,color:l.color||"",logo:l.p.logo||"",spec:l.spec,qty:l.qty,unit:l.unit,line:+l.line.toFixed(2)})),
-          vendor:info, total:+cartTotal().toFixed(2),
+          vendor:info, subtotal:+cartTotal().toFixed(2),
+          coupon:award?award.code:"", coupon_label:award?award.label:"", discount:award?award.discount:0,
+          total:+(award?Math.max(0,cartTotal()-award.discount):cartTotal()).toFixed(2),
         }),
       });
       if(!res.ok) throw new Error("HTTP "+res.status);
-      logOrderToSheet(info);
-      orderSuccess();return;
+      logOrderToSheet(info, award);
+      if(award){ coupon=null; try{ sessionStorage.removeItem("cw_coupon"); }catch(e){} }
+      orderSuccess(false, award);return;
     }catch(e){
+      if(award){ try{ await couponPost({kind:"rec_coupon_release", code:award.code, token:award.token}); }catch(x){} award=null; }
       btn.disabled=false;btn.textContent="Submit Order";
-      err.textContent="Could not reach the order service. Check your connection and try again, or use the email option below.";
-      addMailFallback(text);return;
+      err.textContent="Could not reach the order service. Check your connection and try again, or use the email option below."+(coupon?" Your award code was not used and is still good.":"");
+      addMailFallback(orderText(info, null));return;
     }
   }
   // No endpoint configured: mail fallback
-  logOrderToSheet(info);
+  logOrderToSheet(info, award);
   location.href="mailto:"+(CFG.ORDER_EMAIL||"")+"?"+(CFG.ORDER_EMAIL_CC?"cc="+encodeURIComponent(CFG.ORDER_EMAIL_CC)+"&":"")+"subject="+encodeURIComponent("Vendor Order: "+info.company)+"&body="+encodeURIComponent(text);
-  orderSuccess(true);
+  if(award){ coupon=null; try{ sessionStorage.removeItem("cw_coupon"); }catch(e){} }
+  orderSuccess(true, award);
 }
 function val(id){return (document.getElementById(id).value||"").trim();}
 function addMailFallback(text){
@@ -793,7 +906,7 @@ function addMailFallback(text){
   a.style.cssText="display:block;text-align:center;margin-top:12px;padding:10px 0;color:var(--cw-red);font-weight:700;font-size:var(--fs-ui);";
   foot.appendChild(a);
 }
-function orderSuccess(mailed){
+function orderSuccess(mailed, award){
   cart=[];saveCart();
   document.getElementById("drawerBody").innerHTML=`
     <div class="success">
@@ -802,6 +915,7 @@ function orderSuccess(mailed){
       <p>${mailed
         ?"Your email app opened with the order details. Press send to complete your order."
         :"Your order was sent to the City Wide team. You'll be contacted if anything needs clarification."}</p>
+      ${award?`<p style="margin-top:12px"><b style="color:#067679">Your Vendor of the Month award of ${fmt(award.discount)} is applied.</b>${award.forfeited>0?` The unused ${fmt(award.forfeited)} does not carry over.`:""} Thank you for the work you do.</p>`:""}
     </div>`;
   document.getElementById("drawerFoot").innerHTML="";
 }
