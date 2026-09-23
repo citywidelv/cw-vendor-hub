@@ -4,7 +4,7 @@
 <meta name="description" content="View and update your City Wide vendor profile: contacts, phone numbers, services, and what is on file for insurance, onboarding and crew clearance.">
 <meta name="robots" content="noindex">
 <link rel="icon" href="favicon.ico" sizes="any"><link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png"><link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
-<!-- build 2026-09-23a: vendor self-service profile. No passwords. The vendor asks for a link
+<!-- build 2026-09-23b (saves run in sequence). Vendor self-service profile. No passwords. The vendor asks for a link
      by email (kind vs_request), opens it (?t=token) and the page loads two parts (vs_get head,
      vs_get compliance). Nothing is fetched on load without a token. Backend: VendorSelf.gs. -->
 <style>
@@ -402,7 +402,7 @@ function renderCompany(){
 }
 function renderServices(){
   var have=(S.cur.service_types||'').split(',').map(function(s){return s.trim().toLowerCase()}).filter(Boolean);
-  var types=S.head.types||[];
+  var types=(S.head.types||[]).filter(function(t){ return t.slug!=='unclassified'; });
   if(!types.length){ $('#sv_body').innerHTML='<p class="help">No service list is available right now.</p>'; return; }
   $('#sv_body').innerHTML='<div class="opts">'+types.map(function(t){
     return '<label class="opt"><input type="checkbox" value="'+esc(t.slug)+'"'+(have.indexOf(t.slug)>=0?' checked':'')+'> '+esc(t.name)+'</label>';
@@ -485,25 +485,25 @@ $('#discard').addEventListener('click',function(){
 $('#save').addEventListener('click',function(){
   var c=changes(), d=detailChanges();
   var b=$('#save'); b.disabled=true; b.textContent='Saving...'; showErr('err','');
-  var jobs=[];
-  if(Object.keys(c).length) jobs.push(post({kind:'vs_save',token:token,changes:c}).then(function(r){
+  // Saves run one after another, never side by side, so the activity log lands in order.
+  var chain=Promise.resolve([]);
+  if(Object.keys(c).length) chain=chain.then(function(acc){ return post({kind:'vs_save',token:token,changes:c}).then(function(r){
     if(expired(r)) throw new Error('expired');
     if(!r||!r.ok) throw new Error(r&&r.error||'Could not save.');
     (r.written||[]).forEach(function(k){ S.base[k]=S.cur[k]; });
     var msgs=[];
     if(r.stale&&r.stale.length){ r.stale.forEach(function(k){ S.cur[k]=S.base[k]; }); msgs.push('City Wide changed '+r.stale.map(function(k){return (S.head.vendor.labels[k]||k)}).join(', ')+' since you opened this page, so that was not overwritten. Reload to see the current value.'); }
     if(r.skipped&&r.skipped.length){ r.skipped.forEach(function(k){ S.cur[k]=S.base[k]; }); msgs.push('Not saved: '+r.skipped.map(function(k){return (S.head.vendor.labels[k]||k)}).join(', ')+'.'); }
-    return msgs;
-  }));
-  if(d) jobs.push(post({kind:'vs_details',token:token,details:d}).then(function(r){
+    return acc.concat(msgs);
+  }); });
+  if(d) chain=chain.then(function(acc){ return post({kind:'vs_details',token:token,details:d}).then(function(r){
     if(expired(r)) throw new Error('expired');
     if(!r||!r.ok) throw new Error(r&&r.error||'Could not save your details.');
-    S.details=r.details||S.details; S.detailsBase=JSON.parse(JSON.stringify(S.details)); return [];
-  }));
-  Promise.all(jobs).then(function(res){
+    S.details=r.details||S.details; S.detailsBase=JSON.parse(JSON.stringify(S.details)); return acc;
+  }); });
+  chain.then(function(msgs){
     b.disabled=false; b.textContent='Save changes';
     renderCompany(); renderServices(); renderEval(); renderRefs(); renderDetails(); markDirty();
-    var msgs=[].concat.apply([],res);
     if(msgs.length) showErr('err',msgs.join(' ')); else showOk('ok','Saved. Your compliance office has been told what changed.');
   }).catch(function(e){
     b.disabled=false; b.textContent='Save changes';
