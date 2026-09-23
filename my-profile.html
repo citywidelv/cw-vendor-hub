@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>My Vendor Profile | City Wide Vendor Hub</title>
+<meta name="description" content="View and update your City Wide vendor profile: contacts, phone numbers, services, and what is on file for insurance, onboarding and crew clearance.">
+<meta name="robots" content="noindex">
+<link rel="icon" href="favicon.ico" sizes="any"><link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png"><link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+<!-- build 2026-09-23a: vendor self-service profile. No passwords. The vendor asks for a link
+     by email (kind vs_request), opens it (?t=token) and the page loads two parts (vs_get head,
+     vs_get compliance). Nothing is fetched on load without a token. Backend: VendorSelf.gs. -->
+<style>
+
+:root{
+  --cw-red:#D22730; --cw-red-dark:#B01F27; --cw-black:#2D2A26; --cw-grey:#636466;
+  --cw-white:#FFFFFF; --cw-light:#F5F5F5; --cw-border:#E5E5E5; --cw-teal:#0AA6A9;
+  --sp-xs:4px; --sp-sm:8px; --sp-md:16px; --sp-lg:24px; --sp-xl:32px; --sp-2xl:48px;
+  --radius:10px; --shadow:0 1px 3px rgba(45,42,38,.08),0 4px 14px rgba(45,42,38,.06);
+  --shadow-lift:0 4px 10px rgba(45,42,38,.10),0 10px 28px rgba(45,42,38,.10);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{font-family:Verdana,'Liberation Sans','DejaVu Sans',Geneva,Tahoma,sans-serif;
+  color:var(--cw-black);background:var(--cw-white);line-height:1.6;font-size:15px}
+img{max-width:100%;display:block}
+a{color:var(--cw-red);font-weight:700}
+a:hover{color:var(--cw-red-dark)}
+.wrap{max-width:1080px;margin:0 auto;padding:0 20px}
+.content-wrap{max-width:860px;margin:0 auto;padding:0 20px}
+
+/* ---------- header ---------- */
+.site-head{position:sticky;top:0;z-index:50;background:var(--cw-white);
+  border-bottom:1px solid var(--cw-border);box-shadow:0 1px 2px rgba(45,42,38,.05)}
+.site-head .bar{display:flex;align-items:center;gap:16px;height:64px}
+.site-head .bar>a:first-child{flex:none;display:block;line-height:0}
+.site-head img.logo{height:38px;width:auto;max-width:none;object-fit:contain}
+.site-head .site-name{font-size:13px;font-weight:700;color:var(--cw-grey);
+  border-left:2px solid var(--cw-border);padding-left:14px;letter-spacing:.02em;
+  text-transform:uppercase;white-space:nowrap}
+.site-head nav{margin-left:auto;display:flex;gap:4px;align-items:center}
+.site-head nav a{font-size:12.5px;font-weight:700;color:var(--cw-black);text-decoration:none;
+  padding:8px 10px;border-radius:6px;white-space:nowrap}
+.site-head nav a:hover{background:var(--cw-light);color:var(--cw-red)}
+.site-head nav a.active{color:var(--cw-red)}
+.site-head nav a.btn-order{background:var(--cw-red);color:#fff;padding:9px 16px}
+.site-head nav a.btn-order:hover{background:var(--cw-red-dark);color:#fff}
+.site-head nav a.nav-opps{color:var(--cw-red);position:relative}
+.site-head nav a.nav-opps::after{content:"";display:inline-block;width:7px;height:7px;
+  border-radius:50%;background:var(--cw-red);margin-left:6px;vertical-align:2px;
+  animation:oppPulse 2s infinite}
+@keyframes oppPulse{0%,100%{opacity:1}50%{opacity:.35}}
+.dd{position:relative}
+.dd>a.dd-label::after{content:" \25BE";font-size:10px;color:var(--cw-grey)}
+.dd-menu{display:none;position:absolute;top:100%;left:0;min-width:210px;background:#fff;
+  border:1px solid var(--cw-border);border-radius:10px;box-shadow:var(--shadow-lift);
+  padding:8px;z-index:60}
+.dd:hover .dd-menu,.dd:focus-within .dd-menu{display:block}
+.dd-menu a{display:block;padding:9px 12px;border-radius:6px;font-size:13px}
+.dd-menu .dd-head{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--cw-grey);padding:8px 12px 4px}
+.menu-toggle{display:none;margin-left:auto;background:none;border:1px solid var(--cw-border);
+  border-radius:6px;padding:8px 10px;cursor:pointer;font-size:16px;line-height:1;color:var(--cw-black)}
+@media(max-width:1080px){
+  .site-head .site-name{display:none}
+  .menu-toggle{display:block}
+  .site-head nav{display:none;position:absolute;top:64px;left:0;right:0;background:#fff;
+    flex-direction:column;align-items:stretch;padding:10px 16px 16px;gap:2px;
+    border-bottom:1px solid var(--cw-border);box-shadow:0 12px 24px rgba(45,42,38,.12)}
+  .site-head nav.open{display:flex}
+  .site-head nav a{padding:12px 10px;border-radius:8px}
+  .site-head nav a.btn-order{text-align:center;margin-top:8px}
+  .dd{display:contents}
+  .dd>a.dd-label{display:none}
+  .dd-menu{display:block;position:static;border:none;box-shadow:none;padding:0;min-width:0}
+  .dd-menu a{padding:12px 10px;font-size:13px}
+  .dd-menu .dd-head{padding:10px 10px 2px}
+}
+
+/* ---------- buttons ---------- */
+.btn{display:inline-flex;align-items:center;gap:8px;font-family:inherit;font-size:14px;
+  font-weight:700;text-decoration:none;border-radius:8px;padding:12px 20px;cursor:pointer;
+  border:2px solid transparent;transition:all .15s}
+.btn-red{background:var(--cw-red);color:#fff}
+.btn-red:hover{background:var(--cw-red-dark);color:#fff;transform:translateY(-1px);box-shadow:var(--shadow)}
+.btn-ghost{background:#fff;color:var(--cw-black);border-color:var(--cw-border)}
+.btn-ghost:hover{border-color:var(--cw-black);color:var(--cw-black)}
+.btn-pdf{background:#fff;color:var(--cw-red);border-color:var(--cw-red)}
+.btn-pdf:hover{background:var(--cw-red);color:#fff}
+.btn svg{flex:none}
+
+/* footer */
+.site-foot{margin-top:56px;background:var(--cw-black);color:#cfcdca;padding:34px 0 30px;font-size:13px}
+.site-foot .cols{display:flex;flex-wrap:wrap;gap:24px;justify-content:space-between;align-items:center}
+.site-foot a{color:#fff;text-decoration:none}
+.site-foot a:hover{color:#fff;text-decoration:underline}
+.site-foot .fine{margin-top:14px;font-size:11.5px;color:#8b8985}
+.next-link{display:flex;justify-content:space-between;gap:12px;margin:44px 0 10px;flex-wrap:wrap}
+
+/* ---------- page ---------- */
+.ev-hero{background:var(--cw-black);color:#fff;padding:40px 0 34px}
+.ev-hero h1{font-size:28px;line-height:1.2;margin:6px 0 10px}
+.ev-hero p{color:#cfcdca;max-width:720px;font-size:15px}
+.ev-hero .kick{font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#ff8a90}
+.ev-wrap{max-width:860px;margin:0 auto;padding:22px 20px 0}
+.card{background:#fff;border:1px solid var(--cw-border);border-radius:var(--radius);box-shadow:var(--shadow);padding:22px 22px 20px;margin-bottom:18px}
+.card h2{font-size:17px;margin:0 0 4px}
+.card .lead{color:var(--cw-grey);font-size:13.5px;margin:0 0 16px}
+.step{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--cw-red);margin-bottom:6px}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:12px 16px}
+
+/* ---------- page ---------- */
+.ev-hero{background:var(--cw-black);color:#fff;padding:36px 0 30px}
+.ev-hero h1{font-size:28px;line-height:1.2;margin:6px 0 10px}
+.ev-hero p{color:#cfcdca;max-width:720px;font-size:15px}
+.ev-hero .kick{font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#ff8a90}
+.ev-wrap{max-width:900px;margin:0 auto;padding:22px 20px 0}
+.card{background:#fff;border:1px solid var(--cw-border);border-radius:var(--radius);box-shadow:var(--shadow);padding:22px 22px 20px;margin-bottom:18px}
+.card h2{font-size:17px;margin:0 0 4px}
+.card .lead{color:var(--cw-grey);font-size:13.5px;margin:0 0 16px}
+.step{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--cw-red);margin-bottom:6px}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:12px 16px}
+.row .full{grid-column:1/-1}
+.row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px 16px}
+@media(max-width:640px){.row,.row3{grid-template-columns:1fr}}
+label.f{display:block;font-size:12.5px;font-weight:700;color:var(--cw-black)}
+label.f small{font-weight:400;color:var(--cw-grey)}
+.f input,.f textarea,.f select{display:block;width:100%;margin-top:5px;font:inherit;font-size:15px;padding:10px 12px;border:1px solid #cfcdca;border-radius:8px;background:#fff;color:var(--cw-black)}
+.f textarea{min-height:80px;resize:vertical}
+.f input:focus,.f textarea:focus,.f select:focus{outline:none;border-color:var(--cw-red);box-shadow:0 0 0 3px rgba(210,39,48,.12)}
+.f input[readonly]{background:var(--cw-light);color:var(--cw-grey)}
+.f.changed input,.f.changed textarea,.f.changed select{border-color:var(--cw-teal);box-shadow:0 0 0 3px rgba(10,166,169,.12)}
+.note{background:var(--cw-light);border-left:4px solid var(--cw-teal);padding:12px 14px;border-radius:0 8px 8px 0;font-size:13.5px;margin-top:14px}
+.warn{background:#FFF4F4;border-left:4px solid var(--cw-red);padding:12px 14px;border-radius:0 8px 8px 0;font-size:13.5px;margin-top:14px}
+.err{display:none;background:#FFF4F4;border:1px solid #f3c4c7;color:#8a1d23;padding:12px 14px;border-radius:8px;font-size:13.5px;margin-top:12px}
+.err.show{display:block}
+.okmsg{display:none;background:#EAF7F7;border:1px solid #bfe6e7;color:#0b5f61;padding:12px 14px;border-radius:8px;font-size:13.5px;margin-top:12px}
+.okmsg.show{display:block}
+.hp{position:absolute;left:-5000px;top:0;height:0;overflow:hidden}
+.hidden{display:none!important}
+/* header card */
+.who{display:flex;flex-wrap:wrap;gap:8px 18px;align-items:center;font-size:13px;color:var(--cw-grey);margin-top:8px}
+.who b{color:var(--cw-black)}
+.pill{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.04em;padding:3px 9px;border-radius:999px;background:var(--cw-light);color:var(--cw-black);border:1px solid var(--cw-border);white-space:nowrap}
+.pill.ok{background:#EAF7F7;border-color:#bfe6e7;color:#0b5f61}
+.pill.soon{background:#FFF6E5;border-color:#f6dfae;color:#7a4b00}
+.pill.bad{background:#FFF4F4;border-color:#f3c4c7;color:#8a1d23}
+.pill.mute{color:var(--cw-grey)}
+.facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px 18px;margin-top:14px}
+.fact{font-size:12px;color:var(--cw-grey)}
+.fact b{display:block;font-size:14px;color:var(--cw-black);font-weight:700;word-break:break-word}
+/* jump bar */
+.jumps{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 16px}
+.jumps a{font-size:12px;font-weight:700;color:var(--cw-black);text-decoration:none;background:#fff;border:1px solid var(--cw-border);border-radius:999px;padding:6px 12px}
+.jumps a:hover{border-color:var(--cw-red);color:var(--cw-red)}
+/* yes/no */
+.yn{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:10px 0;border-bottom:1px solid var(--cw-border);font-size:14px}
+.yn:last-child{border-bottom:none}
+.pills{display:flex;gap:6px;flex:none}
+.pills button{font:inherit;font-size:13px;font-weight:700;padding:7px 16px;border-radius:999px;border:1.5px solid #cfcdca;background:#fff;cursor:pointer;color:var(--cw-black)}
+.pills button.on{background:var(--cw-black);border-color:var(--cw-black);color:#fff}
+.pills button.on[data-v="Yes"]{background:var(--cw-red);border-color:var(--cw-red)}
+/* services */
+.opts{display:grid;grid-template-columns:1fr 1fr 1fr;gap:2px 14px}
+@media(max-width:720px){.opts{grid-template-columns:1fr 1fr}}
+@media(max-width:480px){.opts{grid-template-columns:1fr}}
+.opt{display:flex;align-items:flex-start;gap:9px;padding:7px 6px;border-radius:6px;font-size:13.5px;cursor:pointer;line-height:1.35}
+.opt:hover{background:var(--cw-light)}
+.opt input{width:17px;height:17px;margin:1px 0 0;accent-color:var(--cw-red);flex:none}
+/* contacts */
+.clist{display:grid;gap:10px}
+.cbox{border:1px solid var(--cw-border);border-radius:10px;padding:12px 14px;display:flex;gap:12px;align-items:flex-start;flex-wrap:wrap}
+.cbox .cmain{flex:1;min-width:200px}
+.cbox .cname{font-weight:700;font-size:15px}
+.cbox .crole{font-size:12px;color:var(--cw-grey);margin-left:6px}
+.cbox .cline{font-size:13px;color:var(--cw-black);margin-top:3px;word-break:break-word}
+.cbox .cuse{font-size:12px;color:var(--cw-grey);margin-top:4px}
+.cbox .cacts{display:flex;gap:6px;flex:none}
+.btn-sm{font:inherit;font-size:12.5px;font-weight:700;padding:7px 12px;border-radius:8px;border:1.5px solid var(--cw-border);background:#fff;color:var(--cw-black);cursor:pointer}
+.btn-sm:hover{border-color:var(--cw-black)}
+.btn-sm.danger:hover{border-color:var(--cw-red);color:var(--cw-red)}
+.cform{border:2px dashed var(--cw-border);border-radius:10px;padding:16px;margin-top:12px}
+.cform h3{font-size:15px;margin:0 0 10px}
+.chk{display:flex;flex-wrap:wrap;gap:4px 14px;margin-top:6px}
+.chk label{display:flex;align-items:center;gap:7px;font-size:13px;cursor:pointer;padding:5px 2px}
+.chk input{accent-color:var(--cw-red);width:16px;height:16px}
+/* compliance */
+.ctable{width:100%;border-collapse:collapse;font-size:13.5px}
+.ctable th{text-align:left;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--cw-grey);padding:6px 8px 6px 0;border-bottom:1px solid var(--cw-border)}
+.ctable td{padding:9px 8px 9px 0;border-bottom:1px solid var(--cw-border);vertical-align:top}
+.ctable tr:last-child td{border-bottom:none}
+.ctable .r{text-align:right;white-space:nowrap}
+.grp{margin-top:14px}
+.grp .gh{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--cw-grey);margin:0 0 4px}
+.skel{height:14px;background:linear-gradient(90deg,#eee,#f7f7f7,#eee);background-size:200% 100%;animation:sk 1.2s infinite;border-radius:6px;margin:8px 0}
+@keyframes sk{0%{background-position:200% 0}100%{background-position:-200% 0}}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+@media(max-width:720px){.two{grid-template-columns:1fr}}
+.help{font-size:12.5px;color:var(--cw-grey);margin-top:6px}
+/* sticky save bar */
+.savebar{position:sticky;bottom:0;z-index:40;background:#fff;border-top:1px solid var(--cw-border);box-shadow:0 -6px 20px rgba(45,42,38,.08);padding:12px 0;margin-top:8px;display:none}
+.savebar.show{display:block}
+.savebar .in{max-width:900px;margin:0 auto;padding:0 20px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.savebar .cnt{font-size:13px;color:var(--cw-grey);flex:1}
+.savebar .btn[disabled]{opacity:.6;cursor:wait;transform:none}
+.gate .btn{margin-top:14px}
+.gate .f{max-width:420px}
+.tiny{font-size:11.5px;color:var(--cw-grey)}
+</style></head>
+<body>
+<header class="site-head"><div class="wrap bar"><a href="index.html"><img class="logo" src="https://emailer.emfluence.com/clients/citywide/uploadedfiles/signature_logo.png" alt="City Wide Facility Solutions"></a><button class="menu-toggle" aria-label="Menu">&#9776;</button><nav><a href="index.html">Home</a><a href="opportunities.html" class="nav-opps">Open Opportunities</a><div class="dd"><a class="dd-label" href="new-vendors.html">New Vendors</a><div class="dd-menu"><a href="new-vendors.html?region=lv">Las Vegas</a><a href="new-vendors.html?region=nnv">Northern Nevada</a></div></div><div class="dd"><a class="dd-label" href="#" onclick="return false;">Guides</a><div class="dd-menu"><div class="dd-head">Crew Guides</div><a href="planner.html">New Building Planner</a><a href="workloading.html">Workloading & Crew Sizing</a><a href="equipment.html">Choosing Your Equipment</a><a href="color-coding.html">Color Coding System</a><a href="medical.html">Medical Facility Cleaning</a><a href="cleanroom.html">Clean Room Cleaning</a><a href="gmp.html">GMP & Food Facility Cleaning</a></div></div><div class="dd"><a class="dd-label" href="invoice.html">Invoices &amp; Paperwork</a><div class="dd-menu"><div class="dd-head">Get Paid</div><a href="invoice.html">Submit Your Monthly Invoice</a><div class="dd-head">Orders</div><a href="building-supplies.html">Report Supplies Needed</a><a href="shop/">Shop Supplies &amp; Uniforms</a><a href="card-authorization.html">Pay by Credit Card</a><div class="dd-head">Paperwork</div><a href="cleaner-roster.html">Add or Remove a Cleaner</a><a href="upload.html">Upload Insurance &amp; Compliance Docs</a><a href="profile-update.html">Update Your Company Profile</a><a href="work-order.html">Maintenance Work Ticket</a><a href="background-check.html">Background Check &amp; Name Badge</a><a href="https://www.onlinecprcertification.net/bloodborne-pathogens-training-certification.php" target="_blank" rel="noopener">Bloodborne Pathogens Certification</a></div></div><div class="dd"><a class="dd-label" href="index.html#recognition">Recognition</a><div class="dd-menu"><a href="index.html#recognition">Vendor of the Month Wall</a><div class="dd-head">Nominate</div><a href="nominate.html">Nominate a Vendor of the Month</a><a href="nominate.html?type=goat">Nominate a City Wide G.O.A.T.</a></div></div>
+<a class="btn-order" href="shop/">Order Supplies</a></nav></div></header>
+
+<section class="ev-hero"><div class="ev-wrap"><div class="kick">Vendor Hub</div><h1>My Vendor Profile</h1>
+<p>See what City Wide has on file for your company and keep it current. Contacts, phone numbers, the services you offer, and where you stand on insurance, onboarding paperwork and crew clearance.</p></div></section>
+
+<div class="ev-wrap">
+
+<!-- Step 1: ask for a link -->
+<div class="card gate" id="gate">
+<div class="step">No password needed</div>
+<h2>Get your profile link</h2>
+<p class="lead">Enter the email address we have on file for your company. We will email you a link that opens your profile. The link works for 24 hours.</p>
+<form id="gform" autocomplete="on">
+<div class="hp" aria-hidden="true"><label>Company fax<input type="text" name="company_fax" tabindex="-1" autocomplete="off"></label></div>
+<label class="f">Email on file<input type="email" name="email" id="gemail" required placeholder="you@yourcompany.com" autocomplete="email"></label>
+<button type="submit" class="btn btn-red" id="gbtn">Email me my link</button>
+<div class="err" id="gerr"></div>
+<div class="okmsg" id="gok"></div>
+</form>
+<div class="note">Not sure which email we have? It is the one that gets our opportunity emails and compliance notices. If nothing arrives, email <a href="mailto:lvcompliance@gocitywide.com">lvcompliance@gocitywide.com</a> (Las Vegas) or <a href="mailto:rncompliance@gocitywide.com">rncompliance@gocitywide.com</a> (Northern Nevada) and we will send it by hand.</div>
+</div>
+
+<!-- Step 2: the profile -->
+<div id="app" class="hidden">
+
+<div class="card" id="c_head">
+<div id="h_body"><div class="skel" style="width:40%"></div><div class="skel" style="width:70%"></div><div class="skel" style="width:55%"></div></div>
+</div>
+<div class="jumps" id="jumps"></div>
+
+<div class="card" id="c_company">
+<div class="step">Company</div>
+<h2>Company details</h2>
+<p class="lead">Fields with a grey background are set by City Wide. To change your company name, legal name, primary email or banking, use the <a id="lnk_form" href="profile-update.html">profile update form</a>, which a person verifies with you first.</p>
+<div id="co_body"><div class="skel" style="width:90%"></div><div class="skel" style="width:80%"></div></div>
+</div>
+
+<div class="card" id="c_services">
+<div class="step">Services</div>
+<h2>Services you offer</h2>
+<p class="lead">Check everything your crew does. This drives which opportunities you hear about.</p>
+<div id="sv_body"><div class="skel" style="width:90%"></div></div>
+</div>
+
+<div class="card" id="c_people">
+<div class="step">People</div>
+<h2>Owners, managers and supervisors</h2>
+<p class="lead">Who we should know at your company, how to reach them, and what to use each contact for. Owners and managers can also ask for a profile link with their own email.</p>
+<div id="ct_body"><div class="skel" style="width:60%"></div></div>
+<div id="ct_form" class="cform hidden"></div>
+<div style="margin-top:12px"><button type="button" class="btn btn-ghost" id="ct_add">Add a contact</button></div>
+<div class="err" id="ct_err"></div>
+</div>
+
+<div class="card" id="c_details">
+<div class="step">More about you</div>
+<h2>Availability and capabilities</h2>
+<p class="lead">Helps our Facility Solutions Managers match work to you. Optional, and only City Wide sees it.</p>
+<div id="dt_body"><div class="skel" style="width:90%"></div></div>
+</div>
+
+<div class="card" id="c_eval">
+<div class="step">Evaluation</div>
+<h2>Your compliance answers</h2>
+<p class="lead">The answers from your vendor evaluation. Keep them honest and current. Every change is dated and logged.</p>
+<div id="ev_body"><div class="skel" style="width:90%"></div></div>
+</div>
+
+<div class="card" id="c_refs">
+<div class="step">References</div>
+<h2>Business references</h2>
+<div id="rf_body"><div class="skel" style="width:90%"></div></div>
+</div>
+
+<div class="card" id="c_status">
+<div class="step">Where you stand</div>
+<h2>Compliance status</h2>
+<p class="lead">What City Wide has on file. These are read-only. Use the buttons to send us anything that is missing or expiring.</p>
+<div id="st_body"><div class="skel" style="width:60%"></div><div class="skel" style="width:80%"></div><div class="skel" style="width:70%"></div></div>
+</div>
+
+<div class="err" id="err"></div>
+<div class="okmsg" id="ok"></div>
+</div><!-- /app -->
+</div><!-- /ev-wrap -->
+
+<div class="savebar" id="savebar"><div class="in"><span class="cnt" id="savecnt">You have unsaved changes.</span><button type="button" class="btn btn-ghost" id="discard">Discard</button><button type="button" class="btn btn-red" id="save">Save changes</button></div></div>
+
+<footer class="site-foot"><div class="wrap"><div class="cols"><div><b style="color:#fff">City Wide Facility Solutions</b> &middot; Las Vegas &amp; Northern Nevada<br>Vendor Resource Hub</div><div><a href="shop/">Order Supplies</a> &nbsp;&nbsp; <a href="index.html">Resource Center</a> &nbsp;&nbsp; <a href="https://www.gocitywide.com" target="_blank" rel="noopener">GoCityWide.com</a></div></div><div class="fine">Questions about this form? Las Vegas: lvcompliance@gocitywide.com &middot; Northern Nevada: rncompliance@gocitywide.com</div></div></footer>
+
+<script src="nav.js" defer></script>
+<script src="https://citywidelv.github.io/cw-ops-desk/cw-nav.js" defer onload="if(window.CWNav)CWNav.vendor()"></script>
+<script>
+(function(){
+var EXEC="https://script.google.com/macros/s/AKfycbzfNnrpidCbWB1DeUNgXvRhDFMQgApfpn-3C9GU45wMEHcJpWFl8ZQVo6PUBSRfEVfRdg/exec";
+var $=function(s,r){return (r||document).querySelector(s)};
+var $$=function(s,r){return Array.prototype.slice.call((r||document).querySelectorAll(s))};
+var esc=function(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})};
+(function(){ var t=$('.menu-toggle'),n=$('.site-head nav'); if(t&&n){t.addEventListener('click',function(){n.classList.toggle('open');});} })();
+
+function post(body){
+  return fetch(EXEC,{method:'POST',headers:{'Content-Type':'text/plain'},body:JSON.stringify(body)}).then(function(r){return r.json()});
+}
+function showErr(id,msg){ var e=$('#'+id); e.textContent=msg; e.className=msg?'err show':'err'; }
+function showOk(id,msg){ var e=$('#'+id); e.textContent=msg; e.className=msg?'okmsg show':'okmsg'; if(msg) setTimeout(function(){ e.className='okmsg'; },6000); }
+
+// ---------------------------------------------------------------- gate
+var token=(function(){ var m=location.search.match(/[?&]t=([a-z0-9]+)/i); return m?m[1]:''; })();
+var gform=$('#gform');
+gform.addEventListener('submit',function(ev){
+  ev.preventDefault(); showErr('gerr',''); showOk('gok','');
+  var email=$('#gemail').value.trim();
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){ showErr('gerr','Enter a valid email address.'); return; }
+  var b=$('#gbtn'); b.disabled=true; b.textContent='Sending...';
+  post({kind:'vs_request', email:email, company_fax:gform.company_fax.value}).then(function(r){
+    b.disabled=false; b.textContent='Email me my link';
+    if(!r||!r.ok){ showErr('gerr',(r&&r.error)||'Could not send. Try again.'); return; }
+    $('#gok').textContent=r.message||'Check your email.'; $('#gok').className='okmsg show';
+  }).catch(function(){ b.disabled=false; b.textContent='Email me my link'; showErr('gerr','Could not reach the server. Check your connection and try again.'); });
+});
+
+if(!token) return;                 // nothing else runs without a link
+$('#gate').classList.add('hidden'); $('#app').classList.remove('hidden');
+
+// ---------------------------------------------------------------- state
+var S={ head:null, comp:null, base:{}, cur:{}, details:{}, detailsBase:{}, contacts:[], editing:null };
+function expired(r){
+  if(r&&r.ok===false&&(r.expired||/link/i.test(r.error||''))){
+    $('#app').classList.add('hidden'); $('#gate').classList.remove('hidden');
+    showErr('gerr',r.error||'This link is not valid. Request a new one.'); window.scrollTo({top:0}); return true;
+  }
+  return false;
+}
+function load(){
+  post({kind:'vs_get',token:token,part:'head'}).then(function(r){
+    if(expired(r)) return;
+    if(!r||!r.ok){ showErr('err',r&&r.error||'Could not load your profile.'); return; }
+    S.head=r; S.base=JSON.parse(JSON.stringify(r.vendor.edit)); S.cur=JSON.parse(JSON.stringify(r.vendor.edit));
+    S.contacts=r.contacts||[]; S.details=r.details||{}; S.detailsBase=JSON.parse(JSON.stringify(S.details));
+    Object.keys(r.errors||{}).forEach(function(k){ showErr('err','Could not load '+k+': '+r.errors[k]); });
+    renderHead(); renderCompany(); renderServices(); renderContacts(); renderDetails(); renderEval(); renderRefs();
+  }).catch(function(){ showErr('err','Could not reach the server. Reload the page to try again.'); });
+  post({kind:'vs_get',token:token,part:'compliance'}).then(function(r){
+    if(!r||!r.ok){ $('#st_body').innerHTML='<p class="help">Could not load your compliance status right now.</p>'; return; }
+    S.comp=r; renderStatus();
+  }).catch(function(){ $('#st_body').innerHTML='<p class="help">Could not load your compliance status right now.</p>'; });
+}
+
+// ---------------------------------------------------------------- head
+function pillFor(state){ return state==='ok'?'ok':state==='soon'?'soon':state==='expired'?'bad':'mute'; }
+function renderHead(){
+  var v=S.head.vendor.view, y=S.head.you||{};
+  var st=v.status||'';
+  $('#h_body').innerHTML=
+    '<div class="step">'+esc(S.head.links.market||'')+'</div>'+
+    '<h2 style="font-size:22px">'+esc(v.dba_name)+'</h2>'+
+    '<div class="who"><span>Vendor ID <b>'+esc(v.vendor_id)+'</b></span>'+(v.bc_vendor_no?'<span>Vendor number <b>'+esc(v.bc_vendor_no)+'</b></span>':'')+
+    '<span>Status <span class="pill '+(v.live?'ok':'mute')+'">'+esc(st||'On file')+'</span></span>'+
+    '<span>Region <b>'+esc(v.region)+'</b></span></div>'+
+    '<div class="who" style="margin-top:12px"><span>Signed in as <b>'+esc(y.name||'')+'</b> ('+esc(y.email||'')+')</span><span class="tiny">This link works until '+esc(S.head.expires||'')+'. Close the tab when you are done.</span></div>';
+  $('#lnk_form').href=S.head.links.profile_form;
+  var jumps=[['c_company','Company'],['c_services','Services'],['c_people','People'],['c_details','Availability'],['c_eval','Evaluation'],['c_refs','References'],['c_status','Compliance status']];
+  $('#jumps').innerHTML=jumps.map(function(j){ return '<a href="#'+j[0]+'">'+esc(j[1])+'</a>'; }).join('');
+}
+
+// ---------------------------------------------------------------- editable fields
+function field(col,label,opts){
+  opts=opts||{};
+  var v=S.cur[col]||'';
+  var inner;
+  if(opts.type==='textarea') inner='<textarea data-col="'+col+'" '+(opts.ph?'placeholder="'+esc(opts.ph)+'"':'')+'>'+esc(v)+'</textarea>';
+  else inner='<input type="'+(opts.type||'text')+'" data-col="'+col+'" value="'+esc(v)+'" '+(opts.ph?'placeholder="'+esc(opts.ph)+'"':'')+(opts.im?' inputmode="'+opts.im+'"':'')+'>';
+  return '<label class="f'+(opts.full?' full':'')+'" data-f="'+col+'">'+esc(label)+(opts.small?' <small>'+esc(opts.small)+'</small>':'')+inner+'</label>';
+}
+function ro(label,value){ return '<label class="f">'+esc(label)+'<input type="text" readonly value="'+esc(value||'')+'"></label>'; }
+function wire(root){
+  $$('[data-col]',root).forEach(function(el){
+    el.addEventListener('input',function(){ S.cur[el.getAttribute('data-col')]=el.value; markDirty(); });
+  });
+}
+function renderCompany(){
+  var v=S.head.vendor.view;
+  $('#co_body').innerHTML='<div class="row">'+
+    ro('Company (DBA)',v.dba_name)+ro('Legal name',v.legal_name)+
+    ro('Primary email',v.email)+ro('Started with City Wide',v.cw_start_date||'')+
+    field('contact_name','Primary contact name')+field('license_no','License number',{small:'if you have one'})+
+    field('phone','Main phone',{type:'tel'})+field('business_phone','Business or office phone',{type:'tel'})+
+    field('website','Website',{ph:'yourcompany.com'})+field('years_in_business','Years in business',{im:'numeric'})+
+    field('business_address','Business address',{full:true})+field('city_state','City and state')+field('metro_areas','Areas you serve',{ph:'Example: Henderson, Las Vegas, North Las Vegas'})+
+    field('crew_ft','Full-time crew',{im:'numeric'})+field('crew_pt','Part-time crew',{im:'numeric'})+
+    field('services_desc','What your company does',{type:'textarea',full:true})+
+    '</div>';
+  wire($('#co_body'));
+}
+function renderServices(){
+  var have=(S.cur.service_types||'').split(',').map(function(s){return s.trim().toLowerCase()}).filter(Boolean);
+  var types=S.head.types||[];
+  if(!types.length){ $('#sv_body').innerHTML='<p class="help">No service list is available right now.</p>'; return; }
+  $('#sv_body').innerHTML='<div class="opts">'+types.map(function(t){
+    return '<label class="opt"><input type="checkbox" value="'+esc(t.slug)+'"'+(have.indexOf(t.slug)>=0?' checked':'')+'> '+esc(t.name)+'</label>';
+  }).join('')+'</div><p class="help">Unchecking a service stops those opportunity emails. Checking a new one starts them.</p>';
+  $$('#sv_body input').forEach(function(cb){ cb.addEventListener('change',function(){
+    var picked=$$('#sv_body input:checked').map(function(x){return x.value});
+    S.cur.service_types=picked.join(','); markDirty();
+  }); });
+}
+function renderEval(){
+  var qs=[['workers_comp','Do you carry Workers\' Compensation insurance?'],['general_liability','Do you carry General Liability insurance?'],
+    ['background_checks','Do you run background checks on crew members?'],['sut_paid','Do you pay state unemployment tax?'],
+    ['wage_compliance','Do you follow all wage and labor laws?'],['documented_pay','Do you have a documented way of paying crew members?'],
+    ['i9_collected','Do you collect I-9 forms for crew members?'],['daily_supervision','Does a supervisor check work quality daily?']];
+  $('#ev_body').innerHTML=qs.map(function(q){
+    var v=(S.cur[q[0]]||'').toLowerCase();
+    return '<div class="yn"><span class="q">'+esc(q[1])+'</span><span class="pills" data-key="'+q[0]+'"><button type="button" data-v="Yes"'+(v==='yes'?' class="on"':'')+'>Yes</button><button type="button" data-v="No"'+(v==='no'?' class="on"':'')+'>No</button></span></div>';
+  }).join('')+'<div class="row" style="margin-top:14px">'+
+    field('concern_process','How do you handle a concern from a client or from City Wide?',{type:'textarea',full:true})+
+    field('family_involvement','Family involvement in the business',{type:'textarea',full:true})+
+    field('additional_notes','Anything else we should know',{type:'textarea',full:true})+'</div>';
+  $$('#ev_body .pills').forEach(function(p){ $$('button',p).forEach(function(b){ b.addEventListener('click',function(){
+    S.cur[p.getAttribute('data-key')]=b.getAttribute('data-v'); $$('button',p).forEach(function(x){x.classList.toggle('on',x===b)}); markDirty();
+  }); }); });
+  wire($('#ev_body'));
+}
+function renderRefs(){
+  $('#rf_body').innerHTML='<div class="row">'+
+    field('ref1_company','Reference 1 company')+field('ref1_name','Reference 1 contact')+field('ref1_phone','Reference 1 phone',{type:'tel'})+field('ref1_email','Reference 1 email',{type:'email'})+
+    field('ref2_company','Reference 2 company')+field('ref2_name','Reference 2 contact')+field('ref2_phone','Reference 2 phone',{type:'tel'})+field('ref2_email','Reference 2 email',{type:'email'})+'</div>';
+  wire($('#rf_body'));
+}
+
+// ---------------------------------------------------------------- details (own save)
+function dfield(col,label,opts){
+  opts=opts||{}; var v=S.details[col]||''; var inner;
+  if(opts.type==='select') inner='<select data-d="'+col+'"><option value="">Choose</option>'+opts.list.map(function(o){return '<option'+(o===v?' selected':'')+'>'+esc(o)+'</option>'}).join('')+'</select>';
+  else if(opts.type==='textarea') inner='<textarea data-d="'+col+'" '+(opts.ph?'placeholder="'+esc(opts.ph)+'"':'')+'>'+esc(v)+'</textarea>';
+  else inner='<input type="'+(opts.type||'text')+'" data-d="'+col+'" value="'+esc(v)+'" '+(opts.ph?'placeholder="'+esc(opts.ph)+'"':'')+'>';
+  return '<label class="f'+(opts.full?' full':'')+'" data-f="'+col+'">'+esc(label)+(opts.small?' <small>'+esc(opts.small)+'</small>':'')+inner+'</label>';
+}
+function renderDetails(){
+  var L=S.head.lists||{};
+  $('#dt_body').innerHTML='<div class="row">'+
+    dfield('capacity','Can you take on more work right now?',{type:'select',list:L.capacity||[]})+
+    dfield('preferred_language','Best language for us to use with you',{type:'select',list:L.languages||[]})+
+    dfield('capacity_notes','Capacity notes',{full:true,ph:'Example: room for two more buildings on the east side, nights only'})+
+    dfield('crew_languages','Languages your crew speaks')+dfield('after_hours_phone','After-hours phone',{type:'tel'})+
+    dfield('emergency_name','Emergency contact name')+dfield('emergency_phone','Emergency contact phone',{type:'tel'})+
+    dfield('equipment','Equipment you own',{type:'textarea',full:true,ph:'Floor machine, carpet extractor, pressure washer, lift, truck...'})+
+    dfield('certifications','Certifications and training',{type:'textarea',full:true,ph:'Bloodborne pathogens, OSHA 10, forklift, clean room...'})+
+    dfield('notes_for_cw','Anything else City Wide should know',{type:'textarea',full:true})+'</div>';
+  $$('[data-d]',$('#dt_body')).forEach(function(el){ el.addEventListener('input',function(){ S.details[el.getAttribute('data-d')]=el.value; markDirty(); }); el.addEventListener('change',function(){ S.details[el.getAttribute('data-d')]=el.value; markDirty(); }); });
+}
+
+// ---------------------------------------------------------------- dirty + save
+function changes(){
+  var out={};
+  Object.keys(S.cur).forEach(function(k){ if(String(S.cur[k]||'')!==String(S.base[k]||'')) out[k]={old:S.base[k]||'', 'new':S.cur[k]||''}; });
+  return out;
+}
+function detailChanges(){
+  var out={}, any=false;
+  Object.keys(S.details).forEach(function(k){ if(String(S.details[k]||'')!==String(S.detailsBase[k]||'')){ out[k]=S.details[k]||''; any=true; } });
+  return any?out:null;
+}
+function markDirty(){
+  var c=changes(), n=Object.keys(c).length, d=detailChanges();
+  $$('.f.changed').forEach(function(el){ el.classList.remove('changed'); });
+  Object.keys(c).forEach(function(k){ var el=$('[data-f="'+k+'"]'); if(el) el.classList.add('changed'); });
+  if(d) Object.keys(d).forEach(function(k){ var el=$('[data-f="'+k+'"]'); if(el) el.classList.add('changed'); });
+  var total=n+(d?Object.keys(d).length:0);
+  $('#savebar').className='savebar'+(total?' show':'');
+  $('#savecnt').textContent=total===1?'1 change not saved yet.':total+' changes not saved yet.';
+}
+$('#discard').addEventListener('click',function(){
+  S.cur=JSON.parse(JSON.stringify(S.base)); S.details=JSON.parse(JSON.stringify(S.detailsBase));
+  renderCompany(); renderServices(); renderEval(); renderRefs(); renderDetails(); markDirty();
+});
+$('#save').addEventListener('click',function(){
+  var c=changes(), d=detailChanges();
+  var b=$('#save'); b.disabled=true; b.textContent='Saving...'; showErr('err','');
+  var jobs=[];
+  if(Object.keys(c).length) jobs.push(post({kind:'vs_save',token:token,changes:c}).then(function(r){
+    if(expired(r)) throw new Error('expired');
+    if(!r||!r.ok) throw new Error(r&&r.error||'Could not save.');
+    (r.written||[]).forEach(function(k){ S.base[k]=S.cur[k]; });
+    var msgs=[];
+    if(r.stale&&r.stale.length){ r.stale.forEach(function(k){ S.cur[k]=S.base[k]; }); msgs.push('City Wide changed '+r.stale.map(function(k){return (S.head.vendor.labels[k]||k)}).join(', ')+' since you opened this page, so that was not overwritten. Reload to see the current value.'); }
+    if(r.skipped&&r.skipped.length){ r.skipped.forEach(function(k){ S.cur[k]=S.base[k]; }); msgs.push('Not saved: '+r.skipped.map(function(k){return (S.head.vendor.labels[k]||k)}).join(', ')+'.'); }
+    return msgs;
+  }));
+  if(d) jobs.push(post({kind:'vs_details',token:token,details:d}).then(function(r){
+    if(expired(r)) throw new Error('expired');
+    if(!r||!r.ok) throw new Error(r&&r.error||'Could not save your details.');
+    S.details=r.details||S.details; S.detailsBase=JSON.parse(JSON.stringify(S.details)); return [];
+  }));
+  Promise.all(jobs).then(function(res){
+    b.disabled=false; b.textContent='Save changes';
+    renderCompany(); renderServices(); renderEval(); renderRefs(); renderDetails(); markDirty();
+    var msgs=[].concat.apply([],res);
+    if(msgs.length) showErr('err',msgs.join(' ')); else showOk('ok','Saved. Your compliance office has been told what changed.');
+  }).catch(function(e){
+    b.disabled=false; b.textContent='Save changes';
+    if(e.message!=='expired') showErr('err',e.message||'Could not save.');
+  });
+});
+
+// ---------------------------------------------------------------- contacts
+function renderContacts(){
+  var cs=S.contacts||[];
+  if(!cs.length){ $('#ct_body').innerHTML='<p class="help">No contacts listed yet. Add the owner, any managers, and the supervisors we may talk to on site.</p>'; return; }
+  $('#ct_body').innerHTML='<div class="clist">'+cs.map(function(c){
+    var lines=[];
+    if(c.email) lines.push(esc(c.email));
+    if(c.mobile) lines.push('Mobile '+esc(c.mobile));
+    if(c.phone) lines.push('Phone '+esc(c.phone));
+    return '<div class="cbox"><div class="cmain"><span class="cname">'+esc(c.name)+'</span><span class="crole">'+esc(c.role)+(c.title?' · '+esc(c.title):'')+'</span>'+
+      (lines.length?'<div class="cline">'+lines.join(' &middot; ')+'</div>':'')+
+      (c.use_for?'<div class="cuse">Use for: '+esc(c.use_for)+'</div>':'')+
+      (c.can_edit?'<div class="cuse">Can request a profile link</div>':'')+
+      (c.notes?'<div class="cuse">'+esc(c.notes)+'</div>':'')+
+      '</div><div class="cacts"><button type="button" class="btn-sm" data-edit="'+esc(c.contact_id)+'">Edit</button><button type="button" class="btn-sm danger" data-remove="'+esc(c.contact_id)+'">Remove</button></div></div>';
+  }).join('')+'</div>';
+  $$('[data-edit]',$('#ct_body')).forEach(function(b){ b.addEventListener('click',function(){ openContact(cs.filter(function(c){return c.contact_id===b.getAttribute('data-edit')})[0]); }); });
+  $$('[data-remove]',$('#ct_body')).forEach(function(b){ b.addEventListener('click',function(){
+    var c=cs.filter(function(x){return x.contact_id===b.getAttribute('data-remove')})[0];
+    if(!c) return;
+    b.disabled=true; b.textContent='Removing...'; showErr('ct_err','');
+    post({kind:'vs_contact_remove',token:token,contact_id:c.contact_id}).then(function(r){
+      if(expired(r)) return;
+      if(!r||!r.ok){ showErr('ct_err',r&&r.error||'Could not remove.'); b.disabled=false; b.textContent='Remove'; return; }
+      S.contacts=r.contacts||[]; renderContacts(); showOk('ok','Contact removed.');
+    }).catch(function(){ showErr('ct_err','Could not reach the server.'); b.disabled=false; b.textContent='Remove'; });
+  }); });
+}
+function openContact(c){
+  c=c||{}; S.editing=c.contact_id||'';
+  var L=S.head.lists||{};
+  var uses=(c.use_for||'').split(',').map(function(s){return s.trim()}).filter(Boolean);
+  var canEdit=c.contact_id?!!c.can_edit:true;
+  var f=$('#ct_form'); f.classList.remove('hidden');
+  f.innerHTML='<h3>'+(c.contact_id?'Edit contact':'New contact')+'</h3><div class="row">'+
+    '<label class="f">Name<input type="text" id="cf_name" value="'+esc(c.name||'')+'" required></label>'+
+    '<label class="f">Role<select id="cf_role">'+(L.roles||[]).map(function(r){return '<option'+(r===(c.role||'')?' selected':'')+'>'+esc(r)+'</option>'}).join('')+'</select></label>'+
+    '<label class="f">Title <small>optional</small><input type="text" id="cf_title" value="'+esc(c.title||'')+'"></label>'+
+    '<label class="f">Email<input type="email" id="cf_email" value="'+esc(c.email||'')+'"></label>'+
+    '<label class="f">Mobile<input type="tel" id="cf_mobile" value="'+esc(c.mobile||'')+'"></label>'+
+    '<label class="f">Other phone<input type="tel" id="cf_phone" value="'+esc(c.phone||'')+'"></label>'+
+    '<div class="full"><label class="f">Use this contact for</label><div class="chk">'+(L.use_for||[]).map(function(u){return '<label><input type="checkbox" class="cf_use" value="'+esc(u)+'"'+(uses.indexOf(u)>=0?' checked':'')+'> '+esc(u)+'</label>'}).join('')+'</div></div>'+
+    '<div class="full chk"><label><input type="checkbox" id="cf_edit"'+(canEdit?' checked':'')+'> This person may request a profile link and update this profile <small class="tiny">(needs an email)</small></label></div>'+
+    '<label class="f full">Notes <small>optional</small><input type="text" id="cf_notes" value="'+esc(c.notes||'')+'" placeholder="Example: speaks Spanish, nights only"></label>'+
+    '</div><div style="display:flex;gap:10px;margin-top:14px;flex-wrap:wrap"><button type="button" class="btn btn-red" id="cf_save">Save contact</button><button type="button" class="btn btn-ghost" id="cf_cancel">Cancel</button></div>';
+  $('#cf_role').addEventListener('change',function(){ if(!c.contact_id) $('#cf_edit').checked=(L.edit_roles||[]).indexOf(this.value)>=0; });
+  $('#cf_cancel').addEventListener('click',function(){ f.classList.add('hidden'); f.innerHTML=''; });
+  $('#cf_save').addEventListener('click',function(){
+    var body={kind:'vs_contact',token:token,contact:{contact_id:S.editing,name:$('#cf_name').value.trim(),role:$('#cf_role').value,title:$('#cf_title').value.trim(),
+      email:$('#cf_email').value.trim(),mobile:$('#cf_mobile').value.trim(),phone:$('#cf_phone').value.trim(),
+      use_for:$$('.cf_use:checked').map(function(x){return x.value}),can_edit:$('#cf_edit').checked,notes:$('#cf_notes').value.trim()}};
+    if(!body.contact.name){ showErr('ct_err','The contact needs a name.'); return; }
+    if(body.contact.can_edit&&!body.contact.email){ showErr('ct_err','Add an email if this person should be able to request a profile link.'); return; }
+    var b=$('#cf_save'); b.disabled=true; b.textContent='Saving...'; showErr('ct_err','');
+    post(body).then(function(r){
+      if(expired(r)) return;
+      if(!r||!r.ok){ showErr('ct_err',r&&r.error||'Could not save.'); b.disabled=false; b.textContent='Save contact'; return; }
+      S.contacts=r.contacts||[]; f.classList.add('hidden'); f.innerHTML=''; renderContacts(); showOk('ok','Contact saved.');
+    }).catch(function(){ showErr('ct_err','Could not reach the server.'); b.disabled=false; b.textContent='Save contact'; });
+  });
+  f.scrollIntoView({behavior:'smooth',block:'center'}); $('#cf_name').focus();
+}
+$('#ct_add').addEventListener('click',function(){ openContact(null); });
+
+// ---------------------------------------------------------------- compliance status
+function renderStatus(){
+  var c=S.comp, L=S.head?S.head.links:{}, h='';
+  function insRow(label,x){
+    var txt=x.state==='none'?'Not required':x.state==='unknown'?'Not on file':x.label;
+    var word=x.state==='ok'?'Current':x.state==='soon'?'Expires soon':x.state==='expired'?'Expired':x.state==='none'?'N/A':'Missing';
+    return '<tr><td>'+esc(label)+'</td><td>'+esc(txt)+(x.days!==undefined&&x.state!=='ok'&&x.state!=='none'?' <span class="tiny">('+(x.days<0?Math.abs(x.days)+' days ago':'in '+x.days+' days')+')</span>':'')+'</td><td class="r"><span class="pill '+pillFor(x.state)+'">'+word+'</span></td></tr>';
+  }
+  // insurance
+  var ins=c.insurance||{gl:{state:'unknown'},wc:{state:'unknown'}};
+  h+='<div class="grp"><div class="gh">Insurance on file</div><table class="ctable"><tr><th>Coverage</th><th>Expires</th><th class="r">Status</th></tr>'+insRow('General liability',ins.gl)+insRow('Workers compensation',ins.wc)+'</table>'+
+     '<div style="margin-top:10px;display:flex;gap:10px;flex-wrap:wrap"><a class="btn btn-ghost" href="'+esc(L.upload_coi||'upload.html')+'">Upload a new certificate</a></div>'+
+     '<p class="help">Send the renewed certificate before the date above and nothing stops. Your insurance agent can email it too.</p></div>';
+  // onboarding
+  var ob=c.onboarding||{tracks:[]};
+  if(ob.tracks&&ob.tracks.length){
+    ob.tracks.forEach(function(t){
+      var groups={}, order=[];
+      t.items.forEach(function(i){ if(!groups[i.group]){groups[i.group]=[];order.push(i.group);} groups[i.group].push(i); });
+      var done=t.items.filter(function(i){return i.state==='Verified'||i.state==='Received'}).length;
+      h+='<div class="grp"><div class="gh">Onboarding paperwork ('+esc(t.track_label)+') &middot; '+done+' of '+t.items.length+' on file'+(t.stage?' &middot; stage: '+esc(t.stage):'')+'</div><table class="ctable"><tr><th>Item</th><th>Date</th><th class="r">Status</th></tr>';
+      order.forEach(function(gname){
+        h+='<tr><td colspan="3" style="font-size:11px;font-weight:700;color:var(--cw-grey);padding-top:12px">'+esc(gname||'Other')+'</td></tr>';
+        groups[gname].forEach(function(i){
+          var cls=i.state==='Verified'?'ok':i.state==='Received'?'ok':i.state==='Needs attention'?'bad':(i.required?'soon':'mute');
+          h+='<tr><td>'+esc(i.label)+(i.required?'':' <span class="tiny">optional</span>')+'</td><td>'+esc(i.date||'')+'</td><td class="r"><span class="pill '+cls+'">'+esc(i.state)+'</span></td></tr>';
+        });
+      });
+      h+='</table><p class="help">Needs attention means we have it but something on it has to be fixed. Your compliance office will tell you what.</p></div>';
+    });
+  }
+  // documents
+  var docs=(c.documents&&c.documents.rows)||[];
+  h+='<div class="grp"><div class="gh">Documents you have sent through the Vendor Hub</div>';
+  if(docs.length) h+='<table class="ctable"><tr><th>Received</th><th>Document</th><th>Files</th></tr>'+docs.map(function(d){ return '<tr><td>'+esc(String(d.received||'').slice(0,10))+'</td><td>'+esc(d.doc_type)+(d.coi_coverage?' ('+esc(d.coi_coverage)+')':'')+'</td><td>'+esc(d.file_names||'')+'</td></tr>'; }).join('')+'</table>';
+  else h+='<p class="help">Nothing uploaded through the hub yet.</p>';
+  h+='<div style="margin-top:10px"><a class="btn btn-ghost" href="'+esc(L.upload||'upload.html')+'">Upload a document</a></div></div>';
+  // crew
+  var crew=(c.crew&&c.crew.rows)||[];
+  h+='<div class="grp"><div class="gh">Crew clearance</div>';
+  if(crew.length) h+='<table class="ctable"><tr><th>Name</th><th>Date</th><th class="r">Status</th></tr>'+crew.map(function(p){ var cls=p.state==='Cleared'?'ok':p.state==='Not cleared'?'bad':'soon'; return '<tr><td>'+esc(p.name)+'</td><td>'+esc(p.date||'')+'</td><td class="r"><span class="pill '+cls+'">'+esc(p.state)+'</span></td></tr>'; }).join('')+'</table>';
+  else h+='<p class="help">No crew members on file for clearance yet.</p>';
+  h+='<p class="help">Only cleared people may work in a City Wide building. To add someone, use <a href="background-check.html">Background Check &amp; Name Badge</a>.</p></div>';
+  // audit
+  var a=c.audit||{};
+  h+='<div class="grp"><div class="gh">Quarterly partner check-in</div><table class="ctable"><tr><td>Last check-in</td><td>'+esc(a.last||'None yet')+'</td><td class="r">'+(a.result?'<span class="pill '+(String(a.result).toUpperCase()==='PASS'?'ok':'bad')+'">'+esc(a.result)+'</span>':'')+'</td></tr><tr><td>Next due</td><td>'+esc(a.next_due||'')+'</td><td></td></tr></table></div>';
+  h+='<p class="help" style="margin-top:14px">Questions about any of this: <a href="mailto:'+esc(L.compliance_email||'lvcompliance@gocitywide.com')+'">'+esc(L.compliance_email||'lvcompliance@gocitywide.com')+'</a></p>';
+  $('#st_body').innerHTML=h;
+}
+
+load();
+})();
+</script>
+</body></html>

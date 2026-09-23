@@ -108,6 +108,10 @@ window.CW_NAV = {
      "href": "upload.html"
     },
     {
+     "label": "View & Update My Vendor Profile",
+     "href": "my-profile.html"
+    },
+    {
      "label": "Update Your Company Profile",
      "href": "profile-update.html"
     },
