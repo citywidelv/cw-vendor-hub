@@ -99,6 +99,12 @@ main{max-width:1200px; margin:0 auto; padding:16px;}
 /* Product grid. Featured uses the same card as everything else; the heading does the work. */
 .featured,.grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(250px,1fr)); gap:16px;}
 .featured{margin-bottom:8px;}
+/* Spotlight band. One product line called out above the warehouse quick order, driven by CFG.SPOTLIGHT. */
+.spot{margin:16px 0 8px; padding:16px; border:1.5px solid var(--cw-border); border-left:6px solid var(--cw-red); border-radius:var(--r-card); background:#fff;}
+.spot .section-title{margin-top:0;}
+.spot .spot-kicker{display:inline-block; font-size:var(--fs-caption); font-weight:700; letter-spacing:.04em; text-transform:uppercase; color:var(--cw-red); margin-bottom:6px;}
+.spot .spot-note{color:var(--cw-black); font-size:var(--fs-ui); line-height:1.5; margin:0 0 14px; max-width:760px;}
+.spot .featured{margin-bottom:0;}
 .card{
   border:1.5px solid var(--cw-border); border-radius:var(--r-card); background:#fff; padding:16px;
   display:flex; flex-direction:column; transition:box-shadow 120ms ease-out;
@@ -305,6 +311,14 @@ footer b{color:var(--cw-black);}
 </div>
 
 <main>
+  <div class="spot" id="spotWrap" style="display:none">
+    <span class="spot-kicker" id="spotKicker"></span>
+    <div class="section-title" id="spotTitle"></div>
+    <div class="section-sub" id="spotSub"></div>
+    <p class="spot-note" id="spotNote"></p>
+    <div class="featured" id="spotGrid"></div>
+  </div>
+
   <div id="featuredWrap">
     <div class="section-title">Warehouse Quick Order</div>
     <div class="section-sub">Stocked at the City Wide office. Fastest turnaround.</div>
@@ -432,7 +446,7 @@ async function load(){
 function catList(){
   const cats = new Set();
   PRODUCTS.forEach(p=>p.categories.forEach(c=>cats.add(c)));
-  const order = ["EnvirOx","Uniforms","New Building Items","Chemicals","Cleaning Tools","Mopping",
+  const order = ["Desert Dust Sheets","EnvirOx","Uniforms","New Building Items","Chemicals","Cleaning Tools","Mopping",
     "Sweeping & Dust Mopping","Window Cleaning","High Dusting","TruShot","Vacuums","Floor Machines",
     "Floor Cleaners","Carts & Dollies","Equipment","PPE","Storage","Kitchens (Sands)","Octapharma"];
   return [...cats].sort((a,b)=>{
@@ -441,7 +455,7 @@ function catList(){
   });
 }
 const GROUPS = [
-  {key:"Supplies",   cats:["Chemicals","EnvirOx","TruShot","Cleaning Tools","Mopping",
+  {key:"Supplies",   cats:["Desert Dust Sheets","Chemicals","EnvirOx","TruShot","Cleaning Tools","Mopping",
                            "Sweeping & Dust Mopping","Window Cleaning","High Dusting",
                            "Floor Cleaners","Restroom","PPE","Storage"]},
   {key:"Equipment",  cats:["Vacuums","Floor Machines","Carts & Dollies","Equipment"]},
@@ -581,8 +595,23 @@ function render(){
   if(showFeat){
     document.getElementById("featured").innerHTML=PRODUCTS.filter(p=>p.featured).map(cardHTML).join("");
   }
+  // Spotlight: one product line called out on the home view. Config-driven, so a new
+  // spotlight is a config.js edit plus a category on the Sheet rows, no page change.
+  const SP = CFG.SPOTLIGHT || null;
+  const spotItems = (SP && SP.category) ? PRODUCTS.filter(p=>p.categories.includes(SP.category)) : [];
+  const showSpot = showFeat && spotItems.length>0;
+  document.getElementById("spotWrap").style.display=showSpot?"":"none";
+  if(showSpot){
+    document.getElementById("spotKicker").textContent=SP.kicker||"Featured";
+    document.getElementById("spotTitle").textContent=SP.title||SP.category;
+    document.getElementById("spotSub").textContent=SP.sub||"";
+    const note=document.getElementById("spotNote");
+    note.textContent=SP.note||""; note.style.display=SP.note?"":"none";
+    document.getElementById("spotGrid").innerHTML=spotItems.map(cardHTML).join("");
+  }
   const grid=document.getElementById("grid");
-  const items=showFeat?list.filter(p=>!p.featured):list;
+  const spotIds = showSpot ? new Set(spotItems.map(p=>p.id)) : new Set();
+  const items=showFeat?list.filter(p=>!p.featured && !spotIds.has(p.id)):list;
   grid.innerHTML=items.map(cardHTML).join("");
   document.getElementById("empty").style.display=items.length?"none":"";
   document.getElementById("gridTitle").textContent =

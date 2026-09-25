@@ -37,6 +37,19 @@ window.CW_CONFIG = {
   // CC on fallback order emails
   ORDER_EMAIL_CC: "rnservicecall@gocitywide.com",
 
+  // SPOTLIGHT: one product line called out at the top of the shop home view.
+  // Every catalog row carrying this category shows in the band (and drops out of the
+  // All Products grid below it). Set category to "" to turn the band off.
+  SPOTLIGHT: {
+    category: "Desert Dust Sheets",
+    kicker: "Featured this month",
+    title: "Desert Dust Sheets",
+    sub: "Clean floors faster and easier. Traps up to 8X more dirt, dust and sand than a cotton dust mop.",
+    note: "Las Vegas floors take a beating from fine desert dust and tracked-in sand. These disposable sweep and dust sheets " +
+          "grab it on the first pass instead of pushing it around. Lay a sheet under the flat dust mop you already use, " +
+          "or pair it with the Flip Holder and handle. Use both sides, then throw it away. Nothing to launder.",
+  },
+
   // Default margin percent applied to any catalog row that has a "cost"
   // value but no "price". Rows with an explicit "price" are shown as-is.
   // Example: cost 100.00 with DEFAULT_MARGIN_PCT 25 displays as $125.00.
