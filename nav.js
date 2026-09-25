@@ -1,6 +1,7 @@
 /* nav.js for the Vendor Hub. Seeded from the page menu on 2026-09-13 by Claude.
    The Site Admin hub (cw-admin-hub/site-admin.html) republishes this file; do not edit by hand.
-   The page keeps its own MENU as a fallback if this file is missing or malformed. */
+   The page keeps its own MENU as a fallback if this file is missing or malformed.
+   Edited by hand 2026-09-25 (menu cleanup: one home per tool, short labels with tag chips; grouped by what the vendor came to do): before the next Site Admin publish, click Import live menu. */
 window.CW_NAV = {
  "hub": "vendor",
  "label": "Vendor Hub",
@@ -15,6 +16,7 @@ window.CW_NAV = {
   },
   {
    "label": "New Vendors",
+   "href": "new-vendors.html",
    "items": [
     {
      "label": "Vendor Evaluation (start here)",
@@ -28,8 +30,7 @@ window.CW_NAV = {
      "label": "Northern Nevada",
      "href": "new-vendors.html?region=nnv"
     }
-   ],
-   "href": "new-vendors.html"
+   ]
   },
   {
    "label": "Guides",
@@ -69,6 +70,7 @@ window.CW_NAV = {
   },
   {
    "label": "Invoices & Paperwork",
+   "href": "invoice.html",
    "items": [
     {
      "ghead": "Get Paid"
@@ -78,19 +80,15 @@ window.CW_NAV = {
      "href": "invoice.html"
     },
     {
-     "ghead": "Orders"
+     "label": "Pay by Credit Card",
+     "href": "card-authorization.html"
+    },
+    {
+     "ghead": "Supplies"
     },
     {
      "label": "Report Supplies Needed",
      "href": "building-supplies.html"
-    },
-    {
-     "label": "Shop Supplies & Uniforms",
-     "href": "shop/"
-    },
-    {
-     "label": "Pay by Credit Card",
-     "href": "card-authorization.html"
     },
     {
      "label": "Build a New Building Kit",
@@ -100,20 +98,27 @@ window.CW_NAV = {
      "ghead": "Paperwork"
     },
     {
+     "label": "Upload Insurance Docs",
+     "href": "upload.html"
+    },
+    {
+     "label": "My Vendor Profile",
+     "href": "my-profile.html"
+    },
+    {
      "label": "Add or Remove a Cleaner",
      "href": "cleaner-roster.html"
     },
     {
-     "label": "Upload Insurance & Compliance Docs",
-     "href": "upload.html"
+     "label": "Background Check & Name Badge",
+     "href": "background-check.html"
     },
     {
-     "label": "View & Update My Vendor Profile",
-     "href": "my-profile.html"
+     "label": "Bloodborne Pathogens Course",
+     "href": "https://www.onlinecprcertification.net/bloodborne-pathogens-training-certification.php"
     },
     {
-     "label": "Update Your Company Profile",
-     "href": "profile-update.html"
+     "ghead": "Report Work"
     },
     {
      "label": "Maintenance Work Ticket",
@@ -122,20 +127,12 @@ window.CW_NAV = {
     {
      "label": "Snow Service Report",
      "href": "snow-report.html"
-    },
-    {
-     "label": "Background Check & Name Badge",
-     "href": "background-check.html"
-    },
-    {
-     "label": "Bloodborne Pathogens Certification",
-     "href": "https://www.onlinecprcertification.net/bloodborne-pathogens-training-certification.php"
     }
-   ],
-   "href": "invoice.html"
+   ]
   },
   {
    "label": "Recognition",
+   "href": "#recognition",
    "items": [
     {
      "label": "Vendor of the Month Wall",
@@ -152,8 +149,7 @@ window.CW_NAV = {
      "label": "Nominate a City Wide G.O.A.T.",
      "href": "nominate.html?type=goat"
     }
-   ],
-   "href": "#recognition"
+   ]
   },
   {
    "label": "Order Supplies",
