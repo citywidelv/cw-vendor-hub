@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Prorate a Partial Month | City Wide Vendor Hub</title><meta name="description" content="Math helper for vendors invoicing a partial month. Estimate only; your agreement controls what is paid."><style>
+:root{
+  --cw-red:#D22730; --cw-red-dark:#B01F27; --cw-black:#2D2A26; --cw-grey:#636466;
+  --cw-white:#FFFFFF; --cw-light:#F5F5F5; --cw-border:#E5E5E5; --cw-teal:#0AA6A9;
+  --sp-xs:4px; --sp-sm:8px; --sp-md:16px; --sp-lg:24px; --sp-xl:32px; --sp-2xl:48px;
+  --radius:10px; --shadow:0 1px 3px rgba(45,42,38,.08),0 4px 14px rgba(45,42,38,.06);
+  --shadow-lift:0 4px 10px rgba(45,42,38,.10),0 10px 28px rgba(45,42,38,.10);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{font-family:Verdana,'Liberation Sans','DejaVu Sans',Geneva,Tahoma,sans-serif;
+  color:var(--cw-black);background:var(--cw-white);line-height:1.6;font-size:15px}
+img{max-width:100%;display:block}
+a{color:var(--cw-red);font-weight:700}
+a:hover{color:var(--cw-red-dark)}
+.wrap{max-width:1080px;margin:0 auto;padding:0 20px}
+.content-wrap{max-width:860px;margin:0 auto;padding:0 20px}
+
+/* ---------- header ---------- */
+.site-head{position:sticky;top:0;z-index:50;background:var(--cw-white);
+  border-bottom:1px solid var(--cw-border);box-shadow:0 1px 2px rgba(45,42,38,.05)}
+.site-head .bar{display:flex;align-items:center;gap:16px;height:64px}
+.site-head .bar>a:first-child{flex:none;display:block;line-height:0}
+.site-head img.logo{height:38px;width:auto;max-width:none;object-fit:contain}
+.site-head .site-name{font-size:13px;font-weight:700;color:var(--cw-grey);
+  border-left:2px solid var(--cw-border);padding-left:14px;letter-spacing:.02em;
+  text-transform:uppercase;white-space:nowrap}
+.site-head nav{margin-left:auto;display:flex;gap:4px;align-items:center}
+.site-head nav a{font-size:12.5px;font-weight:700;color:var(--cw-black);text-decoration:none;
+  padding:8px 10px;border-radius:6px;white-space:nowrap}
+.site-head nav a:hover{background:var(--cw-light);color:var(--cw-red)}
+.site-head nav a.active{color:var(--cw-red)}
+.site-head nav a.btn-order{background:var(--cw-red);color:#fff;padding:9px 16px}
+.site-head nav a.btn-order:hover{background:var(--cw-red-dark);color:#fff}
+.site-head nav a.nav-opps{color:var(--cw-red);position:relative}
+.site-head nav a.nav-opps::after{content:"";display:inline-block;width:7px;height:7px;
+  border-radius:50%;background:var(--cw-red);margin-left:6px;vertical-align:2px;
+  animation:oppPulse 2s infinite}
+@keyframes oppPulse{0%,100%{opacity:1}50%{opacity:.35}}
+.dd{position:relative}
+.dd>a.dd-label::after{content:" \25BE";font-size:10px;color:var(--cw-grey)}
+.dd-menu{display:none;position:absolute;top:100%;left:0;min-width:210px;background:#fff;
+  border:1px solid var(--cw-border);border-radius:10px;box-shadow:var(--shadow-lift);
+  padding:8px;z-index:60}
+.dd:hover .dd-menu,.dd:focus-within .dd-menu{display:block}
+.dd-menu a{display:block;padding:9px 12px;border-radius:6px;font-size:13px}
+.dd-menu .dd-head{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--cw-grey);padding:8px 12px 4px}
+.menu-toggle{display:none;margin-left:auto;background:none;border:1px solid var(--cw-border);
+  border-radius:6px;padding:8px 10px;cursor:pointer;font-size:16px;line-height:1;color:var(--cw-black)}
+@media(max-width:1080px){
+  .site-head .site-name{display:none}
+  .menu-toggle{display:block}
+  .site-head nav{display:none;position:absolute;top:64px;left:0;right:0;background:#fff;
+    flex-direction:column;align-items:stretch;padding:10px 16px 16px;gap:2px;
+    border-bottom:1px solid var(--cw-border);box-shadow:0 12px 24px rgba(45,42,38,.12)}
+  .site-head nav.open{display:flex}
+  .site-head nav a{padding:12px 10px;border-radius:8px}
+  .site-head nav a.btn-order{text-align:center;margin-top:8px}
+  .dd{display:contents}
+  .dd>a.dd-label{display:none}
+  .dd-menu{display:block;position:static;border:none;box-shadow:none;padding:0;min-width:0}
+  .dd-menu a{padding:12px 10px;font-size:13px}
+  .dd-menu .dd-head{padding:10px 10px 2px}
+}
+
+/* ---------- hero ---------- */
+.hero{padding:56px 0 44px;background:
+  linear-gradient(180deg,#fff 0%,#FAFAFA 100%)}
+.hero .kicker{display:inline-flex;align-items:center;gap:8px;font-size:11px;font-weight:700;
+  letter-spacing:.14em;text-transform:uppercase;color:var(--cw-red);margin-bottom:14px}
+.hero .kicker::before{content:"";width:22px;height:3px;background:var(--cw-red);border-radius:2px}
+.hero h1{font-size:clamp(26px,4.5vw,40px);font-weight:700;line-height:1.2;letter-spacing:.01em;
+  max-width:760px}
+.hero p.lede{margin-top:14px;font-size:clamp(14px,2vw,17px);color:var(--cw-grey);max-width:640px}
+.hero .cta-row{margin-top:26px;display:flex;gap:12px;flex-wrap:wrap}
+
+/* ---------- buttons ---------- */
+.btn{display:inline-flex;align-items:center;gap:8px;font-family:inherit;font-size:14px;
+  font-weight:700;text-decoration:none;border-radius:8px;padding:12px 20px;cursor:pointer;
+  border:2px solid transparent;transition:all .15s}
+.btn-red{background:var(--cw-red);color:#fff}
+.btn-red:hover{background:var(--cw-red-dark);color:#fff;transform:translateY(-1px);box-shadow:var(--shadow)}
+.btn-ghost{background:#fff;color:var(--cw-black);border-color:var(--cw-border)}
+.btn-ghost:hover{border-color:var(--cw-black);color:var(--cw-black)}
+.btn-pdf{background:#fff;color:var(--cw-red);border-color:var(--cw-red)}
+.btn-pdf:hover{background:var(--cw-red);color:#fff}
+.btn svg{flex:none}
+
+/* ---------- section + cards ---------- */
+.section{padding:40px 0}
+.section + .section{border-top:1px solid var(--cw-border)}
+.section-head{display:flex;align-items:baseline;gap:14px;margin-bottom:6px}
+.section-head h2{font-size:20px;font-weight:700}
+.section-head .tag{font-size:11px;font-weight:700;color:var(--cw-grey);letter-spacing:.1em;
+  text-transform:uppercase}
+.section p.sub{color:var(--cw-grey);font-size:14px;max-width:640px;margin-bottom:22px}
+.card-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:18px}
+.card{position:relative;display:flex;flex-direction:column;background:#fff;border:1px solid var(--cw-border);
+  border-radius:var(--radius);padding:22px;text-decoration:none;color:var(--cw-black);
+  transition:all .15s;box-shadow:var(--shadow)}
+.card:hover{box-shadow:var(--shadow-lift);transform:translateY(-2px);border-color:#d8d8d8;color:var(--cw-black)}
+.card .icon{width:44px;height:44px;border-radius:10px;background:var(--cw-light);display:flex;
+  align-items:center;justify-content:center;margin-bottom:14px;color:var(--cw-red)}
+.card.flag .icon{background:var(--cw-red);color:#fff}
+.card h3{font-size:15px;font-weight:700;margin-bottom:6px}
+.card p{font-size:13px;color:var(--cw-grey);font-weight:400;flex:1}
+.card .go{margin-top:14px;font-size:13px;font-weight:700;color:var(--cw-red)}
+.card .go::after{content:" \2192"}
+.card .pdf-mini{position:absolute;top:16px;right:16px;font-size:10px;font-weight:700;
+  letter-spacing:.08em;color:var(--cw-grey);border:1px solid var(--cw-border);border-radius:4px;
+  padding:2px 7px;text-transform:uppercase}
+.card.soon{background:var(--cw-light);box-shadow:none;border-style:dashed}
+.card.soon:hover{transform:none;box-shadow:none}
+.card.soon .icon{background:#fff;color:var(--cw-grey)}
+.badge-soon{display:inline-block;font-size:10px;font-weight:700;letter-spacing:.1em;
+  text-transform:uppercase;background:var(--cw-black);color:#fff;border-radius:4px;
+  padding:3px 8px;margin-bottom:10px;width:max-content}
+
+/* ---------- guide page ---------- */
+.guide-hero{background:var(--cw-black);color:#fff;padding:40px 0 34px}
+.guide-hero .crumbs{font-size:12px;margin-bottom:14px}
+.guide-hero .crumbs a{color:#cfcdca;text-decoration:none;font-weight:400}
+.guide-hero .crumbs a:hover{color:#fff}
+.guide-hero .crumbs span{color:#8b8985;margin:0 6px}
+.guide-hero h1{font-size:clamp(24px,4vw,34px);line-height:1.25;max-width:720px}
+.guide-hero h1::after{content:"";display:block;width:56px;height:4px;background:var(--cw-red);
+  border-radius:2px;margin-top:16px}
+.guide-hero p.lede{margin-top:14px;color:#cfcdca;font-size:15px;max-width:640px}
+.guide-hero .cta-row{margin-top:22px;display:flex;gap:12px;flex-wrap:wrap}
+.guide-hero .btn-pdf{background:transparent;color:#fff;border-color:#fff}
+.guide-hero .btn-pdf:hover{background:#fff;color:var(--cw-black)}
+.guide-body{padding:40px 0 8px}
+.guide-body h2{font-size:20px;font-weight:700;margin:38px 0 12px;padding-top:6px}
+.guide-body h2:first-child{margin-top:0}
+.guide-body h2 .num{color:var(--cw-red);margin-right:8px}
+.guide-body h3{font-size:15px;font-weight:700;margin:24px 0 8px}
+.guide-body p{margin:0 0 14px;max-width:70ch}
+.guide-body ul,.guide-body ol{margin:0 0 16px 22px;max-width:70ch}
+.guide-body li{margin-bottom:7px}
+.guide-body li::marker{color:var(--cw-red);font-weight:700}
+
+/* callouts */
+.callout{border-left:4px solid var(--cw-red);background:var(--cw-light);border-radius:0 8px 8px 0;
+  padding:16px 18px;margin:20px 0;font-size:14px}
+.callout.warn{border-left-color:var(--cw-black)}
+.callout b.title{display:block;font-size:12px;letter-spacing:.08em;text-transform:uppercase;
+  color:var(--cw-red);margin-bottom:5px}
+.callout.warn b.title{color:var(--cw-black)}
+.callout p:last-child{margin-bottom:0}
+
+/* tables */
+.tbl-wrap{overflow-x:auto;margin:18px 0 26px;border:1px solid var(--cw-border);border-radius:8px;
+  box-shadow:var(--shadow)}
+table{border-collapse:collapse;width:100%;font-size:13px;min-width:520px}
+thead th{background:var(--cw-black);color:#fff;text-align:left;font-size:11px;letter-spacing:.06em;
+  text-transform:uppercase;padding:11px 14px;white-space:nowrap}
+tbody td{padding:11px 14px;border-top:1px solid var(--cw-border);vertical-align:top}
+tbody tr:nth-child(even){background:#FAFAFA}
+td.qty,th.qty{text-align:center;font-weight:700;white-space:nowrap}
+td.item{font-weight:700}
+td .note{display:block;font-weight:400;color:var(--cw-grey);font-size:12px;margin-top:2px}
+
+/* color chips */
+.chip{display:inline-flex;align-items:center;gap:8px;font-weight:700;white-space:nowrap}
+.chip i{width:16px;height:16px;border-radius:50%;border:1px solid rgba(0,0,0,.15);flex:none}
+.c-red{background:#D0342C}.c-yellow{background:#F2C230}.c-blue{background:#2D69B3}
+.c-green{background:#3B9A46}.c-orange{background:#F68C28}.c-ltblue{background:#7FC3E8}
+.c-pink{background:#F08CA4}
+
+/* product figure row */
+.prod-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:14px;margin:20px 0 26px}
+.prod{border:1px solid var(--cw-border);border-radius:10px;background:#fff;padding:12px;text-align:center;
+  box-shadow:var(--shadow)}
+.prod .ph{height:110px;display:flex;align-items:center;justify-content:center;margin-bottom:10px}
+.prod img{max-height:110px;width:auto;margin:0 auto}
+.prod figcaption{font-size:11.5px;font-weight:700;line-height:1.4}
+.prod figcaption small{display:block;font-weight:400;color:var(--cw-grey);margin-top:2px}
+
+/* checklist */
+.checklist{list-style:none;margin:16px 0 24px;padding:0;max-width:70ch}
+.checklist li{position:relative;padding:10px 12px 10px 40px;border:1px solid var(--cw-border);
+  border-radius:8px;margin-bottom:8px;background:#fff;font-size:14px}
+.checklist li::before{content:"";position:absolute;left:12px;top:12px;width:16px;height:16px;
+  border:2px solid var(--cw-red);border-radius:4px}
+.checklist li::marker{content:""}
+
+/* planner controls */
+.picker{margin:6px 0 18px}
+.picker .lbl{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--cw-grey);margin-bottom:8px;display:block}
+.seg{display:flex;flex-wrap:wrap;gap:8px}
+.seg button{font-family:inherit;font-size:13px;font-weight:700;color:var(--cw-black);
+  background:#fff;border:2px solid var(--cw-border);border-radius:8px;padding:10px 14px;
+  cursor:pointer;transition:all .12s;line-height:1.35}
+.seg button small{display:block;font-weight:400;color:var(--cw-grey);font-size:11px}
+.seg button:hover{border-color:var(--cw-grey)}
+.seg button.on{border-color:var(--cw-red);background:var(--cw-red);color:#fff}
+.seg button.on small{color:rgba(255,255,255,.85)}
+.planner-panel{border:1px solid var(--cw-border);border-radius:12px;padding:22px;margin:22px 0 30px;
+  background:#fff;box-shadow:var(--shadow)}
+.planner-panel h3{margin:0 0 4px;font-size:16px}
+.planner-panel .meta{font-size:12.5px;color:var(--cw-grey);margin-bottom:12px}
+.type-notes{margin:14px 0 4px}
+.type-notes li{font-size:13.5px}
+
+/* opportunities band (hub) */
+.opps-band{background:linear-gradient(120deg,var(--cw-black) 0%,#3a3733 100%);color:#fff;
+  border-top:4px solid var(--cw-red)}
+.opps-band .inner{display:flex;align-items:center;gap:20px;flex-wrap:wrap;padding:24px 0}
+.opps-band .dot{width:10px;height:10px;border-radius:50%;background:var(--cw-red);flex:none;
+  animation:oppPulse 2s infinite}
+.opps-band .txt{flex:1;min-width:220px}
+.opps-band .txt b{display:block;font-size:17px}
+.opps-band .txt span{font-size:13px;color:#cfcdca}
+.opps-band .btn-red{background:var(--cw-red)}
+
+/* footer */
+.site-foot{margin-top:56px;background:var(--cw-black);color:#cfcdca;padding:34px 0 30px;font-size:13px}
+.site-foot .cols{display:flex;flex-wrap:wrap;gap:24px;justify-content:space-between;align-items:center}
+.site-foot a{color:#fff;text-decoration:none}
+.site-foot a:hover{color:#fff;text-decoration:underline}
+.site-foot .fine{margin-top:14px;font-size:11.5px;color:#8b8985}
+.next-link{display:flex;justify-content:space-between;gap:12px;margin:44px 0 10px;flex-wrap:wrap}
+
+/* brand accent colors (teal primary accent, gold for cautions/badges) */
+.section-head .tag{color:var(--cw-teal)}
+.dd-head{color:var(--cw-teal)}
+.pdf-mini{color:#8a6a0e;border-color:var(--cw-gold);background:#FFFDF4}
+.region-tag{color:#067a7d;border-color:var(--cw-teal)}
+.rule-box{border-left-color:var(--cw-gold);background:#FFFDF4}
+.rule-box .stepnum{background:var(--cw-gold)!important;color:var(--cw-black)!important}
+
+/* photo hero treatment (July 2026) */
+.has-photo{position:relative;overflow:hidden}
+.has-photo .ph-bg{position:absolute;inset:0;background-size:cover;background-position:center}
+.has-photo .ph-scrim{position:absolute;inset:0;background:linear-gradient(100deg,rgba(20,18,16,.93) 0%,rgba(20,18,16,.74) 55%,rgba(20,18,16,.42) 100%)}
+.has-photo>.wrap,.has-photo>.content-wrap{position:relative;z-index:2}
+.kit-cta{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-top:18px;padding:16px 18px;border-radius:10px;background:#FDF5F5;border:1.5px solid #F1D6D8}.kit-cta .kc-tx b{display:block;font-size:14px}.kit-cta .kc-tx span{font-size:12.5px;color:#636466}@media(max-width:560px){.kit-cta .btn{width:100%;text-align:center}}
+/* ---------- prorate helper ---------- */
+.ack{display:flex;gap:12px;align-items:flex-start;border:1.5px solid var(--cw-red);background:#FDF5F5;
+  border-radius:10px;padding:14px 16px;margin:0 0 26px;font-size:14px;font-weight:700;cursor:pointer;line-height:1.45}
+.ack input{width:20px;height:20px;flex:none;margin-top:2px;accent-color:var(--cw-red)}
+.pro-grid{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:26px;align-items:start}
+@media(max-width:820px){.pro-grid{grid-template-columns:1fr}}
+.step{border:1px solid var(--cw-border);border-radius:12px;padding:18px;margin-bottom:16px;background:#fff;box-shadow:var(--shadow)}
+.step-h{display:flex;gap:12px;align-items:flex-start;margin-bottom:12px}
+.step-h b{display:block;font-size:15px;line-height:1.3}
+.step-h small{display:block;color:var(--cw-grey);font-size:12.5px;margin-top:3px;line-height:1.45}
+.stepnum{flex:none;width:28px;height:28px;border-radius:50%;background:var(--cw-red);color:#fff;font-weight:700;
+  font-size:14px;display:flex;align-items:center;justify-content:center}
+.money{display:flex;align-items:center;gap:8px;max-width:260px;border:2px solid var(--cw-border);border-radius:8px;padding:0 12px;background:#fff}
+.money:focus-within{border-color:var(--cw-red)}
+.money span{font-weight:700;color:var(--cw-grey);font-size:16px}
+.money input{font-family:inherit;font-size:20px;font-weight:700;border:none;outline:none;padding:10px 0;width:100%;min-width:0;color:var(--cw-black)}
+.dow{display:flex;flex-wrap:wrap;gap:8px}
+.dow button{font-family:inherit;font-size:13px;font-weight:700;color:var(--cw-black);background:#fff;border:2px solid var(--cw-border);
+  border-radius:8px;padding:10px 0;cursor:pointer;width:calc((100% - 48px)/7);min-width:46px;text-align:center;transition:all .12s}
+.dow button:hover{border-color:var(--cw-grey)}
+.dow button.on{background:var(--cw-red);border-color:var(--cw-red);color:#fff}
+@media(max-width:480px){.dow{gap:4px}.dow button{min-width:0;width:calc((100% - 24px)/7);font-size:12px}}
+.cal-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px}
+.cal-nav{font-family:inherit;font-size:22px;line-height:1;width:40px;height:40px;border:2px solid var(--cw-border);border-radius:8px;background:#fff;cursor:pointer;color:var(--cw-black)}
+.cal-nav:hover{border-color:var(--cw-grey)}
+.cal-sel{display:flex;gap:8px}
+.cal-sel select{font-family:inherit;font-size:15px;font-weight:700;padding:8px 10px;border:2px solid var(--cw-border);border-radius:8px;background:#fff;color:var(--cw-black)}
+.modes{display:flex;flex-wrap:wrap;gap:6px;margin:4px 0 8px}
+.modes button{font-family:inherit;font-size:12px;font-weight:700;padding:7px 12px;border-radius:999px;border:2px solid var(--cw-border);background:#fff;color:var(--cw-black);cursor:pointer}
+.modes button.on{background:var(--cw-black);border-color:var(--cw-black);color:#fff}
+.modes button.reset{margin-left:auto;color:var(--cw-red);border-color:transparent;background:transparent}
+.modes button.reset:hover{text-decoration:underline}
+.hint{font-size:13px;font-weight:700;color:var(--cw-red);min-height:20px;margin-bottom:8px}
+.cal{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;user-select:none}
+.cal .dh{font-size:10.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--cw-grey);text-align:center;padding:4px 0}
+.cal .d{position:relative;aspect-ratio:1/1;min-height:40px;border:2px solid var(--cw-border);border-radius:8px;background:#fff;
+  font-family:inherit;font-size:14px;font-weight:700;color:var(--cw-black);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .1s}
+.cal .d:hover{border-color:var(--cw-grey)}
+.cal .d.off{color:#b5b3b0;font-weight:400}
+.cal .d.pad{visibility:hidden}
+.cal .d.range{background:#F3F3F3;border-color:#E0E0E0}
+.cal .d.count{background:var(--cw-red);border-color:var(--cw-red);color:#fff}
+.cal .d.skip{background:#fff;border-color:var(--cw-black);color:var(--cw-black);text-decoration:line-through}
+.cal .d.edge::after{content:"";position:absolute;bottom:4px;left:50%;transform:translateX(-50%);width:6px;height:6px;border-radius:50%;background:currentColor}
+.cal .d.edge.count::after{background:#fff}
+.legend{display:flex;flex-wrap:wrap;gap:14px;margin-top:10px;font-size:12px;color:var(--cw-grey)}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.legend i{width:14px;height:14px;border-radius:4px;border:2px solid var(--cw-border);display:inline-block}
+.legend .l-count{background:var(--cw-red);border-color:var(--cw-red)}
+.legend .l-range{background:#F3F3F3;border-color:#E0E0E0}
+.legend .l-skip{border-color:var(--cw-black)}
+.result{position:sticky;top:80px;border:2px solid var(--cw-black);border-radius:12px;padding:20px;background:#fff;box-shadow:var(--shadow-lift)}
+.r-title{font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--cw-red);margin-bottom:10px}
+.r-locked{font-size:13.5px;color:var(--cw-grey);padding:10px 0}
+.r-msg{font-size:13.5px;color:var(--cw-grey);margin-bottom:8px;line-height:1.5}
+.r-amt{font-size:34px;font-weight:700;letter-spacing:-.01em;line-height:1.1;margin:6px 0 4px}
+.r-amt.muted{font-size:18px;color:var(--cw-grey)}
+.r-line{font-size:13px;font-weight:700;margin-bottom:6px}
+.r-days{font-size:12px;color:var(--cw-grey);line-height:1.5;margin-bottom:12px}
+.result .btn{width:100%;justify-content:center;font-size:13px;padding:10px 14px}
+.r-fine{margin-top:12px;padding-top:10px;border-top:1px solid var(--cw-border);font-size:11.5px;color:var(--cw-grey);line-height:1.45}
+@media(max-width:820px){.result{position:static}}
+</style>  <link rel="icon" href="favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+  <link rel="manifest" href="site.webmanifest">
+<link rel="stylesheet" href="https://citywidelv.github.io/cw-base.css">
+</head><body><header class="site-head"><div class="wrap bar"><a href="index.html"><img class="logo" src="https://emailer.emfluence.com/clients/citywide/uploadedfiles/signature_logo.png" alt="City Wide Facility Solutions"></a><button class="menu-toggle" aria-label="Menu">&#9776;</button><nav><a href="index.html">Home</a><a href="opportunities.html" class="nav-opps">Open Opportunities</a><div class="dd"><a class="dd-label" href="new-vendors.html">New Vendors</a><div class="dd-menu"><a href="new-vendors.html?region=lv">Las Vegas</a><a href="new-vendors.html?region=nnv">Northern Nevada</a></div></div><div class="dd"><a class="dd-label" href="#" onclick="return false;">Guides</a><div class="dd-menu"><div class="dd-head">Crew Guides</div><a href="planner.html">New Building Planner</a><a href="workloading.html">Workloading & Crew Sizing</a><a href="equipment.html">Choosing Your Equipment</a><a href="color-coding.html">Color Coding System</a><a href="medical.html">Medical Facility Cleaning</a><a href="cleanroom.html">Clean Room Cleaning</a><a href="gmp.html">GMP & Food Facility Cleaning</a></div></div><div class="dd"><a class="dd-label" href="invoice.html">Invoices &amp; Paperwork</a><div class="dd-menu"><div class="dd-head">Get Paid</div><a href="invoice.html">Submit Your Monthly Invoice</a><a href="prorate.html" class="active">Prorate a Partial Month</a><div class="dd-head">Orders</div><a href="building-supplies.html">Report Supplies Needed</a><a href="shop/">Shop Supplies &amp; Uniforms</a><a href="card-authorization.html">Pay by Credit Card</a><div class="dd-head">Paperwork</div><a href="cleaner-roster.html">Add or Remove a Cleaner</a><a href="upload.html">Upload Insurance &amp; Compliance Docs</a><a href="profile-update.html">Update Your Company Profile</a><a href="work-order.html">Maintenance Work Ticket</a><a href="background-check.html">Background Check &amp; Name Badge</a><a href="https://www.onlinecprcertification.net/bloodborne-pathogens-training-certification.php" target="_blank" rel="noopener">Bloodborne Pathogens Certification</a></div></div><div class="dd"><a class="dd-label" href="index.html#recognition">Recognition</a><div class="dd-menu"><a href="index.html#recognition">Vendor of the Month Wall</a><div class="dd-head">Nominate</div><a href="nominate.html">Nominate a Vendor of the Month</a><a href="nominate.html?type=goat">Nominate a City Wide G.O.A.T.</a></div></div>
+<a class="btn-order" href="shop/">Order Supplies</a></nav></div></header>
+<script src="nav.js"></script>
+<script src="https://citywidelv.github.io/cw-ops-desk/cw-nav.js"></script>
+<script>if(window.CWNav) CWNav.vendor();</script><section class="guide-hero has-photo"><div class="ph-bg" style="background-image:url('images/paperwork.jpg')"></div><div class="ph-scrim"></div><div class="content-wrap"><div class="crumbs"><a href="index.html">Resource Center</a><span>/</span><a href="invoice.html">Invoices &amp; Paperwork</a><span>/</span>Prorate a Partial Month</div><h1>Prorate a Partial Month</h1><p class="lede">Started or stopped service partway through a month? This helper does the math for the partial amount so your invoice is ready to submit. It is a calculator only. Your agreement decides what is paid.</p></div></section>
+
+<section class="guide-body"><div class="content-wrap">
+
+<div class="callout warn"><b class="title">Please read before you use this</b>
+<p>This page is a math helper. It is not a quote, a promise, or an approval of any amount. City Wide does not see, check, or save anything you type here. You are responsible for your inputs and for your invoice. The amount City Wide pays is set by your Independent Contractor Agreement and the Exhibit A for the building, based on the service actually provided. Nothing on this page changes those documents.</p></div>
+
+<label class="ack"><input type="checkbox" id="ack"> <span>I understand this is a math helper only. My inputs and my invoice are my responsibility. The result is an estimate, not an amount City Wide has agreed to pay.</span></label>
+
+<div class="pro-grid">
+<div class="pro-left">
+
+<div class="step"><div class="step-h"><span class="stepnum">1</span><div><b>Monthly pay for this building</b><small>The full month amount on your Exhibit A for this building. One building at a time.</small></div></div>
+<div class="money"><span>$</span><input type="text" inputmode="decimal" id="pay" placeholder="0.00" autocomplete="off"></div></div>
+
+<div class="step"><div class="step-h"><span class="stepnum">2</span><div><b>Which days does your crew clean this building?</b><small>Tap every day that is on the schedule.</small></div></div>
+<div class="dow" id="dow"></div></div>
+
+<div class="step"><div class="step-h"><span class="stepnum">3</span><div><b>Pick the month, then tap your first and last day of service</b><small>If you started this month, tap your first day. If you stopped this month, tap the 1st and then your last day. Tap a counted day to skip it (holiday, building closed, no service).</small></div></div>
+
+<div class="cal-head"><button type="button" class="cal-nav" id="prevM" aria-label="Previous month">&#8249;</button><div class="cal-sel"><select id="selM"></select><select id="selY"></select></div><button type="button" class="cal-nav" id="nextM" aria-label="Next month">&#8250;</button></div>
+<div class="modes" id="modes"><button type="button" data-m="start" class="on">First day</button><button type="button" data-m="end">Last day</button><button type="button" data-m="skip">Skip a day</button><button type="button" class="reset" id="resetBtn">Start over</button></div>
+<div class="hint" id="hint">Tap your first day of service.</div>
+<div class="cal" id="cal"></div>
+<div class="legend"><span><i class="l-count"></i>Counted</span><span><i class="l-range"></i>In range, not a cleaning day</span><span><i class="l-skip"></i>Skipped</span></div>
+</div>
+
+</div>
+
+<div class="pro-right">
+<div class="result" id="result">
+<div class="r-title">Your answer</div>
+<div class="r-locked" id="rLocked">Check the box above to see the amount.</div>
+<div id="rBody" style="display:none">
+<div class="r-msg" id="rMsg"></div>
+<div class="r-amt" id="rAmt"></div>
+<div class="r-line" id="rLine"></div>
+<div class="r-days" id="rDays"></div>
+<button type="button" class="btn btn-ghost" id="copyBtn" style="display:none">Copy a note for your invoice</button>
+<div class="r-fine">Estimate only. Not an amount City Wide has agreed to pay. Your agreement and the service actually provided control. Check your dates and your schedule before you invoice.</div>
+</div>
+</div>
+<div class="callout" style="margin-top:18px"><b class="title">How to use the number</b>
+<p>Put the amount on your invoice for this building and add a note such as "Partial month, first day to last day, number of service days." Then submit it the normal way on the <a href="invoice.html">Submit Your Monthly Invoice</a> page. <b>Invoices must be received by the 28th.</b> Corporate accounting closes the books on the 28th, and an invoice received after that moves to the next month's payment run. If something about the month was unusual (an extra service, a missed night, a schedule change), note it on the invoice so Accounts Payable can match it to the record.</p></div>
+</div>
+</div>
+
+<h2>What this helper does and does not do</h2>
+<ul>
+<li>It counts the days on your schedule between the first and last day you tap, less any day you skip, and applies the monthly pay you typed. That is all it does.</li>
+<li>It does not know your building, your Exhibit A, your schedule, or whether service was provided. It only knows what you type and tap.</li>
+<li>If you type the wrong amount, pick the wrong days, or miss a skipped night, the answer is wrong. City Wide cannot check your entries because nothing here is sent or saved.</li>
+<li>It never shows more than the full monthly amount, and if you select every scheduled day in the month it will tell you to invoice the full month.</li>
+<li>Extra services, project work, and supply charges are not part of this. Those need a Work Order number from your FSM and go on the invoice separately.</li>
+<li>The amount paid on any invoice is governed by your Independent Contractor Agreement, the Exhibit A for the building, and confirmation that the service was provided. Using this page does not create an agreement, change a pay amount, or approve an invoice.</li>
+<li>If your number and the City Wide record do not match, Accounts Payable will reach out. The record and the agreement control, not this page.</li>
+</ul>
+<p style="font-size:13px;color:var(--cw-grey)">Questions about a partial month? Ask your Facility Solutions Manager before you invoice. It is faster than fixing it after.</p>
+
+</div></section>
+<footer class="site-foot"><div class="wrap"><div class="cols"><div><b style="color:#fff">City Wide Facility Solutions</b> &middot; Las Vegas &amp; Northern Nevada<br>Vendor Resource Hub</div><div><a href="shop/">Order Supplies</a> &nbsp;&nbsp; <a href="index.html">Resource Center</a> &nbsp;&nbsp; <a href="https://www.gocitywide.com" target="_blank" rel="noopener">GoCityWide.com</a></div></div><div class="fine">For crew and vendor reference. Quantities and methods are guidance; your account scope of work always comes first. Questions? Contact your City Wide Facility Solutions representative.</div></div></footer>
+<script>
+(function(){
+  var t=document.querySelector('.menu-toggle'),n=document.querySelector('.site-head nav');
+  if(t&&n){t.addEventListener('click',function(){n.classList.toggle('open');});}
+})();
+</script>
+<script>
+(function(){
+  var WEEKS = 4.33;
+  var MN = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+  var MS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  var DN = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+  var now = new Date();
+  var S = { pay:0, dow:[false,false,false,false,false,false,false], y:now.getFullYear(), m:now.getMonth(),
+            start:null, end:null, skips:{}, mode:'start', ack:false };
+  var $ = function(id){ return document.getElementById(id); };
+
+  function dim(y,m){ return new Date(y, m+1, 0).getDate(); }
+  function money(n){ return '$' + n.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ','); }
+  function parsePay(){ var v = ($('pay').value||'').replace(/[^0-9.]/g,''); var n = parseFloat(v); return isNaN(n)||n<0 ? 0 : n; }
+  function dowCount(){ var c=0; for (var i=0;i<7;i++) if (S.dow[i]) c++; return c; }
+  function isSched(d){ return S.dow[new Date(S.y,S.m,d).getDay()]; }
+  function inRange(d){ return S.start!==null && d>=S.start && d<=S.end; }
+  function isCounted(d){ return inRange(d) && isSched(d) && !S.skips[d]; }
+  function fmt(d){ return MS[S.m]+' '+d; }
+
+  /* step 2 buttons */
+  (function(){
+    var box = $('dow'); var h='';
+    for (var i=0;i<7;i++) h += '<button type="button" data-i="'+i+'">'+DN[i]+'</button>';
+    box.innerHTML = h;
+    box.addEventListener('click', function(e){
+      var b = e.target.closest('button'); if (!b) return;
+      var i = +b.getAttribute('data-i'); S.dow[i] = !S.dow[i]; b.classList.toggle('on', S.dow[i]);
+      for (var d in S.skips) if (!isSched(+d)) delete S.skips[d];
+      render();
+    });
+  })();
+
+  /* month pickers */
+  (function(){
+    var sm = $('selM'), sy = $('selY'), h='';
+    for (var i=0;i<12;i++) h += '<option value="'+i+'">'+MN[i]+'</option>';
+    sm.innerHTML = h; h='';
+    for (var y=now.getFullYear()-1; y<=now.getFullYear()+1; y++) h += '<option value="'+y+'">'+y+'</option>';
+    sy.innerHTML = h;
+    sm.value = S.m; sy.value = S.y;
+    sm.addEventListener('change', function(){ setMonth(S.y, +sm.value); });
+    sy.addEventListener('change', function(){ setMonth(+sy.value, S.m); });
+    $('prevM').addEventListener('click', function(){ var m=S.m-1, y=S.y; if (m<0){m=11;y--;} setMonth(y,m); });
+    $('nextM').addEventListener('click', function(){ var m=S.m+1, y=S.y; if (m>11){m=0;y++;} setMonth(y,m); });
+  })();
+  function setMonth(y,m){
+    var miny = now.getFullYear()-1, maxy = now.getFullYear()+1;
+    if (y<miny || y>maxy) return;
+    S.y=y; S.m=m; $('selM').value=m; $('selY').value=y; resetRange(); render();
+  }
+  function resetRange(){ S.start=null; S.end=null; S.skips={}; setMode('start'); }
+  function setMode(m){
+    S.mode = m;
+    var bs = $('modes').querySelectorAll('button[data-m]');
+    for (var i=0;i<bs.length;i++) bs[i].classList.toggle('on', bs[i].getAttribute('data-m')===m);
+    $('hint').textContent = m==='start' ? 'Tap your first day of service.'
+      : m==='end' ? 'Now tap your last day of service. It is set to the end of the month until you tap an earlier day.'
+      : 'Tap any counted day to skip it (holiday, building closed, no service). Use First day or Last day to change the range.';
+  }
+  $('modes').addEventListener('click', function(e){
+    var b = e.target.closest('button'); if (!b) return;
+    if (b.id==='resetBtn'){ resetRange(); render(); return; }
+    var m = b.getAttribute('data-m');
+    if ((m==='end'||m==='skip') && S.start===null){ $('hint').textContent='Tap your first day of service first.'; return; }
+    setMode(m);
+  });
+
+  /* calendar */
+  $('cal').addEventListener('click', function(e){
+    var b = e.target.closest('button.d'); if (!b || b.classList.contains('pad')) return;
+    var d = +b.getAttribute('data-d'); var last = dim(S.y,S.m);
+    if (S.mode==='start'){
+      S.start = d; if (S.end===null || S.end<d) S.end = last; S.skips={}; setMode('end');
+    } else if (S.mode==='end'){
+      if (d < S.start){ S.start = d; S.skips={}; }
+      else { S.end = d; for (var k in S.skips) if (+k>d) delete S.skips[k]; setMode('skip'); }
+    } else {
+      if (!inRange(d)){ $('hint').textContent = 'That day is outside your range. Use First day or Last day to change the range.'; return; }
+      if (!isSched(d)){ $('hint').textContent = 'That day is not on your cleaning schedule, so it is not counted anyway.'; return; }
+      if (S.skips[d]) delete S.skips[d]; else S.skips[d]=true;
+    }
+    render();
+  });
+
+  function renderCal(){
+    var h='', i;
+    for (i=0;i<7;i++) h += '<div class="dh">'+DN[i].charAt(0)+'</div>';
+    var first = new Date(S.y,S.m,1).getDay(), last = dim(S.y,S.m);
+    for (i=0;i<first;i++) h += '<button type="button" class="d pad" tabindex="-1"></button>';
+    for (var d=1; d<=last; d++){
+      var cls = 'd';
+      if (!isSched(d)) cls += ' off';
+      if (inRange(d)) cls += ' range';
+      if (isCounted(d)) cls += ' count';
+      if (S.skips[d] && inRange(d)) cls += ' skip';
+      if (d===S.start || d===S.end) cls += ' edge';
+      h += '<button type="button" class="'+cls+'" data-d="'+d+'">'+d+'</button>';
+    }
+    $('cal').innerHTML = h;
+  }
+
+  function compute(){
+    var pay = S.pay, dpw = dowCount(), last = dim(S.y,S.m);
+    var r = { ok:false, msg:'' };
+    if (!(pay>0)) { r.msg = 'Type the monthly pay for this building in step 1.'; return r; }
+    if (dpw===0) { r.msg = 'Tap at least one cleaning day in step 2.'; return r; }
+    if (S.start===null) { r.msg = 'Tap your first day of service on the calendar in step 3.'; return r; }
+    var counted=[], skipped=[], sched=0, d;
+    for (d=1; d<=last; d++){
+      if (isSched(d)) sched++;
+      if (isCounted(d)) counted.push(d);
+      else if (inRange(d) && isSched(d) && S.skips[d]) skipped.push(d);
+    }
+    r.counted=counted; r.skipped=skipped; r.pay=pay; r.dpw=dpw;
+    if (counted.length===0){ r.msg='No cleaning days fall between the days you tapped. Check step 2 and step 3.'; return r; }
+    r.ok = true;
+    if (counted.length===sched){ r.full=true; r.amount=pay; return r; }
+    var daily = pay / dpw / WEEKS;
+    r.amount = Math.min(pay, Math.round(daily*counted.length*100)/100);
+    return r;
+  }
+
+  function dowList(){ var a=[]; for (var i=1;i<=7;i++){ var j=i%7; if (S.dow[j]) a.push(DN[j]); } return a.join(', '); }
+  function noteText(r){
+    var t = 'Partial month: '+MN[S.m]+' '+S.start+' to '+MN[S.m]+' '+S.end+', '+S.y+'. '
+      + r.counted.length+' scheduled service day'+(r.counted.length===1?'':'s')+' counted ('+dowList()+'). '
+      + 'Skipped: '+(r.skipped.length? r.skipped.map(fmt).join(', ') : 'none')+'. '
+      + 'Prorated amount: '+money(r.amount)+' of '+money(r.pay)+' monthly.';
+    if (r.full) t = MN[S.m]+' '+S.y+': every scheduled service day counted ('+dowList()+'). Full month: '+money(r.pay)+'.';
+    return t;
+  }
+
+  function renderResult(){
+    var r = compute();
+    $('rLocked').style.display = S.ack ? 'none' : '';
+    $('rBody').style.display = S.ack ? '' : 'none';
+    if (!S.ack) return;
+    var amt=$('rAmt'), line=$('rLine'), days=$('rDays'), msg=$('rMsg'), cb=$('copyBtn');
+    if (!r.ok){ msg.textContent = r.msg; amt.textContent=''; line.textContent=''; days.textContent=''; cb.style.display='none'; return; }
+    if (r.full){
+      msg.textContent = 'Every scheduled cleaning day this month is counted, so this is not a partial month.';
+      amt.textContent = money(r.amount); amt.className='r-amt';
+      line.textContent = 'Invoice the full monthly amount.';
+      days.textContent = MN[S.m]+' '+S.y+'. '+r.counted.length+' scheduled days ('+dowList()+').';
+    } else {
+      msg.textContent = 'Estimated amount to put on your invoice for this building:';
+      amt.textContent = money(r.amount); amt.className='r-amt';
+      line.textContent = fmt(S.start)+' to '+fmt(S.end)+', '+S.y+'. '+r.counted.length+' service day'+(r.counted.length===1?'':'s')+' counted.';
+      days.textContent = 'Counted: '+r.counted.map(fmt).join(', ')+'.'+(r.skipped.length? ' Skipped: '+r.skipped.map(fmt).join(', ')+'.' : '');
+    }
+    cb.style.display=''; cb.setAttribute('data-note', noteText(r));
+  }
+  function render(){ renderCal(); renderResult(); }
+
+  $('pay').addEventListener('input', function(){ S.pay = parsePay(); renderResult(); });
+  $('pay').addEventListener('blur', function(){ if (S.pay>0) this.value = S.pay.toFixed(2); });
+  $('ack').addEventListener('change', function(){ S.ack = this.checked; renderResult(); });
+  $('copyBtn').addEventListener('click', function(){
+    var t = this.getAttribute('data-note')||'', b=this;
+    function done(){ b.textContent='Copied'; setTimeout(function(){ b.textContent='Copy a note for your invoice'; }, 1600); }
+    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(t).then(done, function(){ window.prompt('Copy this note:', t); });
+    else window.prompt('Copy this note:', t);
+  });
+
+  setMode('start'); render();
+})();
+</script>
+</body></html>

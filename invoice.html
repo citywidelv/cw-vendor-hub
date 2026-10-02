@@ -250,6 +250,7 @@ td .note{display:block;font-weight:400;color:var(--cw-grey);font-size:12px;margi
   border:1.5px solid #E5E5E5;border-radius:8px;padding:10px 12px;background:#fff;box-sizing:border-box}
 .f textarea{min-height:70px;resize:vertical}
 .f input:focus,.f select:focus,.f textarea:focus{outline:none;border-color:var(--cw-red)}
+.cutoff-bar{display:flex;gap:14px;align-items:flex-start;background:#FDF5F5;border:1.5px solid var(--cw-red);border-left:6px solid var(--cw-red);border-radius:10px;padding:14px 16px;margin:0 0 22px;font-size:14px;line-height:1.5}.cutoff-bar .cb-tag{flex:none;background:var(--cw-red);color:#fff;font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;border-radius:4px;padding:3px 8px;margin-top:3px}
 .inv-note{background:#FBF3DC;border:1px solid #E5B423;border-radius:10px;padding:12px 14px;
   font-size:12.5px;color:#2D2A26;margin-bottom:16px;line-height:1.5}
 .line-head{display:grid;grid-template-columns:2.2fr 1.4fr 1.1fr .9fr 34px;gap:8px;
@@ -335,15 +336,17 @@ td .note{display:block;font-weight:400;color:var(--cw-grey);font-size:12px;margi
 <p>Already have an invoice from your own system? Upload it. Need one? Build it right here.
 Either way, City Wide Accounts Payable gets it the moment you hit submit, and you get a
 confirmation copy for your records. Payment terms are Net 10th Prox: due the 10th of the
-month following service.</p>
+month following service. <b>Invoices must be received by the 28th to make that payment run.</b></p>
 </div></section>
 
 <div class="inv-wrap">
+<div class="cutoff-bar"><span class="cb-tag">Deadline</span><div><b>Invoice cutoff is the 28th.</b> Corporate accounting closes the books on the 28th of every month. An invoice received by the 28th pays on the 10th. An invoice received after the 28th, unless it is already in the system for payment, moves to the next month and pays on the following 10th.</div></div>
 
 <div id="invChoice">
 <div class="choice-intro">
 <h2>How would you like to submit your invoice?</h2>
 <p>Both go straight to City Wide Accounts Payable. Pick whichever is easier for you.</p>
+<p style="margin-top:8px">Started or stopped service partway through the month? <a href="prorate.html">Prorate a partial month</a> first, then come back here.</p>
 </div>
 <div class="choice-grid">
 <button type="button" class="choice-card" onclick="showUpload()">
@@ -374,7 +377,8 @@ project work. Missing Work Order numbers can slow down payment.</div>
 on the <b>10th of the month following confirmed service</b>. Recurring contract work pays
 automatically. For one-time projects and extra work, we first confirm the job is complete,
 either by visiting the site or by hearing from the customer that they are satisfied, and
-payment then lands on the following 10th.</p></div>
+payment then lands on the following 10th.</p>
+<p style="margin-top:8px"><b>Invoice cutoff is the 28th.</b> Corporate accounting closes the books on the 28th of every month. An invoice received by the 28th pays on the 10th. An invoice received after the 28th, unless it is already in the system for payment, moves to the next month and pays on the following 10th.</p></div>
 
 <div class="inv-card">
 <h2>How This Works</h2>
@@ -426,7 +430,8 @@ work. Lines without a Work Order number can slow down payment.</div>
 on the <b>10th of the month following confirmed service</b>. Recurring contract work pays
 automatically. For one-time projects and extra work, we first confirm the job is complete,
 either by visiting the site or by hearing from the customer that they are satisfied, and
-payment then lands on the following 10th.</p></div>
+payment then lands on the following 10th.</p>
+<p style="margin-top:8px"><b>Invoice cutoff is the 28th.</b> Corporate accounting closes the books on the 28th of every month. An invoice received by the 28th pays on the 10th. An invoice received after the 28th, unless it is already in the system for payment, moves to the next month and pays on the following 10th.</p></div>
 
 <div class="inv-card">
 <h2>Your Company</h2>
@@ -482,7 +487,7 @@ Attention: Accounts Payable, City Wide Facility Solutions &middot; Payment Terms
 <div class="big">&#10003;</div>
 <h2>Invoice Submitted</h2>
 <p id="doneMsg"></p>
-<p>City Wide Accounts Payable pays on Net 10th Prox terms (the 10th of the month following service). Keep the confirmation email for your records.</p>
+<p>City Wide Accounts Payable pays on Net 10th Prox terms (the 10th of the month following service). Invoices received by the 28th are in that month's payment run. Invoices received after the 28th, unless already in the system for payment, move to the next month. Keep the confirmation email for your records.</p>
 </div>
 </div>
 

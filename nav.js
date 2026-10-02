@@ -1,7 +1,7 @@
 /* nav.js for the Vendor Hub. Seeded from the page menu on 2026-09-13 by Claude.
    The Site Admin hub (cw-admin-hub/site-admin.html) republishes this file; do not edit by hand.
    The page keeps its own MENU as a fallback if this file is missing or malformed.
-   Edited by hand 2026-09-25 (menu cleanup: one home per tool, short labels with tag chips; grouped by what the vendor came to do): before the next Site Admin publish, click Import live menu. */
+   Edited by hand 2026-10-02 (added Prorate a Partial Month under Get Paid) and 2026-09-25 (menu cleanup: one home per tool, short labels with tag chips; grouped by what the vendor came to do): before the next Site Admin publish, click Import live menu. */
 window.CW_NAV = {
  "hub": "vendor",
  "label": "Vendor Hub",
@@ -73,11 +73,15 @@ window.CW_NAV = {
    "href": "invoice.html",
    "items": [
     {
-     "ghead": "Get Paid"
+     "ghead": "Get Paid (invoices due by the 28th)"
     },
     {
      "label": "Submit Your Monthly Invoice",
      "href": "invoice.html"
+    },
+    {
+     "label": "Prorate a Partial Month",
+     "href": "prorate.html"
     },
     {
      "label": "Pay by Credit Card",
