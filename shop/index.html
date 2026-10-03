@@ -5,7 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>City Wide Vendor Shop</title>
 <!-- build 2026-09-21: Vendor of the Month award codes at checkout (server-checked, one-time, up to $150). -->
-<script src="config.js"></script>
+<!-- build 2026-10-02: orders post straight to the Team Portal backend (kind shop_order), which writes the Orders tab row first and emails second. Formspree retired. Region picker added at checkout. -->
+<script src="config.js?v=20261002"></script>
 <style>
 :root{
   --cw-red:#D22730; --cw-black:#2D2A26; --cw-grey:#636466; --cw-white:#FFFFFF;
@@ -727,6 +728,13 @@ function renderDrawer(){
       <div class="form-grp"><label>Primary Account These Supplies Are For <span class="req">*</span></label>
         <input id="f-account" placeholder="Building or account name" value="${esc(saved.account||"")}">
       </div>
+      <div class="form-grp"><label>Which City Wide office? <span class="req">*</span></label>
+        <select id="f-region">
+          <option value=""${saved.region?"":" selected"}>Select your region</option>
+          <option value="Las Vegas"${saved.region==="Las Vegas"?" selected":""}>Las Vegas (Las Vegas, Henderson, North Las Vegas)</option>
+          <option value="Northern Nevada"${saved.region==="Northern Nevada"?" selected":""}>Northern Nevada (Reno, Sparks, Carson City)</option>
+        </select>
+      </div>
       <div class="form-grp"><label>Special Requests / Name Badge Names</label><textarea id="f-notes" rows="3"></textarea></div>
       ${couponHTML()}
       <div class="notice"><b>Pricing Notice:</b> ${esc(CFG.PRICING_NOTICE||"")}</div>
@@ -832,6 +840,7 @@ function orderText(info, award){
     `VENDOR ORDER - ${new Date().toLocaleString()}`,
     `Name: ${info.name}`, `Company: ${info.company}`, `Email: ${info.email}`,
     `Primary Account: ${info.account}`,
+    info.region?`Region: ${info.region}`:null,
     info.notes?`Notes: ${info.notes}`:null,
     ``, `ITEMS:`, ...lines, ``,
     award ? `Subtotal: ${fmt(cartTotal())}` : null,
@@ -840,29 +849,32 @@ function orderText(info, award){
     info.pay==="card" ? `Payment: CREDIT CARD on file (vendor approves the total before we charge)` : `Payment: Pay deduction (authorized at checkout)`,
   ].filter(x=>x!==null).join("\n");
 }
-function logOrderToSheet(info, award){
-  // Fire-and-forget append to the Orders tab of the master Google Sheet.
-  if(!CFG.ORDERS_WEBHOOK) return;
-  try{
-    const v=Object.assign({}, info);
-    if(award) v.notes=(v.notes?v.notes+" | ":"")+`Vendor of the Month award ${award.code} applied: -${fmt(award.discount)}`;
-    fetch(CFG.ORDERS_WEBHOOK,{
-      method:"POST", mode:"no-cors",
-      headers:{"Content-Type":"text/plain"},
-      body:JSON.stringify({
-        vendor:v, total:+(award?Math.max(0,cartTotal()-award.discount):cartTotal()).toFixed(2), coupon:award?award.code:"", discount:award?award.discount:0,
-        items:cartLines().map(l=>({sku:l.p.sku+(l.p.supplier_sku?" / Bennett "+l.p.supplier_sku:""),name:l.p.name,size:l.spec,qty:l.qty,unit:l.unit})),
-      }),
-    });
-  }catch(e){ /* logging must never block an order */ }
+// The order IS the sheet write. One POST to the Team Portal backend (kind shop_order):
+// it appends the row to the Orders tab of the CW Vendor Shop Catalog book, which the
+// Ops Hub Alerts card reads, then sends the internal email and the vendor confirmation.
+// Resolves {ok:true,id} only after the row has landed. No Formspree, no fire-and-forget.
+function placeOrder(info, award){
+  if(!CFG.ORDERS_WEBHOOK) return Promise.reject(new Error("No order service configured."));
+  const total=+(award?Math.max(0,cartTotal()-award.discount):cartTotal()).toFixed(2);
+  const payload={
+    kind:"shop_order",
+    vendor:info,
+    items:cartLines().map(l=>({id:l.id,sku:l.p.sku,supplier_sku:l.p.supplier_sku||"",name:l.p.name,size:l.size,color:l.color||"",logo:l.p.logo||"",spec:l.spec,qty:l.qty,unit:l.unit,line:+l.line.toFixed(2),fulfillment:l.p.fulfillment||""})),
+    subtotal:+cartTotal().toFixed(2),
+    coupon:award?award.code:"", coupon_label:award?award.label:"", discount:award?award.discount:0,
+    total:total,
+  };
+  return fetch(CFG.ORDERS_WEBHOOK,{method:"POST",headers:{"Content-Type":"text/plain"},body:JSON.stringify(payload)})
+    .then(r=>r.json());
 }
 async function submitOrder(){
   const info={
     name:val("f-name"), company:val("f-company"), email:val("f-email"),
-    account:val("f-account"), notes:val("f-notes"), pay:payMethod(),
+    account:val("f-account"), region:val("f-region"), notes:val("f-notes"), pay:payMethod(),
   };
   const err=document.getElementById("f-err");
   if(!info.name||!info.company||!info.email||!info.account){err.textContent="Please fill in all required fields.";return;}
+  if(!info.region){err.textContent="Please select your region.";return;}
   if(!document.getElementById("f-ack").checked){err.textContent="Please check the acknowledgment box to submit.";return;}
   err.textContent="";
   localStorage.setItem("cw_vendor",JSON.stringify(info));
@@ -890,39 +902,17 @@ async function submitOrder(){
     award={code:r.code, label:r.label, amount:r.amount, discount:Number(r.discount)||0, forfeited:Number(r.forfeited)||0, token:r.token};
     btn.textContent="Submitting...";
   }
-  const text=orderText(info, award);
-
-  if(CFG.ORDER_ENDPOINT){
-    try{
-      const res=await fetch(CFG.ORDER_ENDPOINT,{
-        method:"POST",
-        headers:{"Content-Type":"application/json","Accept":"application/json"},
-        body:JSON.stringify({
-          _subject:`Vendor Order: ${info.company} (${fmt(award?Math.max(0,cartTotal()-award.discount):cartTotal())})${award?" - Vendor of the Month award applied":""}`,
-          _replyto:info.email,
-          email:info.email, order:text,
-          items:cartLines().map(l=>({id:l.id,sku:l.p.sku,supplier_sku:l.p.supplier_sku,name:l.p.name,size:l.size,color:l.color||"",logo:l.p.logo||"",spec:l.spec,qty:l.qty,unit:l.unit,line:+l.line.toFixed(2)})),
-          vendor:info, subtotal:+cartTotal().toFixed(2),
-          coupon:award?award.code:"", coupon_label:award?award.label:"", discount:award?award.discount:0,
-          total:+(award?Math.max(0,cartTotal()-award.discount):cartTotal()).toFixed(2),
-        }),
-      });
-      if(!res.ok) throw new Error("HTTP "+res.status);
-      logOrderToSheet(info, award);
-      if(award){ coupon=null; try{ sessionStorage.removeItem("cw_coupon"); }catch(e){} }
-      orderSuccess(false, award);return;
-    }catch(e){
-      if(award){ try{ await couponPost({kind:"rec_coupon_release", code:award.code, token:award.token}); }catch(x){} award=null; }
-      btn.disabled=false;btn.textContent="Submit Order";
-      err.textContent="Could not reach the order service. Check your connection and try again, or use the email option below."+(coupon?" Your award code was not used and is still good.":"");
-      addMailFallback(orderText(info, null));return;
-    }
+  let r=null;
+  try{ r=await placeOrder(info, award); }catch(e){ r=null; }
+  if(r&&r.ok){
+    if(award){ coupon=null; try{ sessionStorage.removeItem("cw_coupon"); }catch(e){} }
+    orderSuccess(false, award, r.id);return;
   }
-  // No endpoint configured: mail fallback
-  logOrderToSheet(info, award);
-  location.href="mailto:"+(CFG.ORDER_EMAIL||"")+"?"+(CFG.ORDER_EMAIL_CC?"cc="+encodeURIComponent(CFG.ORDER_EMAIL_CC)+"&":"")+"subject="+encodeURIComponent("Vendor Order: "+info.company)+"&body="+encodeURIComponent(text);
-  if(award){ coupon=null; try{ sessionStorage.removeItem("cw_coupon"); }catch(e){} }
-  orderSuccess(true, award);
+  // The row did not land, so nothing was submitted. Hand the award code back and offer email.
+  if(award){ try{ await couponPost({kind:"rec_coupon_release", code:award.code, token:award.token}); }catch(x){} award=null; }
+  btn.disabled=false;btn.textContent="Submit Order";
+  err.textContent=((r&&r.error)?r.error+" ":"Could not reach the order service. ")+"Your order was not submitted. Check your connection and try again, or use the email option below."+(coupon?" Your award code was not used and is still good.":"");
+  addMailFallback(orderText(info, null));
 }
 function val(id){return (document.getElementById(id).value||"").trim();}
 function addMailFallback(text){
@@ -935,7 +925,7 @@ function addMailFallback(text){
   a.style.cssText="display:block;text-align:center;margin-top:12px;padding:10px 0;color:var(--cw-red);font-weight:700;font-size:var(--fs-ui);";
   foot.appendChild(a);
 }
-function orderSuccess(mailed, award){
+function orderSuccess(mailed, award, id){
   cart=[];saveCart();
   document.getElementById("drawerBody").innerHTML=`
     <div class="success">
@@ -944,6 +934,7 @@ function orderSuccess(mailed, award){
       <p>${mailed
         ?"Your email app opened with the order details. Press send to complete your order."
         :"Your order was sent to the City Wide team. You'll be contacted if anything needs clarification."}</p>
+      ${id?`<p style="margin-top:10px;color:var(--cw-grey);font-size:var(--fs-ui);">Order reference <b>${esc(id)}</b>. A copy was emailed to you.</p>`:""}
       ${award?`<p style="margin-top:12px"><b style="color:#067679">Your Vendor of the Month award of ${fmt(award.discount)} is applied.</b>${award.forfeited>0?` The unused ${fmt(award.forfeited)} does not carry over.`:""} Thank you for the work you do.</p>`:""}
     </div>`;
   document.getElementById("drawerFoot").innerHTML="";

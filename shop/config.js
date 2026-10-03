@@ -14,18 +14,12 @@ window.CW_CONFIG = {
   // the repo's catalog.csv.
   CATALOG_URL: "https://docs.google.com/spreadsheets/d/e/2PACX-1vQKNqUqE4xDUT24EmeEthfuPYSvAO7nl5Fb1LbaE3-nU3V5t_EhJYtdk4AETcFiMIcQj2zDrkXgOWEl/pub?output=csv",
 
-  // Where orders are sent.
-  // Option A (recommended): create a free form endpoint at https://formspree.io,
-  //   then paste its URL here, e.g. "https://formspree.io/f/abcdwxyz".
-  //   Orders will arrive in your inbox as structured emails.
-  // Option B: leave blank ("") and the site falls back to opening the
-  //   vendor's email app with a pre-written order email to ORDER_EMAIL.
-  ORDER_ENDPOINT: "https://formspree.io/f/xaqrwqlz",
-
-  // Order log: a Google Apps Script webhook that appends every order to the
-  // "Orders" tab of the CW Vendor Shop Catalog sheet (with Order Placed /
-  // Picked Up checkboxes). Leave blank ("") to disable sheet logging.
-  ORDERS_WEBHOOK: "https://script.google.com/macros/s/AKfycbzXd26tryRxa_W_DRRzDIkBoUgzzNe5As2p8LJqcg-9-sY89AmH_GaV-68nbHd0wqBS/exec",
+  // Where orders go. One POST to the CW Team Portal Backend (kind shop_order): it writes
+  // the row to the Orders tab of the CW Vendor Shop Catalog sheet (what the Ops Hub
+  // Alerts card reads), then emails the market service inbox and the vendor. The order
+  // only reads as submitted once the row has landed. Formspree was retired Oct 2 2026:
+  // it emailed first and logged to the sheet second, and the sheet write was being lost.
+  ORDERS_WEBHOOK: "https://script.google.com/macros/s/AKfycbzfNnrpidCbWB1DeUNgXvRhDFMQgApfpn-3C9GU45wMEHcJpWFl8ZQVo6PUBSRfEVfRdg/exec",
 
   // Coupon codes (Vendor of the Month, $150 off one order). Checked and redeemed on the
   // CW Solicitations Apps Script (kinds rec_coupon_check / rec_coupon_redeem), never in
