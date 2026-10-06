@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Background Check &amp; Name Badge | City Wide Vendor Hub</title><meta name="description" content="Request a background check and City Wide name badge for your crew in Las Vegas or Northern Nevada. Every person in a City Wide building needs one on file before their first shift."><!-- build 2026-10-06 (lands on Step 1, readable person cards, optional building lookup, Arroweye 10-year package). Previous: build 2026-09-19. Native replacement for the Asana "Background Checks & Badge Requests" form. Static page, nothing fetched on load. One POST (kind ob_bc_request) to Onboarding.gs on submit. No DOB or SSN collected; Verified First gathers those from the applicant. --><link rel="icon" href="favicon.ico" sizes="any"><link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png"><link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png"><style>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Background Check &amp; Name Badge | City Wide Vendor Hub</title><meta name="description" content="Request a background check and City Wide name badge for your crew in Las Vegas or Northern Nevada. Every person in a City Wide building needs one on file before their first shift."><!-- build 2026-10-06b (Arroweye package per the Agency Attestation: 7-year criminal + financial check + signed City Wide attestation; pickers show that they are looking; min 5 letters to match the backend). Previous: build 2026-10-06, 2026-09-19. Native replacement for the Asana "Background Checks & Badge Requests" form. Static page, nothing fetched on load. One POST (kind ob_bc_request) to Onboarding.gs on submit. No DOB or SSN collected; Verified First gathers those from the applicant. --><link rel="icon" href="favicon.ico" sizes="any"><link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png"><link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png"><style>
 :root{
   --cw-red:#D22730; --cw-red-dark:#B01F27; --cw-black:#2D2A26; --cw-grey:#636466;
   --cw-white:#FFFFFF; --cw-light:#F5F5F5; --cw-border:#E5E5E5; --cw-teal:#0AA6A9;
@@ -329,7 +329,9 @@ body.badgeonly.badgefirst .rep,body.badgeonly.badgereplace .rep{display:none}
 .special .k{font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;opacity:.9}
 .special .h{font-size:18px;font-weight:700;line-height:1.3;margin-top:4px}
 .special ul{margin:10px 0 0 20px;font-size:14px}
-.special li{margin-bottom:3px}
+.special li{margin-bottom:5px}
+.special li small{display:block;font-size:12px;opacity:.9}
+.match.busy{color:var(--cw-grey);font-style:italic}
 .special p{font-size:13px;margin-top:8px;color:#fff}
 .type.sp-on b .sp-txt{color:var(--cw-red)}
 .sp-pill{display:none;font-size:10.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;background:var(--cw-red);color:#fff;border-radius:4px;padding:2px 7px;margin-left:8px;vertical-align:2px}
@@ -379,13 +381,13 @@ body.sp .sp-pill{display:inline-block}
 <div class="fgrid">
 <div class="fld wide cowrap"><label for="building">Building or client name</label><input id="building" name="building" placeholder="Start typing the building name" autocomplete="off"><input type="hidden" id="building_id" name="building_id"><div class="sugg" id="bsugg"></div><div class="match" id="bmatch"></div></div>
 </div>
-<div class="special" id="special" role="alert"><div class="k" id="spK">Special background check</div><div class="h" id="spH"></div><ul><li>10-year background check</li><li>Credit check</li><li>Drug screen</li></ul><p id="spP"></p></div>
+<div class="special" id="special" role="alert"><div class="k" id="spK">Special background check</div><div class="h" id="spH"></div><ul id="spL"></ul><p id="spP"></p></div>
 </div></div>
 
 <div class="fstep"><div class="fnum">4</div><div class="fbody">
 <h2>What do you need?</h2>
 <div class="types">
-<label class="type"><input type="radio" name="request_type" value="Background check and name badge" data-kind="check" checked><span><b><span class="sp-txt">A background check, then a name badge</span><span class="sp-pill" id="spPill">10-year + credit + drug screen</span></b><small>New crew member. Verified First emails them a consent form; results come to City Wide, never to you.</small></span></label>
+<label class="type"><input type="radio" name="request_type" value="Background check and name badge" data-kind="check" checked><span><b><span class="sp-txt">A background check, then a name badge</span><span class="sp-pill" id="spPill"></span></b><small>New crew member. Verified First emails them a consent form; results come to City Wide, never to you.</small></span></label>
 <label class="type"><input type="radio" name="request_type" value="Already checked, name badge only" data-kind="already"><span><b>I already ran a background check, I just need a badge</b><small>Attach the passing report for each person below. We review it, file it, and mark them cleared through your platform.</small></span></label>
 <label class="type"><input type="radio" name="request_type" value="First name badge" data-kind="first"><span><b>A first name badge (never received one)</b><small>For someone who is already cleared.</small></span></label>
 <label class="type"><input type="radio" name="request_type" value="Replacement name badge ($5)" data-kind="replace"><span><b>A replacement badge (lost or damaged, $5)</b><small>Billed against your next payment.</small></span></label>
@@ -476,14 +478,15 @@ function needsReport(){ return form.request_type.value === "Already checked, nam
 $$("input[name=request_type]").forEach(function(r){ r.addEventListener("change", function(){ syncKind(); save(); }); });
 /* ---- company picker: matches only once most of the name is typed, at most three ---- */
 var sugg = $("#sugg"), matchEl = $("#match"), vidEl = $("#vendor_id"), sT = null, lastQ = "";
-function setMatch(v){ vidEl.value = v ? v.vendor_id : ""; matchEl.className = "match " + (v ? "ok" : "warn"); matchEl.innerHTML = v ? "Matched to our records: " + esc(v.name) + (v.contact ? " (" + esc(v.contact) + ")" : "") + ' <a href="#" data-unmatch>not you?</a>' : (form.company.value.trim().length >= 5 && market ? "No match yet. Keep typing your full company name, or continue and we will match it by hand." : ""); }
+function setMatch(v){ vidEl.value = v ? v.vendor_id : ""; matchEl.className = "match " + (v ? "ok" : "warn"); matchEl.innerHTML = v ? "Matched to our records: " + esc(v.name) + (v.contact ? " (" + esc(v.contact) + ")" : "") + ' <a href="#" data-unmatch>not you?</a>' : (form.company.value.trim().length >= 5 && market ? "No match yet. We only show a match once most of your company name is typed, so look-alike names are told apart. Keep typing, or continue and we will match it by hand." : ""); }
 function esc(s){ return String(s == null ? "" : s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;"); }
 function suggest(){
   var q = form.company.value.trim();
   sugg.className = "sugg"; sugg.innerHTML = "";
   if(!market){ setMatch(null); if(q) { matchEl.className = "match need-region"; matchEl.textContent = "Pick Las Vegas or Northern Nevada in Step 1 first, then we can find your company."; } return; }
-  if(q.length < 4){ setMatch(null); return; }
+  if(q.length < 5){ vidEl.value = ""; matchEl.className = "match warn"; matchEl.textContent = q ? "Keep typing. We start looking at 5 letters." : ""; return; }
   if(q === lastQ) return; lastQ = q;
+  matchEl.className = "match busy"; matchEl.textContent = "Looking in our vendor list...";
   fetch(EXEC, { method:"POST", headers:{ "Content-Type":"text/plain" }, body: JSON.stringify({ kind:"ob_vendor_suggest", market: market, q: q }) }).then(function(r){ return r.json(); }).then(function(r){
     if(form.company.value.trim() !== q) return;
     var ms = (r && r.ok && r.matches) || [];
@@ -491,7 +494,7 @@ function suggest(){
     sugg.innerHTML = ms.map(function(m){ return '<button type="button" data-pick="' + esc(m.vendor_id) + '"><b>' + esc(m.name) + '</b><small>' + (m.contact ? esc(m.contact) : "contact name not on file yet") + '</small></button>'; }).join("") + '<button type="button" class="none" data-pick="">None of these is my company</button>';
     sugg.className = "sugg show";
     window.__sugg = ms;
-  }).catch(function(){});
+  }).catch(function(){ if(form.company.value.trim() === q){ matchEl.className = "match warn"; matchEl.textContent = "Our vendor list did not answer. Keep going, we will match your company by hand."; } });
 }
 form.company.addEventListener("input", function(){ vidEl.value = ""; clearTimeout(sT); sT = setTimeout(suggest, 350); });
 form.company.addEventListener("focus", function(){ if(sugg.innerHTML && !vidEl.value) sugg.className = "sugg show"; });
@@ -499,7 +502,14 @@ sugg.addEventListener("click", function(e){ var b = e.target.closest("button[dat
 matchEl.addEventListener("click", function(e){ if(e.target.dataset.unmatch !== undefined){ e.preventDefault(); setMatch(null); lastQ = ""; suggest(); } });
 /* ---- building picker (optional): customer registry, same rule, at most three ---- */
 var bsugg = $("#bsugg"), bmatch = $("#bmatch"), bidEl = $("#building_id"), bT = null, lastB = "", bMatches = [];
-var SPECIAL = [{ re: /arrow\s*eye/i, client: "Arroweye" }];
+var SPECIAL = [{ re: /arrow\s*eye/i, client: "Arroweye", pill: "7-year + financial check + attestation",
+  head: "Arroweye needs more than the standard check.",
+  items: [["7-year criminal background check", "No felony or misdemeanor convictions for theft, fraud, drugs, violence, embezzlement or other financial crimes. No active warrant. Not on probation."],
+          ["Financial background check", "Credit history. No more than one bankruptcy on file."],
+          ["A signed City Wide attestation letter to Arroweye", "City Wide signs it for each person once both checks are back. Nobody starts in the building before Arroweye has it."]],
+  check: "City Wide runs both checks through Verified First and signs the attestation. It takes longer than a standard check, so send this as early as you can.",
+  own: "For Arroweye, City Wide has to run the check itself through Verified First so we can attest to it. A report you ran cannot be used here. Pick \"A background check, then a name badge\" instead.",
+  done: "Because this is for Arroweye, each person needs the 7-year criminal background check, the financial background check and a signed City Wide attestation before they can start. We will reach out about timing." }];
 function specialFor(t){ t = String(t || ""); for(var i = 0; i < SPECIAL.length; i++){ if(SPECIAL[i].re.test(t)) return SPECIAL[i]; } return null; }
 function syncSpecial(){
   var sp = specialFor(form.building.value);
@@ -507,9 +517,10 @@ function syncSpecial(){
   var box = $("#special");
   if(!sp){ box.className = "special"; return; }
   $("#spK").textContent = sp.client + " building";
-  $("#spH").textContent = sp.client + " requires a 10-year background check, a credit check and a drug screen for every person.";
-  $("#spP").textContent = needsReport() ? "If you ran your own check, the report must cover all three. A standard report will not clear anyone for " + sp.client + "." :
-    "This is not the standard check. It takes longer, and City Wide will reach out about next steps for the drug screen.";
+  $("#spH").textContent = sp.head;
+  $("#spL").innerHTML = sp.items.map(function(it){ return "<li><b>" + esc(it[0]) + "</b><small>" + esc(it[1]) + "</small></li>"; }).join("");
+  $("#spPill").textContent = sp.pill;
+  $("#spP").textContent = needsReport() ? sp.own : sp.check;
   box.className = "special show";
 }
 function setB(m){ bidEl.value = m ? m.id : ""; bmatch.className = "match" + (m ? " ok" : ""); bmatch.innerHTML = m ? "Matched to our customer list: " + esc(m.name) + (m.city ? " (" + esc(m.city) + ")" : "") + ' <a href="#" data-bun>change</a>' : ""; }
@@ -521,14 +532,15 @@ function bsuggest(){
   var longest = q.split(/[^A-Za-z0-9]+/).reduce(function(m, w){ return Math.max(m, w.length); }, 0);
   if(longest < 4){ setB(null); return; }
   if(q === lastB) return; lastB = q;
+  bmatch.className = "match busy"; bmatch.textContent = "Looking in our customer list...";
   fetch(EXEC, { method:"POST", headers:{ "Content-Type":"text/plain" }, body: JSON.stringify({ kind:"ob_account_suggest", market: market, q: q }) }).then(function(r){ return r.json(); }).then(function(r){
     if(form.building.value.trim() !== q) return;
-    if(!r || !r.ok){ bMatches = []; return; }
+    if(!r || !r.ok){ bMatches = []; bmatch.className = "match warn"; bmatch.textContent = "Could not check our list. The name you typed is fine."; return; }
     bMatches = r.matches || [];
     if(!bMatches.length){ bmatch.className = "match warn"; bmatch.textContent = "Not on our list yet. That is fine, keep the name as you typed it."; return; }
     bsugg.innerHTML = bMatches.map(function(m){ return '<button type="button" data-bpick="' + esc(m.id) + '"><b>' + esc(m.name) + '</b><small>' + esc(m.city || "") + '</small></button>'; }).join("") + '<button type="button" class="none" data-bpick="">None of these, keep what I typed</button>';
     bsugg.className = "sugg show";
-  }).catch(function(){});
+  }).catch(function(){ if(form.building.value.trim() === q){ bmatch.className = "match warn"; bmatch.textContent = "Could not check our list. The name you typed is fine."; } });
 }
 form.building.addEventListener("input", function(){ bidEl.value = ""; setB(null); syncSpecial(); clearTimeout(bT); bT = setTimeout(bsuggest, 350); });
 form.building.addEventListener("focus", function(){ if(bsugg.innerHTML && !bidEl.value) bsugg.className = "sugg show"; });
@@ -591,7 +603,7 @@ form.addEventListener("submit", function(ev){
     var names = d.people.map(function(p){ return p.first + " " + p.last; });
     $("#doneMsg").textContent = "Thanks, " + (d.submitted_by.split(" ")[0] || "") + ". " + (needsReport() ? "We have the report for " : needsCheck() ? "We have the background check request for " : "We have the badge request for ") + names.join(", ") + " from " + d.company.trim() + " (" + (d.market === "nnv" ? "Northern Nevada" : "Las Vegas") + ")." + (needsReport() ? " Our compliance team reviews the report, files it, and marks them cleared." : "");
     var sp = specialFor(d.building);
-    if(sp && (needsCheck() || needsReport())) $("#doneMsg").textContent += " Because this is for " + sp.client + ", each person needs the 10-year background check, credit check and drug screen. We will reach out about next steps.";
+    if(sp && (needsCheck() || needsReport())) $("#doneMsg").textContent += " " + sp.done;
     $("#done").classList.add("show"); $("#done").scrollIntoView({ behavior:"smooth", block:"start" });
   }).catch(function(e){
     go.disabled = false; go.textContent = "Send the Request";
