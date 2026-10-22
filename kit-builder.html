@@ -306,10 +306,10 @@ const TYPES = [
    sub:'Zone dedicated tools that never cross, doubled pad counts for production floors, food contact sanitizer, and drain discipline.'},
   {k:'apt5', n:'Apartment Community, 5-Day Porter', apt:true, days:5,
    s:'One day porter, Monday to Friday. Lobbies, elevators, clubhouse, pool, pet stations, dumpsters.',
-   sub:'Everything one porter needs to start an apartment community on a five day schedule. Backpack vacuum, two WaveBrake buckets with the dirty water insert, flat mops with five pads, color coded cloths with a laundry hamper, the TruShot chemical system, and the rolling BRUTE cart. Every item ships from Staples Business Advantage as one order, and every item in this order carries the apartment kit discount.'},
+   sub:'Everything one porter needs to start an apartment community on a five day schedule. Backpack vacuum, a three shelf janitor cart, two WaveBrake buckets with the dirty water insert, microfiber loop mops with five green heads for common areas and five red heads for restrooms, color coded cloths with a laundry hamper, the TruShot chemical system, and the rolling BRUTE trash can. Every item ships from Staples Business Advantage as one order, and every item in this order carries the apartment kit discount.'},
   {k:'apt7', n:'Apartment Community, 7-Day Porter', apt:true, days:7,
    s:'One day porter, seven days a week. Lobbies, elevators, clubhouse, pool, pet stations, dumpsters.',
-   sub:'The same kit built for a seven day schedule: seven mop pads, an extra box of gloves and a second box of liners. Every item ships from Staples Business Advantage as one order, and every item in this order carries the apartment kit discount.'}
+   sub:'The same kit built for a seven day schedule: seven green and seven red mop heads, an extra box of gloves and a second box of liners. Every item ships from Staples Business Advantage as one order, and every item in this order carries the apartment kit discount.'}
 ];
 function isApt(){ const t=TYPES.find(x=>x.k===TYPE); return !!(t&&t.apt); }
 
@@ -390,8 +390,8 @@ EDU.apt = {
       <li><b>The porter is customer facing.</b> Residents and the leasing office see them all day. The client requires the black City Wide polo with the Independent Contractor logo, black slacks and closed non-slip shoes. No sweatpants, shorts, jeans or hoodies. Order the polo from Bennett Uniform: <a href="https://citywide.bennettuniform.com/men-s-silk-touch-polo" target="_blank" rel="noopener" style="color:var(--cw-red);font-weight:700">men's black polo</a> or <a href="https://citywide.bennettuniform.com/women-s-silk-touch-polo" target="_blank" rel="noopener" style="color:var(--cw-red);font-weight:700">women's black polo</a>. The polo is not part of the kit price.</li>
       <li><b>The kit is the minimum, not a suggestion.</b> The quantities below match the day porter scope: restrooms serviced once and checked three times a shift, lobbies and elevators mopped daily, the pool deck and pet stations every pass. If you take something out, you will be short on site.</li>
       <li><b>TruShot replaces spray bottles.</b> A cartridge snaps into the trigger and dilutes as you spray. Glass and multi-surface for the lobbies and elevators, restroom disinfectant for the restrooms and touch points, degreaser for the grills and pet stations. No mixing, no unlabeled bottles.</li>
-      <li><b>Color codes are not optional.</b> Red is restrooms only. Yellow is sinks and counters. Green is the kitchenette and fitness room. Blue is glass and general dusting. The mesh wash bags keep the colors apart on laundry day.</li>
-      <li><b>The BRUTE is the cart.</b> Bagged trash from the lobbies, clubhouse and pet stations rides in the can to the dumpster, so leaking bags never cross a clean floor. The caddy bag and rim caddy carry everything else.</li>
+      <li><b>Color codes are not optional.</b> Red is restrooms only. Yellow is sinks and counters. Green is the kitchenette and fitness room. Blue is glass and general dusting. Mop heads follow the same rule. Red heads stay with the restroom bucket and green heads do everything else, one clean head per color every shift. The mesh wash bags keep the colors apart on laundry day.</li>
+      <li><b>The janitor cart carries the tools. The BRUTE carries the trash.</b> Chemicals, cloths, liners, the broom and the signs ride on the cart. Bagged trash from the lobbies, clubhouse and pet stations rides in the BRUTE to the dumpster, so leaking bags never cross a clean floor.</li>
      </ul>`
 };
 const EDU_BY_TYPE = {
