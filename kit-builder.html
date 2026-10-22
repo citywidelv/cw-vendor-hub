@@ -326,7 +326,7 @@ const TYPES = [
    sub:'Zone dedicated tools that never cross, doubled pad counts for production floors, food contact sanitizer, and drain discipline.'},
   {k:'apt5', n:'Apartment Community, 5-Day Porter', apt:true, days:5,
    s:'One day porter, Monday to Friday. Lobbies, elevators, clubhouse, pool, pet stations, dumpsters.',
-   sub:'Everything one porter needs to start an apartment community on a five day schedule. Backpack vacuum, a three shelf janitor cart, two WaveBrake buckets with the dirty water insert, microfiber loop mops with five green heads for common areas and five red heads for restrooms, color coded cloths with a laundry hamper, the TruShot chemical system, the rolling BRUTE trash can, and black uniform polos, one per service day. Every item ships from Staples Business Advantage as one order, and every item in this order carries the apartment kit discount.'},
+   sub:'Everything one porter needs to start an apartment community on a five day schedule. Backpack vacuum, a three shelf janitor cart, two WaveBrake buckets with the dirty water insert, microfiber loop mops with five green heads for common areas and five red heads for restrooms, color coded cloths with a laundry hamper, the TruShot chemical system, a push broom and dustpan for the parking lot, the rolling BRUTE trash can, and black uniform polos, one per service day. Every item ships from Staples Business Advantage as one order, and every item in this order carries the apartment kit discount.'},
   {k:'apt7', n:'Apartment Community, 7-Day Porter', apt:true, days:7,
    s:'One day porter, seven days a week. Lobbies, elevators, clubhouse, pool, pet stations, dumpsters.',
    sub:'The same kit built for a seven day schedule: seven green and seven red mop heads, seven polos, an extra box of gloves and a second box of liners. Every item ships from Staples Business Advantage as one order, and every item in this order carries the apartment kit discount.'}
@@ -595,7 +595,10 @@ const NOTES={
   P152:'Snap a cartridge in and spray. No bottles to mix or label.',
   P160:'The rolling can the scope calls for. Add the dolly, skirt and caddy.',
   P163:'The skirt. Hangs on the rim and carries the small tools.',
-  P171:'Black gloves. The porter is customer facing.'
+  P171:'Black gloves. The porter is customer facing.',
+  P179:'Stiff palmyra bristles for the parking lot, carports and dumpster pads.',
+  P180:'Threads into the push broom head.',
+  P181:'Picks up what the push broom gathers outside.'
 };
 const GROUPS=[
   ["Mopping &amp; Floor Care", /mop|bucket|wringer|wavebrake|scrubber|sweeper|burnish|floor pad|scraper|squeegee/i],
@@ -606,6 +609,9 @@ const GROUPS=[
   ["PPE &amp; Safety",         /glove|glasses|vest|boot|mat/i],
 ];
 function groupOf(p){
+  // Brooms and dustpans carry the "Sweeping & Dust Mopping" category, which would
+  // otherwise drop them into the mopping group.
+  if(/broom|dust ?pan/i.test(p.name)) return "Tools, Carts &amp; Waste";
   const hay=p.name+" "+p.categories.join(" ");
   for(const [g,re] of GROUPS){ if(re.test(hay)) return g; }
   return "Other Supplies";
