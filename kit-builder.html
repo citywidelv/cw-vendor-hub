@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>New Building Kit Builder | City Wide Vendor Hub</title>
+<title>Kit Builder | City Wide Vendor Hub</title>
 <script src="shop/config.js"></script>
 <style>
 :root{
@@ -76,6 +76,10 @@ details.edu[open] summary{margin-bottom:8px;}
 .row .nm b{font-size:12.5px; font-weight:700; display:block; line-height:1.35;}
 .row .nm span{font-size:11px; color:var(--cw-grey);}
 .row .why{font-size:11px; color:var(--cw-red); font-weight:700; display:block; margin-top:2px;}
+.row .warn{display:block; margin-top:4px; padding:6px 8px; border-left:3px solid var(--cw-red); background:#FDF3F3; color:var(--cw-black); font-size:11px; line-height:1.45; font-weight:700;}
+.row .warn small{display:block; font-weight:400; color:var(--cw-grey);}
+.type.apt{border-color:var(--cw-red);}
+.type.apt b:after{content:" Apartment"; font-size:10px; color:#fff; background:var(--cw-red); border-radius:4px; padding:1px 6px; margin-left:6px; vertical-align:middle;}
 .row .pr{width:82px; text-align:right; font-weight:700; font-size:12.5px; flex:none;}
 .qty{display:flex; align-items:center; gap:4px; flex:none;}
 .qty button{width:26px; height:26px; border:1.5px solid var(--cw-border); background:var(--cw-white);
@@ -123,7 +127,7 @@ details.edu[open] summary{margin-bottom:8px;}
 .drawer-ft{padding:14px 16px; border-top:1.5px solid var(--cw-border); background:var(--cw-light-grey);}
 .form-grp{margin-bottom:11px;}
 .form-grp label{display:block; font-size:11.5px; font-weight:700; margin-bottom:4px;}
-.form-grp input,.form-grp textarea{width:100%; padding:9px 11px; border:1.5px solid var(--cw-border); border-radius:7px;}
+.form-grp input,.form-grp textarea,.form-grp select{width:100%; padding:9px 11px; border:1.5px solid var(--cw-border); border-radius:7px; font-family:inherit; font-size:13px; background:#fff;}
 .req{color:var(--cw-red);}
 .ln{display:flex; justify-content:space-between; font-size:12px; padding:4px 0; gap:10px;}
 .ln.tot{border-top:1.5px solid var(--cw-border); margin-top:8px; padding-top:8px; font-weight:700; font-size:14px;}
@@ -148,7 +152,7 @@ details.edu[open] summary{margin-bottom:8px;}
 <header>
   <div class="hdr-inner">
     <a class="hdr-logo" href="./"><img src="https://emailer.emfluence.com/clients/citywide/uploadedfiles/signature_logo.png" alt="City Wide Facility Solutions"></a>
-    <div class="hdr-title">New Building Kit Builder<small>Start a new account with the right tools</small></div>
+    <div class="hdr-title">Kit Builder<small>New building kits and apartment community kits</small></div>
     <span class="hdr-sp"></span>
     <a class="hdr-link" href="shop/">Vendor Shop</a>
     <a class="hdr-link" href="./">Vendor Hub</a>
@@ -157,8 +161,8 @@ details.edu[open] summary{margin-bottom:8px;}
 
 <main>
   <div class="hero">
-    <h1>Build your new building kit</h1>
-    <p>Pick the building type and we will load a starting kit built around what that kind of facility actually needs. Change any quantity, uncheck what you already own, and add anything else from the full catalog. The more complete the kit, the bigger the discount.</p>
+    <h1 id="heroH">Build your start-up kit</h1>
+    <p id="heroP">Pick the building type and we will load a starting kit built around what that kind of facility actually needs. Change any quantity, uncheck what you already own, and add anything else from the full catalog. New building kits earn a bigger discount the more complete they are. Apartment community kits carry a flat kit discount on every item in the order.</p>
     <div class="accent"></div>
   </div>
 
@@ -168,20 +172,22 @@ details.edu[open] summary{margin-bottom:8px;}
 
   <div id="kitArea" style="display:none">
 
+    <div id="bandStep">
     <div class="section-title">2. How big is it?</div>
     <div class="section-sub">Cleanable square feet. Quantities scale the same way the <a href="planner.html" style="color:var(--cw-red)">New Building Inventory Planner</a> scales them, with the 3x rotation already built in: one set in use, one in the laundry, one spare.</div>
     <div class="types" id="bands"></div>
+    </div>
 
-    <div class="section-title">3. Your suggested kit</div>
+    <div class="section-title" id="kitStepTitle">3. Your suggested kit</div>
     <div class="section-sub" id="kitSub"></div>
     <div id="eduWrap"></div>
     <div class="items" id="coreItems"></div>
 
-    <div class="section-title">4. Also worth adding</div>
+    <div class="section-title" id="optStepTitle">4. Also worth adding</div>
     <div class="section-sub">Not in the base kit. Check anything that fits the building.</div>
     <div class="items" id="optItems"></div>
 
-    <div class="section-title">5. Add anything else</div>
+    <div class="section-title" id="browseStepTitle">5. Add anything else</div>
     <div class="section-sub">The full catalog. Search it and add to your kit.</div>
     <div class="searchrow">
       <input id="q" type="search" placeholder="Search the full catalog by name, SKU, or keyword...">
@@ -196,8 +202,8 @@ details.edu[open] summary{margin-bottom:8px;}
   <div class="bar-inner">
     <div class="tiers">
       <div style="font-size:11.5px;font-weight:700" id="tierMsg">Pick a building type to start</div>
-      <div class="track"><div class="fill" id="fill"></div></div>
-      <div class="ticks">
+      <div class="track" id="track"><div class="fill" id="fill"></div></div>
+      <div class="ticks" id="ticks">
         <span class="tick" id="t0">$500 &middot; 5%</span>
         <span class="tick" id="t1">$1,200 &middot; 8%</span>
         <span class="tick" id="t2">$2,500 &middot; 10%</span>
@@ -233,6 +239,12 @@ const TIERS = [
   {min:2500, pct:10}
 ];
 const MAX_PCT = 10;
+/* Apartment community kits are priced differently from new building kits. Shop prices
+   carry the regular margin; the apartment kit takes every item in the order down to the
+   kit margin. APT_KEEP is the ratio between the two, so the discount is 1 - APT_KEEP. */
+const APT_KEEP = 0.65/0.75;                 // 13.33% off every line
+const APT_PCT_LABEL = "13.3%";
+const APT_WARN = "Make sure you have this. You will need it to properly clean the property.";
 
 /* Size bands and scaling mirror the New Building Inventory Planner so the two
    pages never contradict each other. Sheet quantities are the MEDIUM, general
@@ -266,6 +278,7 @@ function scaleClass(p){
   return "durable";
 }
 function scaledQty(p, base){
+  if(isApt()) return base;
   const c=scaleClass(p);
   const bm=(BAND_MULT[c]||BAND_MULT.durable)[BAND]||1;
   const tm=(c==="pads"||c==="cloths") ? ((TYPE_MULT[TYPE]||{})[c]||1) : 1;
@@ -290,8 +303,15 @@ const TYPES = [
    sub:'Low lint and non shedding only, sterile 70% IPA, tacky mats, and dedicated tools that never leave the classified area.'},
   {k:'gmp', n:'GMP / Food',
    s:'Food production, packaging, beverage, allergen and segregated zones.',
-   sub:'Zone dedicated tools that never cross, doubled pad counts for production floors, food contact sanitizer, and drain discipline.'}
+   sub:'Zone dedicated tools that never cross, doubled pad counts for production floors, food contact sanitizer, and drain discipline.'},
+  {k:'apt5', n:'Apartment Community, 5-Day Porter', apt:true, days:5,
+   s:'One day porter, Monday to Friday. Lobbies, elevators, clubhouse, pool, pet stations, dumpsters.',
+   sub:'Everything one porter needs to start an apartment community on a five day schedule. Backpack vacuum, two WaveBrake buckets with the dirty water insert, flat mops with five pads, color coded cloths with a laundry hamper, the TruShot chemical system, and the rolling BRUTE cart. Every item ships from Staples Business Advantage as one order, and every item in this order carries the apartment kit discount.'},
+  {k:'apt7', n:'Apartment Community, 7-Day Porter', apt:true, days:7,
+   s:'One day porter, seven days a week. Lobbies, elevators, clubhouse, pool, pet stations, dumpsters.',
+   sub:'The same kit built for a seven day schedule: seven mop pads, an extra box of gloves and a second box of liners. Every item ships from Staples Business Advantage as one order, and every item in this order carries the apartment kit discount.'}
 ];
+function isApt(){ const t=TYPES.find(x=>x.k===TYPE); return !!(t&&t.apt); }
 
 const EDU = {
   mopping: {
@@ -364,7 +384,19 @@ const EDU = {
   }
 };
 
+EDU.apt = {
+  t:'Before you start an apartment community',
+  h:`<ul>
+      <li><b>The porter is customer facing.</b> Residents and the leasing office see them all day. The client requires the black City Wide polo with the Independent Contractor logo, black slacks and closed non-slip shoes. No sweatpants, shorts, jeans or hoodies. Order the polo from Bennett Uniform: <a href="https://citywide.bennettuniform.com/men-s-silk-touch-polo" target="_blank" rel="noopener" style="color:var(--cw-red);font-weight:700">men's black polo</a> or <a href="https://citywide.bennettuniform.com/women-s-silk-touch-polo" target="_blank" rel="noopener" style="color:var(--cw-red);font-weight:700">women's black polo</a>. The polo is not part of the kit price.</li>
+      <li><b>The kit is the minimum, not a suggestion.</b> The quantities below match the day porter scope: restrooms serviced once and checked three times a shift, lobbies and elevators mopped daily, the pool deck and pet stations every pass. If you take something out, you will be short on site.</li>
+      <li><b>TruShot replaces spray bottles.</b> A cartridge snaps into the trigger and dilutes as you spray. Glass and multi-surface for the lobbies and elevators, restroom disinfectant for the restrooms and touch points, degreaser for the grills and pet stations. No mixing, no unlabeled bottles.</li>
+      <li><b>Color codes are not optional.</b> Red is restrooms only. Yellow is sinks and counters. Green is the kitchenette and fitness room. Blue is glass and general dusting. The mesh wash bags keep the colors apart on laundry day.</li>
+      <li><b>The BRUTE is the cart.</b> Bagged trash from the lobbies, clubhouse and pet stations rides in the can to the dumpster, so leaking bags never cross a clean floor. The caddy bag and rim caddy carry everything else.</li>
+     </ul>`
+};
 const EDU_BY_TYPE = {
+  apt5:      ['apt','mopping','vac'],
+  apt7:      ['apt','mopping','vac'],
   office:    ['mopping','vac','flat'],
   medical:   ['medical','flat','vac','mopping'],
   school:    ['school','vac','mopping','flat'],
@@ -422,6 +454,7 @@ async function load(){
     cost:parseFloat(r[idx("cost")])||0, margin_pct:r[idx("margin_pct")],
     price:parseFloat(r[idx("price")])||0,
     image:r[idx("image")], description:r[idx("description")],
+    supplier_sku:idx("supplier_sku")>=0?(r[idx("supplier_sku")]||"").trim():"",
     active:r[idx("active")]!=="0",
     kits:parseKits(idx("kits")>=0 ? (r[idx("kits")]||"") : "")
   })).filter(p=>p.active && p.id);
@@ -444,7 +477,7 @@ function parseKits(s){
 /* ---------- render ---------- */
 function renderTypes(){
   document.getElementById("types").innerHTML = TYPES.map(t=>
-    `<button class="type${TYPE===t.k?" on":""}" onclick="pickType('${t.k}')">
+    `<button class="type${TYPE===t.k?" on":""}${t.apt?" apt":""}" onclick="pickType('${t.k}')">
        <b>${esc(t.n)}</b><span>${esc(t.s)}</span></button>`).join("");
   document.getElementById("bands").innerHTML = BANDS.map(b=>
     `<button class="type${BAND===b.k?" on":""}" onclick="pickBand('${b.k}')">
@@ -462,6 +495,12 @@ function showType(k){
   const t=TYPES.find(x=>x.k===k); if(!t) return;
   document.getElementById("kitArea").style.display="";
   document.getElementById("kitSub").textContent=t.sub;
+  const apt=!!t.apt;
+  document.getElementById("bandStep").style.display=apt?"none":"";
+  document.getElementById("kitStepTitle").textContent=apt?"2. Your apartment community kit":"3. Your suggested kit";
+  document.getElementById("optStepTitle").textContent=apt?"3. Also worth adding":"4. Also worth adding";
+  document.getElementById("browseStepTitle").textContent=apt?"4. Add anything else":"5. Add anything else";
+  document.getElementById("heroH").textContent=apt?"Build your apartment community kit":"Build your start-up kit";
   document.getElementById("eduWrap").innerHTML =
     (EDU_BY_TYPE[k]||[]).map((e,i)=>{
       const b=EDU[e]; if(!b) return "";
@@ -482,6 +521,12 @@ function inKit(p){ return SEL[p.id]>0; }
 function rowHTML(p, note){
   const on=inKit(p);
   const q=SEL[p.id]||0;
+  // Apartment kits: the quantity on the row is what the scope needs. Dropping below it
+  // (or unchecking) shows the warning on that row. The vendor can still do it.
+  const kk=p.kits[TYPE];
+  const need=(isApt() && kk && kk.tier==="core") ? scaledQty(p,kk.qty) : 0;
+  const warn = need>0 && q<need
+    ? `<span class="warn">${esc(APT_WARN)}<small>The kit calls for ${need}. You have ${q}.</small></span>` : "";
   return `<div class="row${on?"":" off"}">
     <input class="chk" type="checkbox" ${on?"checked":""} onchange="toggle('${p.id}',this.checked)" aria-label="include">
     <div class="thumb">${p.image?`<img src="${esc(p.image)}" alt="" loading="lazy" onerror="this.remove()">`:""}</div>
@@ -489,6 +534,7 @@ function rowHTML(p, note){
       <b>${esc(p.name)}</b>
       <span>SKU ${esc(p.sku)}${p.fulfillment==="Warehouse"?' <span class="badge">In Stock</span>':""}</span>
       ${note?`<span class="why">${esc(note)}</span>`:""}
+      ${warn}
     </div>
     <div class="qty">
       <button onclick="bump('${p.id}',-1)">&minus;</button>
@@ -507,7 +553,17 @@ const NOTES={
   P103:'One fresh pad per room. Do not re-use across rooms.',
   P068:'Adds flat mop wringing to a WaveBrake you already own.',
   P125:'Sporicidal. Use disposable pads with it, never microfiber.',
-  P005:'Hard water and scum. Not part of the H2Orange2 program.'
+  P005:'Hard water and scum. Not part of the H2Orange2 program.',
+  P137:'The least expensive backpack vacuum we carry. Converts to a blower for the breezeways.',
+  P141:'Two buckets: one for restrooms, one for lobbies and corridors.',
+  P142:'Drops inside the WaveBrake. Rinse water stays out of the clean solution.',
+  P145:'One fresh pad per service day. Dirty pads go in the hamper.',
+  P146:'Red is restrooms only.',
+  P150:'Dirty cloths and pads live here during the shift.',
+  P152:'Snap a cartridge in and spray. No bottles to mix or label.',
+  P160:'The rolling can the scope calls for. Add the dolly, skirt and caddy.',
+  P163:'The skirt. Hangs on the rim and carries the small tools.',
+  P171:'Black gloves. The porter is customer facing.'
 };
 const GROUPS=[
   ["Mopping &amp; Floor Care", /mop|bucket|wringer|wavebrake|scrubber|sweeper|burnish|floor pad|scraper|squeegee/i],
@@ -562,20 +618,32 @@ function lines(){
 }
 function subtotal(){ return lines().reduce((s,l)=>s+l.line,0); }
 function tierFor(sub){
+  if(isApt()) return sub>0 ? +((1-APT_KEEP)*100).toFixed(2) : 0;
   let pct=0;
   TIERS.forEach(t=>{ if(sub>=t.min) pct=t.pct; });
   return Math.min(pct,MAX_PCT);
 }
+// One place computes the money so the bar, the review and the order never disagree.
+function money(){
+  const sub=+subtotal().toFixed(2);
+  const pct=tierFor(sub);
+  const disc=isApt() ? +(sub-sub*APT_KEEP).toFixed(2) : +(sub*pct/100).toFixed(2);
+  return {sub, pct, disc, grand:+(sub-disc).toFixed(2), label: isApt()?APT_PCT_LABEL:pct+"%"};
+}
 function renderBar(){
-  const sub=subtotal(), pct=tierFor(sub), disc=+(sub*pct/100).toFixed(2), grand=+(sub-disc).toFixed(2);
+  const {sub,pct,disc,grand,label}=money();
   const n=lines().reduce((s,l)=>s+l.qty,0);
   document.getElementById("subLine").textContent = n===1?"1 item":n+" items";
   document.getElementById("grand").textContent = fmt(grand);
   document.getElementById("saveLine").innerHTML = pct
-    ? `${pct}% kit discount, you save ${fmt(disc)} <span class="strike">${fmt(sub)}</span>`
+    ? `${label} kit discount, you save ${fmt(disc)} <span class="strike">${fmt(sub)}</span>`
     : "";
+  const apt=isApt();
+  document.getElementById("track").style.display=apt?"none":"";
+  document.getElementById("ticks").style.display=apt?"none":"";
   const next=TIERS.find(t=>sub<t.min);
   document.getElementById("tierMsg").textContent = !TYPE ? "Pick a building type to start"
+    : apt ? `Apartment community kit pricing: ${APT_PCT_LABEL} off every item in this order. Quantities are what the scope needs.`
     : next ? `Add ${fmt(next.min-sub)} more to reach ${next.pct}% off`
            : `Top tier unlocked. ${MAX_PCT}% is the most we can offer.`;
   const cap=TIERS[TIERS.length-1].min;
@@ -610,28 +678,39 @@ function restore(){
 
 /* ---------- review + submit ---------- */
 function openReview(){
-  const sub=subtotal(), pct=tierFor(sub), disc=+(sub*pct/100).toFixed(2), grand=+(sub-disc).toFixed(2);
+  const {sub,pct,disc,grand,label}=money();
   const saved=JSON.parse(localStorage.getItem("cw_vendor")||"{}");
   const t=TYPES.find(x=>x.k===TYPE);
+  const apt=isApt();
+  const short=PRODUCTS.filter(p=>apt && p.kits[TYPE] && p.kits[TYPE].tier==="core" && (SEL[p.id]||0)<p.kits[TYPE].qty);
   document.getElementById("drawerBd").innerHTML=`
     <div style="font-weight:700;margin-bottom:2px">${esc(t?t.n:"")} kit</div>
-    <div style="font-size:11px;color:var(--cw-grey);margin-bottom:12px">New building start up order</div>
+    <div style="font-size:11px;color:var(--cw-grey);margin-bottom:12px">${apt?"Apartment community start up order":"New building start up order"}</div>
+    ${short.length?`<div class="notice" style="border-color:var(--cw-red);background:#FDF3F3"><b>${esc(APT_WARN)}</b><br>Below the kit quantity: ${short.map(p=>esc(p.name)+" ("+(SEL[p.id]||0)+" of "+p.kits[TYPE].qty+")").join("; ")}.</div>`:""}
     ${lines().map(l=>`<div class="ln"><span>${l.qty} &times; ${esc(l.p.name)}</span><span>${fmt(l.line)}</span></div>`).join("")}
     <div class="ln" style="border-top:1.5px solid var(--cw-border);margin-top:8px;padding-top:8px"><span>Subtotal</span><span>${fmt(sub)}</span></div>
-    ${pct?`<div class="ln disc"><span>New building kit discount (${pct}%)</span><span>-${fmt(disc)}</span></div>`:""}
+    ${pct?`<div class="ln disc"><span>${apt?"Apartment community kit discount":"New building kit discount"} (${label})</span><span>-${fmt(disc)}</span></div>`:""}
     <div class="ln tot"><span>Total</span><span>${fmt(grand)}</span></div>
-    ${pct<MAX_PCT?`<div style="font-size:11px;color:var(--cw-grey);margin-top:6px">${(function(){const nx=TIERS.find(x=>sub<x.min);return nx?`Add ${fmt(nx.min-sub)} more and this becomes ${nx.pct}% off.`:"";})()}</div>`:""}
+    ${(!apt&&pct<MAX_PCT)?`<div style="font-size:11px;color:var(--cw-grey);margin-top:6px">${(function(){const nx=TIERS.find(x=>sub<x.min);return nx?`Add ${fmt(nx.min-sub)} more and this becomes ${nx.pct}% off.`:"";})()}</div>`:""}
     <div style="height:14px"></div>
     <div class="form-grp"><label>Building / Account Name <span class="req">*</span></label><input id="f-building" placeholder="The new building this kit is for"></div>
     <div class="form-grp"><label>Your Name <span class="req">*</span></label><input id="f-name" value="${esc(saved.name||"")}"></div>
     <div class="form-grp"><label>Company Name <span class="req">*</span></label><input id="f-company" value="${esc(saved.company||"")}"></div>
     <div class="form-grp"><label>Email <span class="req">*</span></label><input id="f-email" type="email" value="${esc(saved.email||"")}"></div>
     <div class="form-grp"><label>Phone</label><input id="f-phone" value="${esc(saved.phone||"")}"></div>
+    <div class="form-grp"><label>Which City Wide office? <span class="req">*</span></label>
+      <select id="f-region">
+        <option value=""${saved.region?"":" selected"}>Select your region</option>
+        <option value="Las Vegas"${saved.region==="Las Vegas"?" selected":""}>Las Vegas (Las Vegas, Henderson, North Las Vegas)</option>
+        <option value="Northern Nevada"${saved.region==="Northern Nevada"?" selected":""}>Northern Nevada (Reno, Sparks, Carson City)</option>
+      </select></div>
     <div class="form-grp"><label>Notes</label><textarea id="f-notes" rows="3" placeholder="Start date, delivery notes, anything we should know"></textarea></div>
     <label class="ack"><input type="checkbox" id="f-ack" class="chk">
       <span>I authorize City Wide to charge this order by pay deduction on my next statement.</span></label>
     <div class="notice">${esc(CFG.PRICING_NOTICE||"")}</div>
-    <div class="notice"><b>Kit discount terms.</b> The new building kit discount applies to kits built on this page for a new account start. Maximum discount is ${MAX_PCT}%. Discounts are applied to the City Wide price shown and are confirmed by City Wide when the order is processed.</div>`;
+    ${apt
+      ? `<div class="notice"><b>Kit discount terms.</b> The apartment community kit discount (${APT_PCT_LABEL}) applies to every item in a kit order placed on this page for an apartment community account. It is applied to the City Wide price shown and confirmed by City Wide when the order is processed. Items ship from Staples Business Advantage as one order.</div>`
+      : `<div class="notice"><b>Kit discount terms.</b> The new building kit discount applies to kits built on this page for a new account start. Maximum discount is ${MAX_PCT}%. Discounts are applied to the City Wide price shown and are confirmed by City Wide when the order is processed.</div>`}`;
   document.getElementById("overlay").classList.add("on");
   document.getElementById("drawer").classList.add("on");
 }
@@ -643,45 +722,65 @@ function v(id){ const e=document.getElementById(id); return e?(e.value||"").trim
 
 function orderText(info,sub,pct,disc,grand){
   const t=TYPES.find(x=>x.k===TYPE);
+  const apt=isApt(), label=apt?APT_PCT_LABEL:pct+"%";
   return [
-    `NEW BUILDING KIT ORDER - ${new Date().toLocaleString()}`,
+    `${apt?"APARTMENT COMMUNITY KIT ORDER":"NEW BUILDING KIT ORDER"} - ${new Date().toLocaleString()}`,
     `Building: ${info.building}`,
     `Kit Type: ${t?t.n:TYPE}`,
     `Name: ${info.name}`, `Company: ${info.company}`, `Email: ${info.email}`,
     info.phone?`Phone: ${info.phone}`:null,
+    info.region?`Region: ${info.region}`:null,
     info.notes?`Notes: ${info.notes}`:null,
     ``, `ITEMS:`,
     ...lines().map(l=>`${l.qty} x ${l.p.name} (SKU ${l.p.sku}) @ ${fmt(l.unit)} = ${fmt(l.line)} [${l.p.fulfillment}]`),
     ``,
     `Subtotal: ${fmt(sub)}`,
-    pct?`New Building Kit Discount (${pct}%): -${fmt(disc)}`:`New Building Kit Discount: none`,
+    pct?`${apt?"Apartment Community Kit Discount":"New Building Kit Discount"} (${label}): -${fmt(disc)}`:`Kit Discount: none`,
     `Estimated Total: ${fmt(grand)}`,
     `Payment: Pay deduction (authorized at checkout)`,
   ].filter(x=>x!==null).join("\n");
 }
 function payloadItems(pct,disc){
-  const its=lines().map(l=>({id:l.p.id,sku:l.p.sku,name:l.p.name,size:"",qty:l.qty,unit:l.unit,line:l.line}));
-  if(pct>0) its.push({id:"KITDISC",sku:"KIT-DISCOUNT",name:`New Building Kit Discount (${pct}%)`,size:"",qty:1,unit:-disc,line:-disc});
-  return its;
+  // Same item shape the Vendor Shop sends, so ShopOrders.gs writes the Orders row,
+  // the Ops Hub Alerts card picks it up, and the service inbox gets the same email.
+  return lines().map(l=>({id:l.p.id,sku:l.p.sku,supplier_sku:l.p.supplier_sku||"",name:l.p.name,size:"",spec:"",qty:l.qty,unit:l.unit,line:l.line,fulfillment:l.p.fulfillment||""}));
 }
 async function submitKit(){
-  const sub=subtotal(), pct=tierFor(sub), disc=+(sub*pct/100).toFixed(2), grand=+(sub-disc).toFixed(2);
+  const {sub,pct,disc,grand,label}=money();
+  const t=TYPES.find(x=>x.k===TYPE);
+  const apt=isApt();
   const info={ building:v("f-building"), name:v("f-name"), company:v("f-company"),
-               email:v("f-email"), phone:v("f-phone"), notes:v("f-notes"),
+               email:v("f-email"), phone:v("f-phone"), notes:v("f-notes"), region:v("f-region"),
                account:v("f-building") };
   const err=document.getElementById("fErr");
   if(!info.building||!info.name||!info.company||!info.email){ err.textContent="Please fill in all required fields."; return; }
+  if(!info.region){ err.textContent="Please select your region."; return; }
   if(!document.getElementById("f-ack").checked){ err.textContent="Please check the authorization box to submit."; return; }
   err.textContent="";
-  try{ localStorage.setItem("cw_vendor",JSON.stringify({name:info.name,company:info.company,email:info.email,phone:info.phone})); }catch(e){}
+  try{ localStorage.setItem("cw_vendor",JSON.stringify({name:info.name,company:info.company,email:info.email,phone:info.phone,region:info.region})); }catch(e){}
   const btn=document.getElementById("submitBtn");
   btn.disabled=true; btn.textContent="Submitting...";
   const text=orderText(info,sub,pct,disc,grand);
   const items=payloadItems(pct,disc);
+  // The kit type and the discount ride in the notes so the Orders row and the email
+  // show them without a backend change.
+  const kitNote=`${apt?"APARTMENT COMMUNITY KIT":"NEW BUILDING KIT"}: ${t?t.n:TYPE}`+(pct?` | Kit discount ${label}: -${fmt(disc)} on ${fmt(sub)}`:"")+(info.phone?` | Phone ${info.phone}`:"");
 
   if(CFG.ORDERS_WEBHOOK){
-    try{ fetch(CFG.ORDERS_WEBHOOK,{method:"POST",mode:"no-cors",headers:{"Content-Type":"text/plain"},
-      body:JSON.stringify({vendor:info,total:grand,items:items.map(i=>({sku:i.sku,name:i.name,size:"",qty:i.qty,unit:i.unit}))})}); }catch(e){}
+    try{
+      const res=await fetch(CFG.ORDERS_WEBHOOK,{method:"POST",headers:{"Content-Type":"text/plain"},
+        body:JSON.stringify({kind:"shop_order",
+          vendor:{name:info.name,company:info.company,email:info.email,account:info.building,region:info.region,pay:"deduct",
+                  notes:(info.notes?info.notes+" | ":"")+kitNote},
+          items:items, subtotal:sub, coupon:"", coupon_label:"", discount:disc, total:grand})});
+      const r=await res.json();
+      if(r && r.ok){ done(); return; }
+      throw new Error((r&&r.error)||"Order service error");
+    }catch(e){
+      btn.disabled=false; btn.textContent="Submit Kit Order";
+      err.textContent=(e&&e.message&&!/fetch/i.test(e.message)?e.message+" ":"Could not reach the order service. ")+"Your order was not submitted. Try again, or use the email link below.";
+      mailFallback(text,info); return;
+    }
   }
   if(CFG.ORDER_ENDPOINT){
     try{
@@ -704,7 +803,7 @@ function mailFallback(text,info){
   const a=document.createElement("a");
   a.id="mailFb"; a.className="cta"; a.style.cssText="display:block;text-align:center;margin-top:8px;text-decoration:none";
   a.href="mailto:"+(CFG.ORDER_EMAIL||"")+"?"+(CFG.ORDER_EMAIL_CC?"cc="+encodeURIComponent(CFG.ORDER_EMAIL_CC)+"&":"")
-    +"subject="+encodeURIComponent("New Building Kit: "+info.company)+"&body="+encodeURIComponent(text);
+    +"subject="+encodeURIComponent((isApt()?"Apartment Community Kit: ":"New Building Kit: ")+info.company)+"&body="+encodeURIComponent(text);
   a.textContent="Send by Email Instead";
   document.querySelector(".drawer-ft").appendChild(a);
 }
