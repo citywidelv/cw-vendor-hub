@@ -133,6 +133,23 @@ main{max-width:1200px; margin:0 auto; padding:16px;}
 .badge.so{background:#fff; color:var(--cw-grey); border:1px solid var(--cw-border);}
 .badge.oos{background:var(--cw-grey); color:#fff;}
 .stockct{font-size:var(--fs-caption); color:var(--cw-grey); font-weight:700;}
+/* Kits: a bundle priced below the sum of its parts. The list price is what the same items
+   cost one at a time in this shop; the kit price is the discounted bundle. */
+.card .price .was{display:inline-block; color:var(--cw-grey); font-weight:400; text-decoration:line-through; font-size:var(--fs-body); margin-right:8px;}
+.card .price.kitprice{margin-bottom:4px;}
+.save{display:inline-block; background:#E8F5EC; color:#1a7f37; border:1px solid #BFE3C9; font-size:var(--fs-caption); font-weight:700; padding:3px 9px; border-radius:var(--r-ctl); line-height:1.4; margin-bottom:8px;}
+.kitlist{margin:0 0 10px; border:1px solid var(--cw-border); border-radius:var(--r-ctl); background:var(--cw-light-grey);}
+.kitlist summary{cursor:pointer; list-style:none; padding:10px 12px; font-size:var(--fs-ui); font-weight:700; display:flex; justify-content:space-between; align-items:center; min-height:44px;}
+.kitlist summary::-webkit-details-marker{display:none;}
+.kitlist summary::after{content:"+"; color:var(--cw-red); font-size:var(--fs-lead); font-weight:700;}
+.kitlist[open] summary::after{content:"\2013";}
+.kitlist ul{margin:0; padding:0 12px 10px 12px; list-style:none; font-size:var(--fs-ui); line-height:1.5; color:var(--cw-black);}
+.kitlist li{padding:5px 0; border-top:1px solid var(--cw-border); display:flex; gap:8px;}
+.kitlist li b{flex:0 0 2.6em; color:var(--cw-red);}
+.kitlist li small{display:block; color:var(--cw-grey); font-size:var(--fs-caption);}
+.kituni{border-left:4px solid var(--cw-red); background:#FDF3F3; border-radius:var(--r-ctl); padding:10px 12px; font-size:var(--fs-ui); line-height:1.5; margin-bottom:10px;}
+.kituni b{display:block; margin-bottom:2px;}
+.kituni a{color:var(--cw-red); font-weight:700;}
 .card .controls{margin-top:auto; display:flex; gap:8px; align-items:stretch;}
 .qty{display:flex; border:1.5px solid var(--cw-border); border-radius:var(--r-ctl); overflow:hidden; flex-shrink:0;}
 .qty button{width:38px; min-height:44px; border:none; background:var(--cw-light-grey); font-size:var(--fs-lead); font-weight:700; color:var(--cw-black);}
@@ -312,13 +329,9 @@ footer b{color:var(--cw-black);}
 </div>
 
 <main>
-  <div class="spot" id="spotWrap" style="display:none">
-    <span class="spot-kicker" id="spotKicker"></span>
-    <div class="section-title" id="spotTitle"></div>
-    <div class="section-sub" id="spotSub"></div>
-    <p class="spot-note" id="spotNote"></p>
-    <div class="featured" id="spotGrid"></div>
-  </div>
+  <!-- Spotlight bands (CFG.SPOTLIGHT and CFG.KIT_BAND). Each one names a catalog category;
+       rows carrying that category render in the band on the home view. -->
+  <div id="bands"></div>
 
   <div id="featuredWrap">
     <div class="section-title">Warehouse Quick Order</div>
@@ -435,6 +448,11 @@ async function load(){
       colors:idx("colors")>=0?(r[idx("colors")]||"").split("|").map(s=>s.trim()).filter(Boolean):[],
       logo:idx("logo")>=0?(r[idx("logo")]||"").trim():"",
       supplier_sku:idx("supplier_sku")>=0?(r[idx("supplier_sku")]||"").trim():"",
+      // Kits only. list_price is what the same items cost one at a time in this shop (the
+      // regular margin); price is the discounted kit price. kit_items lists the contents,
+      // one per line as "qty x name (supplier item)", split on " | ".
+      list_price:idx("list_price")>=0?(parseFloat(r[idx("list_price")])||0):0,
+      kit_items:idx("kit_items")>=0?(r[idx("kit_items")]||"").split("|").map(s=>s.trim()).filter(Boolean):[],
       featured:r[idx("featured")]==="1", active:r[idx("active")]!=="0",
     };
   }).filter(p=>p.active);
@@ -447,7 +465,7 @@ async function load(){
 function catList(){
   const cats = new Set();
   PRODUCTS.forEach(p=>p.categories.forEach(c=>cats.add(c)));
-  const order = ["Desert Dust Sheets","EnvirOx","Uniforms","New Building Items","Chemicals","Cleaning Tools","Mopping",
+  const order = ["Desert Dust Sheets","Apartment Community Kits","EnvirOx","Uniforms","New Building Items","Chemicals","Cleaning Tools","Mopping",
     "Sweeping & Dust Mopping","Window Cleaning","High Dusting","TruShot","Vacuums","Floor Machines",
     "Floor Cleaners","Carts & Dollies","Equipment","PPE","Storage","Kitchens (Sands)","Octapharma"];
   return [...cats].sort((a,b)=>{
@@ -459,6 +477,7 @@ const GROUPS = [
   {key:"Supplies",   cats:["Desert Dust Sheets","Chemicals","EnvirOx","TruShot","Cleaning Tools","Mopping",
                            "Sweeping & Dust Mopping","Window Cleaning","High Dusting",
                            "Floor Cleaners","Restroom","PPE","Storage"]},
+  {key:"Apartment Kits", cats:["Apartment Community Kits"]},
   {key:"Equipment",  cats:["Vacuums","Floor Machines","Carts & Dollies","Equipment"]},
   {key:"Uniforms",   cats:["Uniforms"]},
   {key:"New Building", cats:["New Building Items"]},
@@ -564,14 +583,22 @@ function cardHTML(p){
   else badge='<span class="badge wh">In Stock at City Wide</span>'
     +(p.stock!==null?'<span class="stockct">'+p.stock+' on hand</span>':"");
   const needsMore=p.description.length>90;
+  const isKit=p.kit_items.length>0;
+  const saving=(p.list_price&&p.list_price>displayPrice(p))?p.list_price-displayPrice(p):0;
+  const priceHTML=saving>0
+    ? `<span class="was">${fmt(p.list_price)}</span>${fmt(displayPrice(p))}<small>kit price, ${p.kit_items.length} items</small>`
+    : `${fmt(displayPrice(p))}${p.size_prices&&Object.keys(p.size_prices).length?' <small>larger sizes cost more</small>':''}`;
   return `<div class="card" data-id="${p.id}">
     <div class="imgwrap"><img loading="lazy" src="${p.image}" alt="" onerror="this.style.display='none'"></div>
     <h3>${esc(p.name)}</h3>
-    <div class="price" id="price-${p.id}">${fmt(displayPrice(p))}${p.size_prices&&Object.keys(p.size_prices).length?' <small>larger sizes cost more</small>':''}</div>
+    <div class="price${saving>0?' kitprice':''}" id="price-${p.id}">${priceHTML}</div>
+    ${saving>0?`<span class="save">Kit discount: you save ${fmt(saving)}</span>`:""}
     <div class="stockline">${badge}</div>
     <div class="sku">SKU ${esc(p.sku)}</div>
     <div class="desc" id="desc-${p.id}">${esc(p.description)}</div>
     ${needsMore?`<button class="more-link" onclick="toggleDesc('${p.id}',this)">More</button>`:""}
+    ${isKit?kitListHTML(p):""}
+    ${isKit?kitUniformHTML():""}
     ${logo}
     ${sizes||colors?`<div class="opts">${sizes}${colors}</div>`:""}
     <div class="controls">
@@ -587,6 +614,27 @@ function cardHTML(p){
   </div>`;
 }
 function esc(s){return (s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");}
+// Kit contents. Each entry is "qty x name (supplier item)". The supplier item moves to a
+// second line so the list scans.
+function kitListHTML(p){
+  const rows=p.kit_items.map(line=>{
+    const m=line.match(/^(\d+)\s*x\s*(.*)$/i);
+    const qty=m?m[1]:"1", rest=m?m[2]:line;
+    const sm=rest.match(/^(.*?)\s*\((Staples[^)]*)\)\s*$/i);
+    const name=sm?sm[1]:rest, sup=sm?sm[2]:"";
+    return `<li><b>${esc(qty)} x</b><span>${esc(name)}${sup?`<small>${esc(sup)}</small>`:""}</span></li>`;
+  }).join("");
+  return `<details class="kitlist"><summary>What is in this kit (${p.kit_items.length} items)</summary><ul>${rows}</ul></details>`;
+}
+// Apartment community porters are customer facing. The client requires the black City Wide
+// polo so residents can tell who is approved on the property. Links come from config.js.
+function kitUniformHTML(){
+  const u=CFG.KIT_UNIFORM||{};
+  if(!u.text) return "";
+  const links=[u.mens?`<a href="${u.mens}" target="_blank" rel="noopener">Men's black polo</a>`:"",
+               u.womens?`<a href="${u.womens}" target="_blank" rel="noopener">Women's black polo</a>`:""].filter(Boolean).join(" &middot; ");
+  return `<div class="kituni"><b>${esc(u.title||"Required on site")}</b>${esc(u.text)}${links?`<div style="margin-top:4px">Order the polo: ${links}</div>`:""}</div>`;
+}
 
 function render(){
   const list=filtered();
@@ -596,22 +644,23 @@ function render(){
   if(showFeat){
     document.getElementById("featured").innerHTML=PRODUCTS.filter(p=>p.featured).map(cardHTML).join("");
   }
-  // Spotlight: one product line called out on the home view. Config-driven, so a new
-  // spotlight is a config.js edit plus a category on the Sheet rows, no page change.
-  const SP = CFG.SPOTLIGHT || null;
-  const spotItems = (SP && SP.category) ? PRODUCTS.filter(p=>p.categories.includes(SP.category)) : [];
-  const showSpot = showFeat && spotItems.length>0;
-  document.getElementById("spotWrap").style.display=showSpot?"":"none";
-  if(showSpot){
-    document.getElementById("spotKicker").textContent=SP.kicker||"Featured";
-    document.getElementById("spotTitle").textContent=SP.title||SP.category;
-    document.getElementById("spotSub").textContent=SP.sub||"";
-    const note=document.getElementById("spotNote");
-    note.textContent=SP.note||""; note.style.display=SP.note?"":"none";
-    document.getElementById("spotGrid").innerHTML=spotItems.map(cardHTML).join("");
-  }
+  // Spotlight bands: product lines called out on the home view. Config-driven, so a new
+  // band is a config.js edit plus a category on the Sheet rows, no page change.
+  // CFG.KIT_BAND renders first (the apartment community kits), CFG.SPOTLIGHT under it.
+  const bands=[CFG.KIT_BAND, CFG.SPOTLIGHT].filter(b=>b&&b.category)
+    .map(b=>({cfg:b, items:PRODUCTS.filter(p=>p.categories.includes(b.category))}))
+    .filter(b=>b.items.length>0);
+  const showSpot = showFeat && bands.length>0;
+  const bandsEl=document.getElementById("bands");
+  bandsEl.innerHTML = showSpot ? bands.map(b=>`<div class="spot">
+      <span class="spot-kicker">${esc(b.cfg.kicker||"Featured")}</span>
+      <div class="section-title">${esc(b.cfg.title||b.cfg.category)}</div>
+      <div class="section-sub">${esc(b.cfg.sub||"")}</div>
+      ${b.cfg.note?`<p class="spot-note">${esc(b.cfg.note)}</p>`:""}
+      <div class="featured">${b.items.map(cardHTML).join("")}</div>
+    </div>`).join("") : "";
   const grid=document.getElementById("grid");
-  const spotIds = showSpot ? new Set(spotItems.map(p=>p.id)) : new Set();
+  const spotIds = showSpot ? new Set(bands.flatMap(b=>b.items.map(p=>p.id))) : new Set();
   const items=showFeat?list.filter(p=>!p.featured && !spotIds.has(p.id)):list;
   grid.innerHTML=items.map(cardHTML).join("");
   document.getElementById("empty").style.display=items.length?"none":"";
@@ -667,8 +716,11 @@ function addToCart(id,btn){
 function cartLines(){
   return cart.map(c=>{
     const p=PRODUCTS.find(x=>x.id===c.id);
-    const spec=[c.size?"Size "+c.size:"",c.color||"",p.logo?p.logo+" logo":""].filter(Boolean).join(" / ");
-    return {...c,p,spec,unit:sizePrice(p,c.size),line:sizePrice(p,c.size)*c.qty};
+    const spec=[c.size?"Size "+c.size:"",c.color||"",p.logo?p.logo+" logo":"",p.kit_items.length?"Kit of "+p.kit_items.length+" items":""].filter(Boolean).join(" / ");
+    // The order line carries the full kit contents so the service team can place the
+    // supplier order from the email without opening the shop.
+    const orderSpec=p.kit_items.length?spec+" | KIT CONTENTS: "+p.kit_items.join("; "):spec;
+    return {...c,p,spec,orderSpec,unit:sizePrice(p,c.size),line:sizePrice(p,c.size)*c.qty};
   });
 }
 function cartTotal(){return cartLines().reduce((s,l)=>s+l.line,0);}
@@ -835,7 +887,7 @@ function rmItem(id,size,color){cart=cart.filter(x=>!(x.id===id&&x.size===size&&(
 // ---------- Submit ----------
 function orderText(info, award){
   const lines=cartLines().map(l=>
-    `${l.qty} x ${l.p.name}${l.spec?" ["+l.spec+"]":""} (SKU ${l.p.sku}${l.p.supplier_sku?" / Bennett "+l.p.supplier_sku:""}) @ ${fmt(l.unit)} = ${fmt(l.line)} [${l.p.fulfillment}]`);
+    `${l.qty} x ${l.p.name}${l.orderSpec?" ["+l.orderSpec+"]":""} (SKU ${l.p.sku}${l.p.supplier_sku?" / Bennett "+l.p.supplier_sku:""}) @ ${fmt(l.unit)} = ${fmt(l.line)} [${l.p.fulfillment}]`);
   return [
     `VENDOR ORDER - ${new Date().toLocaleString()}`,
     `Name: ${info.name}`, `Company: ${info.company}`, `Email: ${info.email}`,
@@ -859,7 +911,7 @@ function placeOrder(info, award){
   const payload={
     kind:"shop_order",
     vendor:info,
-    items:cartLines().map(l=>({id:l.id,sku:l.p.sku,supplier_sku:l.p.supplier_sku||"",name:l.p.name,size:l.size,color:l.color||"",logo:l.p.logo||"",spec:l.spec,qty:l.qty,unit:l.unit,line:+l.line.toFixed(2),fulfillment:l.p.fulfillment||""})),
+    items:cartLines().map(l=>({id:l.id,sku:l.p.sku,supplier_sku:l.p.supplier_sku||"",name:l.p.name,size:l.size,color:l.color||"",logo:l.p.logo||"",spec:l.orderSpec,qty:l.qty,unit:l.unit,line:+l.line.toFixed(2),fulfillment:l.p.fulfillment||""})),
     subtotal:+cartTotal().toFixed(2),
     coupon:award?award.code:"", coupon_label:award?award.label:"", discount:award?award.discount:0,
     total:total,

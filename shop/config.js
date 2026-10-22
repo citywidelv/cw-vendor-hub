@@ -44,6 +44,32 @@ window.CW_CONFIG = {
           "or pair it with the Flip Holder and handle. Use both sides, then throw it away. Nothing to launder.",
   },
 
+  // KIT_BAND: the Apartment Community Kits band, shown above the spotlight on the shop home
+  // view. Works like SPOTLIGHT: every catalog row carrying this category renders in the band.
+  // Kit rows carry a list_price (what the items cost one at a time in this shop) and a lower
+  // price (the kit price), and the card shows the difference as the kit discount.
+  KIT_BAND: {
+    category: "Apartment Community Kits",
+    kicker: "Apartment communities",
+    title: "Apartment Community Kits",
+    sub: "Everything a day porter needs to start an apartment community, in one order, at a kit discount.",
+    note: "Built for the multifamily day porter workflow: lobbies, elevators, clubhouse and leasing office, " +
+          "pool deck, pet stations, walkways and dumpster areas. Pick the 5-day or the 7-day kit to match the " +
+          "schedule on the Exhibit A. Each kit ships from Staples Business Advantage as one order. " +
+          "The TruShot system replaces spray bottles: one trigger, cartridges for glass and multi-surface, " +
+          "restroom disinfectant, and degreaser.",
+  },
+
+  // KIT_UNIFORM: the uniform note shown on every kit card. The client requires the black
+  // City Wide polo so residents can tell who is approved on the property.
+  KIT_UNIFORM: {
+    title: "Required on apartment community sites",
+    text: "Black City Wide polo with the Independent Contractor logo, black slacks, and closed non-slip shoes. " +
+          "No sweatpants, shorts, jeans or hoodies. Polos are embroidered and ordered through Bennett Uniform; they are not part of the kit price.",
+    mens: "https://citywide.bennettuniform.com/men-s-silk-touch-polo",
+    womens: "https://citywide.bennettuniform.com/women-s-silk-touch-polo",
+  },
+
   // Default margin percent applied to any catalog row that has a "cost"
   // value but no "price". Rows with an explicit "price" are shown as-is.
   // Example: cost 100.00 with DEFAULT_MARGIN_PCT 25 displays as $125.00.
