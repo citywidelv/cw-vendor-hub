@@ -44,21 +44,10 @@ window.CW_CONFIG = {
           "or pair it with the Flip Holder and handle. Use both sides, then throw it away. Nothing to launder.",
   },
 
-  // KIT_BAND: the Apartment Community Kits band, shown above the spotlight on the shop home
-  // view. Works like SPOTLIGHT: every catalog row carrying this category renders in the band.
-  // Kit rows carry a list_price (what the items cost one at a time in this shop) and a lower
-  // price (the kit price), and the card shows the difference as the kit discount.
-  KIT_BAND: {
-    category: "Apartment Community Kits",
-    kicker: "Apartment communities",
-    title: "Apartment Community Kits",
-    sub: "Everything a day porter needs to start an apartment community, in one order, at a kit discount.",
-    note: "Built for the multifamily day porter workflow: lobbies, elevators, clubhouse and leasing office, " +
-          "pool deck, pet stations, walkways and dumpster areas. Pick the 5-day or the 7-day kit to match the " +
-          "schedule on the Exhibit A. Each kit ships from Staples Business Advantage as one order. " +
-          "The TruShot system replaces spray bottles: one trigger, cartridges for glass and multi-surface, " +
-          "restroom disinfectant, and degreaser.",
-  },
+  // KIT_BAND: optional second home-view band, same shape as SPOTLIGHT (category, kicker,
+  // title, sub, note). Off. The apartment community items live under New Building >
+  // Apartments 5 Days / Apartments 7 Days, and the kits are built on kit-builder.html.
+  KIT_BAND: { category: "" },
 
   // KIT_UNIFORM: the uniform note shown on every kit card. The client requires the black
   // City Wide polo so residents can tell who is approved on the property.

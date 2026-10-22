@@ -298,7 +298,7 @@ footer b{color:var(--cw-black);}
     </a>
     <div class="hdr-title">Vendor Shop<small>Supplies, Equipment &amp; Uniforms</small></div>
     <nav class="hdr-nav">
-      <a class="hdr-res" href="../kit-builder.html">New Building Kit</a>
+      <a class="hdr-res" href="../kit-builder.html">Kit Builder</a>
       <a class="hdr-res" href="../">Vendor Hub</a>
     </nav>
   </div>
@@ -343,6 +343,10 @@ footer b{color:var(--cw-black);}
   <div class="section-title" id="gridTitle">All Products</div>
   <div class="section-sub" id="gridCount"></div>
   <div class="accent"></div>
+  <div class="catnote" id="aptNote" style="display:none"><b>Starting an apartment community?</b>
+    These are the items in the apartment community porter kit. Order them one at a time here at the regular price, or
+    <a id="aptKitLink" href="../kit-builder.html?type=apt5">build the whole kit on the Kit Builder</a> and the apartment kit discount applies to every item in the order, with the quantities already set to the schedule.
+    The porter wears the black City Wide polo from <a href="https://citywide.bennettuniform.com/men-s-silk-touch-polo" target="_blank" rel="noopener">Bennett Uniform</a> with black slacks; the polo is in the Uniforms section.</div>
   <div class="catnote" id="uniNote"><b>Uniforms come with the Independent Contractor logo.</b>
     Every uniform item here is embroidered with the Independent Contractor logo and ordered for you through Bennett Uniform. Pick your color and size on each item. Sizes 2XL and up cost a little more, and the price shown updates when you pick a size. Special order items usually take 2 to 3 weeks.</div>
   <div class="grid" id="grid"></div>
@@ -465,7 +469,7 @@ async function load(){
 function catList(){
   const cats = new Set();
   PRODUCTS.forEach(p=>p.categories.forEach(c=>cats.add(c)));
-  const order = ["Desert Dust Sheets","Apartment Community Kits","EnvirOx","Uniforms","New Building Items","Chemicals","Cleaning Tools","Mopping",
+  const order = ["Desert Dust Sheets","EnvirOx","Uniforms","New Building Items","Apartments 5 Days","Apartments 7 Days","Chemicals","Cleaning Tools","Mopping",
     "Sweeping & Dust Mopping","Window Cleaning","High Dusting","TruShot","Vacuums","Floor Machines",
     "Floor Cleaners","Carts & Dollies","Equipment","PPE","Storage","Kitchens (Sands)","Octapharma"];
   return [...cats].sort((a,b)=>{
@@ -477,10 +481,9 @@ const GROUPS = [
   {key:"Supplies",   cats:["Desert Dust Sheets","Chemicals","EnvirOx","TruShot","Cleaning Tools","Mopping",
                            "Sweeping & Dust Mopping","Window Cleaning","High Dusting",
                            "Floor Cleaners","Restroom","PPE","Storage"]},
-  {key:"Apartment Kits", cats:["Apartment Community Kits"]},
   {key:"Equipment",  cats:["Vacuums","Floor Machines","Carts & Dollies","Equipment"]},
   {key:"Uniforms",   cats:["Uniforms"]},
-  {key:"New Building", cats:["New Building Items"]},
+  {key:"New Building", cats:["New Building Items","Apartments 5 Days","Apartments 7 Days"]},
   {key:"Specialty",  cats:["Kitchens (Sands)","Octapharma","Clean Room","GMP Cleaning","Medical Office"]},
 ];
 // Any category the Sheet adds later that is not mapped above lands in Supplies so it
@@ -673,6 +676,12 @@ function render(){
   document.getElementById("gridCount").textContent=`${items.length} product${items.length===1?"":"s"}`;
   const uniNote=document.getElementById("uniNote");
   if(uniNote) uniNote.style.display=(activeCat==="Uniforms")?"block":"none";
+  const aptNote=document.getElementById("aptNote");
+  if(aptNote){
+    const apt = activeCat==="Apartments 5 Days" ? "apt5" : activeCat==="Apartments 7 Days" ? "apt7" : "";
+    aptNote.style.display=apt?"block":"none";
+    if(apt) document.getElementById("aptKitLink").href="../kit-builder.html?type="+apt;
+  }
 }
 function livePrice(id){
   const p=PRODUCTS.find(x=>x.id===id); if(!p) return;
