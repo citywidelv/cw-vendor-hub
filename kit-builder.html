@@ -139,6 +139,25 @@ details.edu[open] summary{margin-bottom:8px;}
   padding:2px 6px; border-radius:4px; vertical-align:middle; margin-left:6px; letter-spacing:.03em;}
 .badge.g{background:var(--cw-green);}
 .badge.k{background:var(--cw-black);}
+.shirts{border:1.5px solid var(--cw-border); border-left:4px solid var(--cw-red); border-radius:8px; padding:12px 14px; margin:14px 0 4px; background:var(--cw-white);}
+.shirts h3{font-size:14px; margin:0 0 2px;}
+.shirts .rec{font-size:12px; color:var(--cw-black); margin:0 0 4px;}
+.shirts .sub{font-size:11px; color:var(--cw-grey); margin:0 0 10px;}
+.fitpick{display:flex; gap:8px; flex-wrap:wrap; margin-bottom:10px;}
+.fitpick button{min-height:40px; padding:0 16px; border:1.5px solid var(--cw-border); border-radius:6px; background:var(--cw-white); font-weight:700; font-size:12.5px; color:var(--cw-black); cursor:pointer;}
+.fitpick button.on{border-color:var(--cw-red); color:var(--cw-red); background:#FDF3F3;}
+.shirts .row{padding:10px 0;}
+.shirts .row .thumb{width:58px; height:58px;}
+.size-sel{min-height:30px; border:1.5px solid var(--cw-border); border-radius:5px; padding:0 6px; font-size:12px; background:var(--cw-white); margin-top:4px;}
+.size-sel.need{border-color:var(--cw-red);}
+@media (max-width:600px){
+  .shirts{padding:12px 10px;}
+  .shirts .row{flex-wrap:wrap; row-gap:8px;}
+  .shirts .row .nm{flex:1 1 calc(100% - 70px);}
+  .shirts .row .qty{margin-left:70px;}
+  .shirts .row .pr{margin-left:auto;}
+  .shirts .size-sel{width:100%; min-height:40px; font-size:16px;}
+}
 .empty{padding:26px; text-align:center; color:var(--cw-grey); border:1.5px dashed var(--cw-border); border-radius:10px;}
 @media(max-width:640px){
   .row .pr{width:66px;} .hdr-title{font-size:14px;}
@@ -182,6 +201,7 @@ details.edu[open] summary{margin-bottom:8px;}
     <div class="section-sub" id="kitSub"></div>
     <div id="eduWrap"></div>
     <div class="items" id="coreItems"></div>
+    <div id="shirtWrap"></div>
 
     <div class="section-title" id="optStepTitle">4. Also worth adding</div>
     <div class="section-sub">Not in the base kit. Check anything that fits the building.</div>
@@ -306,10 +326,10 @@ const TYPES = [
    sub:'Zone dedicated tools that never cross, doubled pad counts for production floors, food contact sanitizer, and drain discipline.'},
   {k:'apt5', n:'Apartment Community, 5-Day Porter', apt:true, days:5,
    s:'One day porter, Monday to Friday. Lobbies, elevators, clubhouse, pool, pet stations, dumpsters.',
-   sub:'Everything one porter needs to start an apartment community on a five day schedule. Backpack vacuum, a three shelf janitor cart, two WaveBrake buckets with the dirty water insert, microfiber loop mops with five green heads for common areas and five red heads for restrooms, color coded cloths with a laundry hamper, the TruShot chemical system, and the rolling BRUTE trash can. Every item ships from Staples Business Advantage as one order, and every item in this order carries the apartment kit discount.'},
+   sub:'Everything one porter needs to start an apartment community on a five day schedule. Backpack vacuum, a three shelf janitor cart, two WaveBrake buckets with the dirty water insert, microfiber loop mops with five green heads for common areas and five red heads for restrooms, color coded cloths with a laundry hamper, the TruShot chemical system, the rolling BRUTE trash can, and black uniform polos, one per service day. Every item ships from Staples Business Advantage as one order, and every item in this order carries the apartment kit discount.'},
   {k:'apt7', n:'Apartment Community, 7-Day Porter', apt:true, days:7,
    s:'One day porter, seven days a week. Lobbies, elevators, clubhouse, pool, pet stations, dumpsters.',
-   sub:'The same kit built for a seven day schedule: seven green and seven red mop heads, an extra box of gloves and a second box of liners. Every item ships from Staples Business Advantage as one order, and every item in this order carries the apartment kit discount.'}
+   sub:'The same kit built for a seven day schedule: seven green and seven red mop heads, seven polos, an extra box of gloves and a second box of liners. Every item ships from Staples Business Advantage as one order, and every item in this order carries the apartment kit discount.'}
 ];
 function isApt(){ const t=TYPES.find(x=>x.k===TYPE); return !!(t&&t.apt); }
 
@@ -387,7 +407,7 @@ const EDU = {
 EDU.apt = {
   t:'Before you start an apartment community',
   h:`<ul>
-      <li><b>The porter is customer facing.</b> Residents and the leasing office see them all day. The client requires the black City Wide polo with the Independent Contractor logo, black slacks and closed non-slip shoes. No sweatpants, shorts, jeans or hoodies. Order the polo from Bennett Uniform: <a href="https://citywide.bennettuniform.com/men-s-silk-touch-polo" target="_blank" rel="noopener" style="color:var(--cw-red);font-weight:700">men's black polo</a> or <a href="https://citywide.bennettuniform.com/women-s-silk-touch-polo" target="_blank" rel="noopener" style="color:var(--cw-red);font-weight:700">women's black polo</a>. The polo is not part of the kit price.</li>
+      <li><b>The porter is customer facing.</b> Residents and the leasing office see them all day. The client requires the black City Wide polo with the Independent Contractor logo, black slacks and closed non-slip shoes. No sweatpants, shorts, jeans or hoodies. The black Sport-Tek Strive polo with the Independent Contractor logo is part of this kit. Pick the fit and size below the kit items. One shirt per service day means laundry once a week.</li>
       <li><b>The kit is the minimum, not a suggestion.</b> The quantities below match the day porter scope: restrooms serviced once and checked three times a shift, lobbies and elevators mopped daily, the pool deck and pet stations every pass. If you take something out, you will be short on site.</li>
       <li><b>TruShot replaces spray bottles.</b> A cartridge snaps into the trigger and dilutes as you spray. Glass and multi-surface for the lobbies and elevators, restroom disinfectant for the restrooms and touch points, degreaser for the grills and pet stations. No mixing, no unlabeled bottles.</li>
       <li><b>Color codes are not optional.</b> Red is restrooms only. Yellow is sinks and counters. Green is the kitchenette and fitness room. Blue is glass and general dusting. Mop heads follow the same rule. Red heads stay with the restroom bucket and green heads do everything else, one clean head per color every shift. The mesh wash bags keep the colors apart on laundry day.</li>
@@ -409,6 +429,9 @@ const EDU_BY_TYPE = {
 const PLANNER_TYPE={gen:'office', porter:'office', medical:'medical', cleanroom:'cleanroom', gmp:'gmp'};
 
 let PRODUCTS=[], TYPE=null, BAND='m', SEL={}, TOUCHED={}, CATS=[];
+/* Apartment kit polos. One row per fit (men's, women's), each with its own size and
+   quantity. Picking a fit sets that row to one shirt per service day. */
+let SHIRT={pick:"", rows:{}};
 
 /* ---------- CSV ---------- */
 function parseCSV(text){
@@ -455,6 +478,10 @@ async function load(){
     price:parseFloat(r[idx("price")])||0,
     image:r[idx("image")], description:r[idx("description")],
     supplier_sku:idx("supplier_sku")>=0?(r[idx("supplier_sku")]||"").trim():"",
+    sizes:idx("sizes")>=0?(r[idx("sizes")]||"").split(",").map(x=>x.trim()).filter(Boolean):[],
+    size_prices:parseSizePrices(idx("size_prices")>=0?(r[idx("size_prices")]||""):""),
+    colors:idx("colors")>=0?(r[idx("colors")]||"").trim():"",
+    logo:idx("logo")>=0?(r[idx("logo")]||"").trim():"",
     active:r[idx("active")]!=="0",
     kits:parseKits(idx("kits")>=0 ? (r[idx("kits")]||"") : "")
   })).filter(p=>p.active && p.id);
@@ -464,6 +491,11 @@ async function load(){
   CATS.forEach(c=>{ const o=document.createElement("option"); o.value=c; o.textContent=c; sel.appendChild(o); });
   renderTypes();
   restore();
+}
+function parseSizePrices(s){
+  const o={};
+  s.split("|").forEach(x=>{ const [k,v]=x.split("="); if(k&&v&&!isNaN(parseFloat(v))) o[k.trim()]=parseFloat(v); });
+  return o;
 }
 function parseKits(s){
   const out={};
@@ -508,7 +540,7 @@ function showType(k){
     }).join("");
 }
 function pickType(k){
-  if(TYPE!==k){ SEL={}; TOUCHED={}; }
+  if(TYPE!==k){ SEL={}; TOUCHED={}; SHIRT={pick:"", rows:{}}; }
   TYPE=k; showType(k); applyKit();
   renderTypes(); renderAll(); save();
   document.getElementById("kitArea").scrollIntoView({behavior:"smooth",block:"start"});
@@ -578,6 +610,60 @@ function groupOf(p){
   for(const [g,re] of GROUPS){ if(re.test(hay)) return g; }
   return "Other Supplies";
 }
+/* ---------- apartment kit polos ---------- */
+function shirtProducts(){ return PRODUCTS.filter(p=>p.kits[TYPE] && p.kits[TYPE].tier==="shirt"); }
+function kitDays(){ const t=TYPES.find(x=>x.k===TYPE); return (t&&t.days)||0; }
+function shirtUnit(p,size){ return (size && p.size_prices[size]!==undefined) ? p.size_prices[size] : p.unit; }
+function shirtRow(id){ return SHIRT.rows[id]||(SHIRT.rows[id]={size:"",qty:0}); }
+function fitLabel(p){ return /women/i.test(p.name)?"Women's fit":"Men's fit"; }
+function pickFit(id){
+  SHIRT.pick=id;
+  const r=shirtRow(id);
+  if(!r.qty) r.qty=kitDays();
+  renderAll(); save();
+}
+function shirtQty(id,v){ shirtRow(id).qty=Math.max(0,parseInt(v)||0); renderAll(); save(); }
+function shirtBump(id,d){ const r=shirtRow(id); r.qty=Math.max(0,(r.qty||0)+d); renderAll(); save(); }
+function shirtSize(id,v){ shirtRow(id).size=v; renderAll(); save(); }
+function shirtCount(){ return shirtProducts().reduce((n,p)=>n+((SHIRT.rows[p.id]||{}).qty||0),0); }
+function shirtNeedsSize(){ return shirtProducts().filter(p=>{ const r=SHIRT.rows[p.id]||{}; return r.qty>0 && !r.size; }); }
+function renderShirts(){
+  const wrap=document.getElementById("shirtWrap");
+  const list=isApt()?shirtProducts():[];
+  if(!list.length){ wrap.innerHTML=""; return; }
+  const days=kitDays(), have=shirtCount();
+  const rows=list.map(p=>{
+    const r=shirtRow(p.id), q=r.qty||0, unit=shirtUnit(p,r.size);
+    const opts=['<option value="">Pick a size</option>'].concat(p.sizes.map(z=>{
+      const up=p.size_prices[z]!==undefined && p.size_prices[z]>p.unit ? ` (${fmt(p.size_prices[z])})` : "";
+      return `<option value="${esc(z)}"${r.size===z?" selected":""}>${esc(z)}${up}</option>`;
+    })).join("");
+    return `<div class="row${q>0?"":" off"}">
+      <div class="thumb">${p.image?`<img src="${esc(p.image)}" alt="${esc(p.name)}" loading="lazy" onerror="this.remove()">`:""}</div>
+      <div class="nm">
+        <b>${esc(p.name)}</b>
+        <span>${esc(fitLabel(p))}. ${esc(p.colors||"Black")} only${p.logo?`, ${esc(p.logo)} logo`:""}. SKU ${esc(p.sku)}</span>
+        <select class="size-sel${q>0&&!r.size?" need":""}" onchange="shirtSize('${p.id}',this.value)" aria-label="Size for ${esc(p.name)}">${opts}</select>
+        ${q>0&&!r.size?`<span class="warn">Pick a size before you order.</span>`:""}
+      </div>
+      <div class="qty">
+        <button onclick="shirtBump('${p.id}',-1)" aria-label="one less">&minus;</button>
+        <input type="number" min="0" value="${q}" onchange="shirtQty('${p.id}',this.value)" aria-label="Quantity">
+        <button onclick="shirtBump('${p.id}',1)" aria-label="one more">+</button>
+      </div>
+      <div class="pr">${fmt((q||1)*unit)}</div>
+    </div>`;
+  }).join("");
+  const short = have>0 && have<days
+    ? `<span class="warn" style="margin-top:8px">${esc(APT_WARN)}<small>The kit calls for ${days} shirts. You have ${have}.</small></span>` : "";
+  wrap.innerHTML=`<div class="shirts">
+    <h3>Uniform polos</h3>
+    <p class="rec">We recommend 5 shirts for a 5-day kit and 7 shirts for a 7-day kit. One clean shirt for every service day means laundry once a week.</p>
+    <p class="sub">Choose the fit. That row starts at ${days} shirts and you can change it. You can order both fits.</p>
+    <div class="fitpick">${list.map(p=>`<button class="${SHIRT.pick===p.id?"on":""}" onclick="pickFit('${p.id}')">${esc(fitLabel(p))}</button>`).join("")}</div>
+    ${rows}${short}
+  </div>`;
+}
 function renderAll(){
   const core=PRODUCTS.filter(p=>p.kits[TYPE] && p.kits[TYPE].tier==="core");
   const opt =PRODUCTS.filter(p=>p.kits[TYPE] && p.kits[TYPE].tier==="opt");
@@ -590,13 +676,13 @@ function renderAll(){
   };
   document.getElementById("coreItems").innerHTML = core.length?grouped(core):`<div style="padding:16px;color:var(--cw-grey)">No base items mapped for this type yet.</div>`;
   document.getElementById("optItems").innerHTML  = opt.length?grouped(opt):`<div style="padding:16px;color:var(--cw-grey)">Nothing extra suggested for this type.</div>`;
-  renderBrowse(); renderBar();
+  renderShirts(); renderBrowse(); renderBar();
 }
 function renderBrowse(){
   const q=(document.getElementById("q").value||"").toLowerCase().trim();
   const c=document.getElementById("cat").value;
   const inKitIds=new Set(PRODUCTS.filter(p=>p.kits[TYPE]).map(p=>p.id));
-  let list=PRODUCTS.filter(p=>!inKitIds.has(p.id));
+  let list=PRODUCTS.filter(p=>!inKitIds.has(p.id) && !Object.values(p.kits).some(k=>k.tier==="shirt"));
   if(c) list=list.filter(p=>p.categories.includes(c));
   if(q) list=list.filter(p=>(p.name+" "+p.sku+" "+p.categories.join(" ")+" "+(p.description||"")).toLowerCase().includes(q));
   if(!q && !c) list=list.filter(p=>inKit(p)).concat(list.filter(p=>!inKit(p)).slice(0,12));
@@ -614,7 +700,14 @@ function setQty(id,v){ SEL[id]=Math.max(0,parseInt(v)||0); TOUCHED[id]=1; render
 
 /* ---------- totals ---------- */
 function lines(){
-  return PRODUCTS.filter(inKit).map(p=>({p,qty:SEL[p.id],unit:p.unit,line:+(SEL[p.id]*p.unit).toFixed(2)}));
+  const out=PRODUCTS.filter(inKit).map(p=>({p,qty:SEL[p.id],unit:p.unit,line:+(SEL[p.id]*p.unit).toFixed(2),size:"",spec:""}));
+  if(isApt()) shirtProducts().forEach(p=>{
+    const r=SHIRT.rows[p.id]||{}; if(!(r.qty>0)) return;
+    const unit=shirtUnit(p,r.size);
+    const spec=[r.size?"Size "+r.size:"Size not picked",p.colors||"Black",p.logo?p.logo+" logo":""].filter(Boolean).join(" / ");
+    out.push({p,qty:r.qty,unit,line:+(r.qty*unit).toFixed(2),size:r.size||"",spec});
+  });
+  return out;
 }
 function subtotal(){ return lines().reduce((s,l)=>s+l.line,0); }
 function tierFor(sub){
@@ -653,7 +746,7 @@ function renderBar(){
 }
 
 /* ---------- persistence ---------- */
-function save(){ try{ localStorage.setItem("cw_kit",JSON.stringify({t:TYPE,b:BAND,s:SEL,x:TOUCHED})); }catch(e){} }
+function save(){ try{ localStorage.setItem("cw_kit",JSON.stringify({t:TYPE,b:BAND,s:SEL,x:TOUCHED,w:SHIRT})); }catch(e){} }
 function restore(){
   // A link from the New Building Inventory Planner wins over saved state so the
   // vendor lands on exactly the kit and size they just configured over there.
@@ -663,13 +756,14 @@ function restore(){
   if(mapped && TYPES.some(t=>t.k===mapped)){
     TYPE=mapped;
     if(qb && BANDS.some(b=>b.k===qb)) BAND=qb;
-    SEL={}; TOUCHED={}; showType(TYPE); applyKit(); renderTypes(); renderAll(); save();
+    SEL={}; TOUCHED={}; SHIRT={pick:"", rows:{}}; showType(TYPE); applyKit(); renderTypes(); renderAll(); save();
     return;
   }
   try{
     const d=JSON.parse(localStorage.getItem("cw_kit")||"null");
     if(d && d.t && TYPES.some(t=>t.k===d.t)){
       TYPE=d.t; BAND=d.b||"m"; SEL=d.s||{}; TOUCHED=d.x||{};
+      SHIRT=(d.w&&d.w.rows)?d.w:{pick:"",rows:{}};
       showType(TYPE); renderTypes(); renderAll(); return;
     }
   }catch(e){}
@@ -687,7 +781,8 @@ function openReview(){
     <div style="font-weight:700;margin-bottom:2px">${esc(t?t.n:"")} kit</div>
     <div style="font-size:11px;color:var(--cw-grey);margin-bottom:12px">${apt?"Apartment community start up order":"New building start up order"}</div>
     ${short.length?`<div class="notice" style="border-color:var(--cw-red);background:#FDF3F3"><b>${esc(APT_WARN)}</b><br>Below the kit quantity: ${short.map(p=>esc(p.name)+" ("+(SEL[p.id]||0)+" of "+p.kits[TYPE].qty+")").join("; ")}.</div>`:""}
-    ${lines().map(l=>`<div class="ln"><span>${l.qty} &times; ${esc(l.p.name)}</span><span>${fmt(l.line)}</span></div>`).join("")}
+    ${apt&&shirtProducts().length&&shirtCount()<kitDays()?`<div class="notice" style="border-color:var(--cw-red);background:#FDF3F3"><b>Uniform polos</b><br>We recommend ${kitDays()} shirts for this kit. You have ${shirtCount()}.</div>`:""}
+    ${lines().map(l=>`<div class="ln"><span>${l.qty} &times; ${esc(l.p.name)}${l.size?" ("+esc(l.size)+")":""}</span><span>${fmt(l.line)}</span></div>`).join("")}
     <div class="ln" style="border-top:1.5px solid var(--cw-border);margin-top:8px;padding-top:8px"><span>Subtotal</span><span>${fmt(sub)}</span></div>
     ${pct?`<div class="ln disc"><span>${apt?"Apartment community kit discount":"New building kit discount"} (${label})</span><span>-${fmt(disc)}</span></div>`:""}
     <div class="ln tot"><span>Total</span><span>${fmt(grand)}</span></div>
@@ -732,7 +827,7 @@ function orderText(info,sub,pct,disc,grand){
     info.region?`Region: ${info.region}`:null,
     info.notes?`Notes: ${info.notes}`:null,
     ``, `ITEMS:`,
-    ...lines().map(l=>`${l.qty} x ${l.p.name} (SKU ${l.p.sku}) @ ${fmt(l.unit)} = ${fmt(l.line)} [${l.p.fulfillment}]`),
+    ...lines().map(l=>`${l.qty} x ${l.p.name}${l.spec?" ["+l.spec+"]":""} (SKU ${l.p.sku}${l.p.supplier_sku?(l.p.source==="Bennett"?" / Bennett ":" / Staples ")+l.p.supplier_sku:""}) @ ${fmt(l.unit)} = ${fmt(l.line)} [${l.p.fulfillment}]`),
     ``,
     `Subtotal: ${fmt(sub)}`,
     pct?`${apt?"Apartment Community Kit Discount":"New Building Kit Discount"} (${label}): -${fmt(disc)}`:`Kit Discount: none`,
@@ -743,7 +838,13 @@ function orderText(info,sub,pct,disc,grand){
 function payloadItems(pct,disc){
   // Same item shape the Vendor Shop sends, so ShopOrders.gs writes the Orders row,
   // the Ops Hub Alerts card picks it up, and the service inbox gets the same email.
-  return lines().map(l=>({id:l.p.id,sku:l.p.sku,supplier_sku:l.p.supplier_sku||"",name:l.p.name,size:"",spec:"",qty:l.qty,unit:l.unit,line:l.line,fulfillment:l.p.fulfillment||""}));
+  // The backend labels supplier_sku as a Bennett number, so only Bennett items send it.
+  // Staples item numbers ride in the spec instead.
+  return lines().map(l=>{
+    const ben=l.p.source==="Bennett";
+    const spec=[l.spec, (!ben&&l.p.supplier_sku)?"Staples "+l.p.supplier_sku:""].filter(Boolean).join(" / ");
+    return {id:l.p.id,sku:l.p.sku,supplier_sku:ben?(l.p.supplier_sku||""):"",name:l.p.name,size:l.size||"",color:ben?(l.p.colors||""):"",logo:l.p.logo||"",spec,qty:l.qty,unit:l.unit,line:l.line,fulfillment:l.p.fulfillment||""};
+  });
 }
 async function submitKit(){
   const {sub,pct,disc,grand,label}=money();
@@ -756,6 +857,7 @@ async function submitKit(){
   if(!info.building||!info.name||!info.company||!info.email){ err.textContent="Please fill in all required fields."; return; }
   if(!info.region){ err.textContent="Please select your region."; return; }
   if(!document.getElementById("f-ack").checked){ err.textContent="Please check the authorization box to submit."; return; }
+  if(isApt() && shirtNeedsSize().length){ err.textContent="Pick a size for the uniform polos before you submit."; return; }
   err.textContent="";
   try{ localStorage.setItem("cw_vendor",JSON.stringify({name:info.name,company:info.company,email:info.email,phone:info.phone,region:info.region})); }catch(e){}
   const btn=document.getElementById("submitBtn");
@@ -816,7 +918,7 @@ function done(mail){
       <button class="cta" style="margin-top:18px" onclick="resetKit()">Build Another Kit</button>
     </div>`;
   document.querySelector(".drawer-ft").style.display="none";
-  SEL={}; save(); renderAll();
+  SEL={}; SHIRT={pick:"", rows:{}}; save(); renderAll();
 }
 function resetKit(){
   try{ localStorage.removeItem("cw_kit"); }catch(e){}
