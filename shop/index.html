@@ -896,7 +896,7 @@ function rmItem(id,size,color){cart=cart.filter(x=>!(x.id===id&&x.size===size&&(
 // ---------- Submit ----------
 function orderText(info, award){
   const lines=cartLines().map(l=>
-    `${l.qty} x ${l.p.name}${l.orderSpec?" ["+l.orderSpec+"]":""} (SKU ${l.p.sku}${l.p.supplier_sku?" / Bennett "+l.p.supplier_sku:""}) @ ${fmt(l.unit)} = ${fmt(l.line)} [${l.p.fulfillment}]`);
+    `${l.qty} x ${l.p.name}${l.orderSpec?" ["+l.orderSpec+"]":""} (SKU ${l.p.sku}${l.p.supplier_sku?(l.p.source==="Bennett"?" / Bennett ":" / Staples ")+l.p.supplier_sku:""}) @ ${fmt(l.unit)} = ${fmt(l.line)} [${l.p.fulfillment}]`);
   return [
     `VENDOR ORDER - ${new Date().toLocaleString()}`,
     `Name: ${info.name}`, `Company: ${info.company}`, `Email: ${info.email}`,
@@ -920,7 +920,7 @@ function placeOrder(info, award){
   const payload={
     kind:"shop_order",
     vendor:info,
-    items:cartLines().map(l=>({id:l.id,sku:l.p.sku,supplier_sku:l.p.supplier_sku||"",name:l.p.name,size:l.size,color:l.color||"",logo:l.p.logo||"",spec:l.orderSpec,qty:l.qty,unit:l.unit,line:+l.line.toFixed(2),fulfillment:l.p.fulfillment||""})),
+    items:cartLines().map(l=>({id:l.id,sku:l.p.sku,supplier_sku:l.p.source==="Bennett"?(l.p.supplier_sku||""):"",name:l.p.name,size:l.size,color:l.color||"",logo:l.p.logo||"",spec:[l.orderSpec,(l.p.source!=="Bennett"&&l.p.supplier_sku)?"Staples "+l.p.supplier_sku:""].filter(Boolean).join(" / "),qty:l.qty,unit:l.unit,line:+l.line.toFixed(2),fulfillment:l.p.fulfillment||""})),
     subtotal:+cartTotal().toFixed(2),
     coupon:award?award.code:"", coupon_label:award?award.label:"", discount:award?award.discount:0,
     total:total,
