@@ -208,7 +208,7 @@ details.edu[open] summary{margin-bottom:8px;}
     <div class="items" id="optItems"></div>
 
     <div class="section-title" id="browseStepTitle">5. Add anything else</div>
-    <div class="section-sub">The full catalog. Search it and add to your kit.</div>
+    <div class="section-sub" id="browseSub">The full catalog. Search it and add to your kit.</div>
     <div class="searchrow">
       <input id="q" type="search" placeholder="Search the full catalog by name, SKU, or keyword...">
       <select id="cat"><option value="">All categories</option></select>
@@ -487,8 +487,7 @@ async function load(){
   })).filter(p=>p.active && p.id);
   PRODUCTS.forEach(p=>p.unit=displayPrice(p));
   CATS=[...new Set(PRODUCTS.flatMap(p=>p.categories))].sort();
-  const sel=document.getElementById("cat");
-  CATS.forEach(c=>{ const o=document.createElement("option"); o.value=c; o.textContent=c; sel.appendChild(o); });
+  buildCats();
   renderTypes();
   restore();
 }
@@ -527,6 +526,10 @@ function showType(k){
   const t=TYPES.find(x=>x.k===k); if(!t) return;
   document.getElementById("kitArea").style.display="";
   document.getElementById("kitSub").textContent=t.sub;
+  document.getElementById("browseSub").textContent=t.apt
+    ? "Staples items only. Apartment community kits ship from Staples Business Advantage as one order, so only Staples items can be added."
+    : "The full catalog. Search it and add to your kit.";
+  buildCats();
   const apt=!!t.apt;
   document.getElementById("bandStep").style.display=apt?"none":"";
   document.getElementById("kitStepTitle").textContent=apt?"2. Your apartment community kit":"3. Your suggested kit";
@@ -548,7 +551,20 @@ function pickType(k){
 function pickBand(b){
   BAND=b; applyKit(); renderTypes(); renderAll(); save();
 }
-function inKit(p){ return SEL[p.id]>0; }
+function inKit(p){ return SEL[p.id]>0 && kitAllowed(p); }
+/* Apartment community kits ship as one Staples Business Advantage order. Only Staples
+   items can go in them. The one exception is the kit polos (Bennett), which have their
+   own section. New building kits are not restricted. */
+const APT_SOURCE="Staples";
+function isKitShirt(p){ return Object.values(p.kits).some(k=>k.tier==="shirt"); }
+function kitAllowed(p){ return !isApt() || p.source===APT_SOURCE || (isKitShirt(p) && p.kits[TYPE]); }
+function buildCats(){
+  const sel=document.getElementById("cat"); if(!sel) return;
+  const keep=sel.value;
+  const cats=[...new Set(PRODUCTS.filter(p=>kitAllowed(p) && !isKitShirt(p)).flatMap(p=>p.categories))].sort();
+  sel.innerHTML='<option value="">All categories</option>'+cats.map(c=>`<option value="${esc(c)}">${esc(c)}</option>`).join("");
+  sel.value=cats.includes(keep)?keep:"";
+}
 
 function rowHTML(p, note){
   const on=inKit(p);
@@ -671,8 +687,8 @@ function renderShirts(){
   </div>`;
 }
 function renderAll(){
-  const core=PRODUCTS.filter(p=>p.kits[TYPE] && p.kits[TYPE].tier==="core");
-  const opt =PRODUCTS.filter(p=>p.kits[TYPE] && p.kits[TYPE].tier==="opt");
+  const core=PRODUCTS.filter(p=>p.kits[TYPE] && p.kits[TYPE].tier==="core" && kitAllowed(p));
+  const opt =PRODUCTS.filter(p=>p.kits[TYPE] && p.kits[TYPE].tier==="opt" && kitAllowed(p));
   const order=GROUPS.map(g=>g[0]).concat(["Other Supplies"]);
   const grouped = list => {
     const by={};
@@ -688,7 +704,7 @@ function renderBrowse(){
   const q=(document.getElementById("q").value||"").toLowerCase().trim();
   const c=document.getElementById("cat").value;
   const inKitIds=new Set(PRODUCTS.filter(p=>p.kits[TYPE]).map(p=>p.id));
-  let list=PRODUCTS.filter(p=>!inKitIds.has(p.id) && !Object.values(p.kits).some(k=>k.tier==="shirt"));
+  let list=PRODUCTS.filter(p=>!inKitIds.has(p.id) && !isKitShirt(p) && kitAllowed(p));
   if(c) list=list.filter(p=>p.categories.includes(c));
   if(q) list=list.filter(p=>(p.name+" "+p.sku+" "+p.categories.join(" ")+" "+(p.description||"")).toLowerCase().includes(q));
   if(!q && !c) list=list.filter(p=>inKit(p)).concat(list.filter(p=>!inKit(p)).slice(0,12));
@@ -697,12 +713,13 @@ function renderBrowse(){
 }
 function toggle(id,on){
   const p=PRODUCTS.find(x=>x.id===id);
+  if(!p || !kitAllowed(p)) return;
   const base=(p.kits[TYPE]&&p.kits[TYPE].qty)||1;
   SEL[id]= on ? (SEL[id]>0?SEL[id]:scaledQty(p,base)) : 0;
   TOUCHED[id]=1; renderAll(); save();
 }
-function bump(id,d){ SEL[id]=Math.max(0,(SEL[id]||0)+d); TOUCHED[id]=1; renderAll(); save(); }
-function setQty(id,v){ SEL[id]=Math.max(0,parseInt(v)||0); TOUCHED[id]=1; renderAll(); save(); }
+function bump(id,d){ if(!kitAllowed(PRODUCTS.find(x=>x.id===id)||{kits:{}})) return; SEL[id]=Math.max(0,(SEL[id]||0)+d); TOUCHED[id]=1; renderAll(); save(); }
+function setQty(id,v){ if(!kitAllowed(PRODUCTS.find(x=>x.id===id)||{kits:{}})) return; SEL[id]=Math.max(0,parseInt(v)||0); TOUCHED[id]=1; renderAll(); save(); }
 
 /* ---------- totals ---------- */
 function lines(){
