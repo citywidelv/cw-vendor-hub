@@ -111,6 +111,7 @@ label.f small{font-weight:400;color:var(--cw-grey)}
 .f textarea{min-height:92px;resize:vertical}
 .f input:focus,.f textarea:focus,.f select:focus{outline:none;border-color:var(--cw-red);box-shadow:0 0 0 3px rgba(210,39,48,.12)}
 .req::after{content:" *";color:var(--cw-red)}
+.same{margin-top:7px;font:inherit;font-size:12.5px;font-weight:700;color:var(--cw-red);background:none;border:0;padding:4px 0;cursor:pointer;text-decoration:underline}
 /* region cards */
 .regions{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 @media(max-width:640px){.regions{grid-template-columns:1fr}}
@@ -203,6 +204,7 @@ label.f small{font-weight:400;color:var(--cw-grey)}
 <label class="f">Legal name <small>if different, as it appears on your W-9</small><input type="text" name="legal_name"></label>
 <label class="f"><span class="req">Your name</span><input type="text" name="contact_name" required autocomplete="name"></label>
 <label class="f"><span class="req">Email</span><input type="email" name="email" required autocomplete="email" inputmode="email"></label>
+<div class="full"><label class="f"><span class="req">Email for monthly payments</span> <small>Where your monthly payment ledger and remittance go. Your main email is fine, or use an accounting email if you have one.</small><input type="email" name="ledger_email" required autocomplete="off" inputmode="email"></label><button type="button" class="same" id="sameEmail">Same as my email above</button></div>
 <label class="f"><span class="req">Mobile phone</span><input type="tel" name="phone" required autocomplete="tel" inputmode="tel"></label>
 <label class="f">Business phone <small>if different</small><input type="tel" name="business_phone" inputmode="tel"></label>
 <label class="f full"><span class="req">Business address</span><input type="text" name="business_address" required autocomplete="street-address" placeholder="Street, city, state, zip"></label>
@@ -526,6 +528,9 @@ restore();
 /* ?region=lv|nnv from an invite link */
 try{ var q=new URLSearchParams(location.search).get('region'); if(q&&!state.region){ var m={lv:'Las Vegas',nnv:'Northern Nevada'}[q.toLowerCase()]; if(m) $('.rg[data-region="'+m+'"]').click(); } }catch(e){}
 
+/* ---- payment email shortcut ---- */
+$('#sameEmail').addEventListener('click',function(){ var m=form.email.value.trim(); var t=form.ledger_email; t.value=m; save(); if(!m){ form.email.focus(); } });
+
 /* ---- submit ---- */
 function fail(msg,el){ var e=$('#err'); e.textContent=msg; e.className='err show'; if(el){ el.scrollIntoView({behavior:'smooth',block:'center'}); if(el.focus) try{el.focus()}catch(x){} } }
 form.addEventListener('submit',function(ev){
@@ -535,6 +540,7 @@ form.addEventListener('submit',function(ev){
   if(!f.dba_name.trim()) return fail('Business name is required.', $('[name=dba_name]'));
   if(!f.contact_name.trim()) return fail('Your name is required.', $('[name=contact_name]'));
   if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(f.email.trim())) return fail('Enter a valid email address.', $('[name=email]'));
+  if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(f.ledger_email.trim())) return fail('Enter the email for your monthly payments. Your main email is fine.', $('[name=ledger_email]'));
   if(!f.phone.trim()) return fail('Mobile phone is required.', $('[name=phone]'));
   if(!f.business_address.trim()) return fail('Business address is required.', $('[name=business_address]'));
   if(!p.labels.length) return fail('Pick at least one service your crew provides (Step 3).', $('#cServices'));
