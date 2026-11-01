@@ -462,6 +462,11 @@ async function load(){
   }).filter(p=>p.active);
   cart = JSON.parse(localStorage.getItem("cw_cart")||"[]")
           .filter(c=>PRODUCTS.some(p=>p.id===c.id));
+  // Deep link: shop/?cat=Uniforms opens the shop on that category (linked from the Exhibit A).
+  try{
+    const qc=new URLSearchParams(location.search).get("cat");
+    if(qc && catList().includes(qc)){ activeCat=qc; activeGroup=groupFor(qc); }
+  }catch(e){}
   buildChips(); render(); updateCartCount();
 }
 
