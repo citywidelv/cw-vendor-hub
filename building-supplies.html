@@ -323,7 +323,8 @@ with City Wide in case we have a question.</div>
 <div class="f"><label>Phone</label><input id="phone" type="tel" placeholder="(702) 555-1234"></div>
 <div class="f"><label>Building / Location Name <span class="req">*</span></label><input id="building" placeholder="The building that needs supplies"></div>
 <div class="f"><label>Region <span class="req">*</span></label>
-<select id="region"><option>Las Vegas</option><option>Northern Nevada</option></select></div>
+<select id="region"><option>Las Vegas</option><option>Northern Nevada</option></select>
+<div id="regionLocked" style="display:none;font-size:12px;color:#636466;margin-top:4px">Set from your night report. The building's own market decides where this goes.</div></div>
 </div>
 </div>
 
@@ -488,6 +489,22 @@ function submitOrder(){
 }
 
 renderChips(); renderItems();
+
+/* Nov 3 2026: the night inspection opens this page with who, market and building filled in
+   (?lock=1&region=&name=&email=&building=). Region is then shown but not changeable, because a
+   wrong Region pick sent three Las Vegas reports to Northern Nevada. The server also matches
+   the building to an account and uses the account's market, so the dropdown is a fallback only. */
+(function(){
+  var p; try { p = new URLSearchParams(location.search); } catch(e){ return; }
+  var set = function(id, v){ if (v) { var el = document.getElementById(id); if (el && !el.value) el.value = v; } };
+  set('requester', p.get('name')); set('email', p.get('email')); set('building', p.get('building'));
+  var rg = p.get('region'), sel = document.getElementById('region');
+  if (rg && sel) { for (var i = 0; i < sel.options.length; i++) if (sel.options[i].value === rg) sel.selectedIndex = i; }
+  if (p.get('lock') === '1' && rg) {
+    sel.disabled = true; sel.style.background = '#f4f4f4';
+    document.getElementById('regionLocked').style.display = 'block';
+  }
+})();
 </script>
 <footer class="site-foot"><div class="wrap"><div class="cols"><div><b style="color:#fff">City Wide Facility Solutions</b> &middot; Las Vegas &amp; Northern Nevada<br>Vendor Resource Hub</div><div><a href="shop/">Order Supplies</a> &nbsp;&nbsp; <a href="index.html">Resource Center</a> &nbsp;&nbsp; <a href="https://www.gocitywide.com" target="_blank" rel="noopener">GoCityWide.com</a></div></div><div class="fine">For crew and vendor reference. Quantities and methods are guidance; your account scope of work always comes first. Questions? Contact your City Wide Facility Solutions representative.</div></div></footer>
 <script>
