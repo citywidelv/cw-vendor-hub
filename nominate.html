@@ -342,6 +342,7 @@ a:hover{color:var(--cw-red-dark)}
     $('reason').placeholder=t==='goat'?'What did they do for you or your crew? A sentence or two is plenty.':'What did they do? A sentence or two is plenty.';
   }
   $('pick').addEventListener('click',function(e){var b=e.target.closest('button');if(b)setType(b.getAttribute('data-t'));});
+  var qr=/[?&]region=(lv|nnv)\b/.exec(location.search); if(qr)$('region').value=qr[1]==='nnv'?'Northern Nevada':'Las Vegas';
   if(/[?&]type=goat/.test(location.search))setType('goat');
   var STAFF=[];
   function loadStaff(){
