@@ -392,7 +392,8 @@ a:hover{color:var(--cw-red-dark)}
     years.sort(function(a,b){return b-a;});
     if(!years.length)years=[thisYear];
     if(V.year===null||years.indexOf(V.year)<0)V.year=years[0];
-    var sw='<button type="button" data-t="vendor"'+(V.type==="vendor"?' class="on"':'')+'>Vendor of the Month</button><button type="button" data-t="goat"'+(V.type==="goat"?' class="on"':'')+'>G.O.A.T. of the Month</button>';
+    /* G.O.A.T. results moved to the Team Portal (Nov 20 2026). This wall shows Vendor of the Month only; G.O.A.T. nominations still come in through nominate.html?type=goat. */
+    var sw='<button type="button" data-t="vendor" class="on">Vendor of the Month</button>';
     if(years.length>1){sw+='<span class="sep"></span>'+years.map(function(y){return '<button type="button" data-y="'+y+'"'+(y===V.year?' class="on"':'')+'>'+y+'</button>';}).join("");}
     $("recSwitch").innerHTML=sw;
     $("recMkts").innerHTML=REGIONS.map(function(r){return column(r[0],r[1],thisYear,thisMonth);}).join("");
@@ -406,7 +407,7 @@ a:hover{color:var(--cw-red-dark)}
   var jump=/^#recognition-(lv|nnv)$/.test(location.hash)&&$(location.hash.slice(1)); if(jump)jump.scrollIntoView();
   try{
     fetch('https://script.google.com/macros/s/AKfycbzfNnrpidCbWB1DeUNgXvRhDFMQgApfpn-3C9GU45wMEHcJpWFl8ZQVo6PUBSRfEVfRdg/exec',{method:'POST',headers:{'Content-Type':'text/plain'},body:JSON.stringify({kind:'rec_wall'})}).then(function(r){return r.json();}).then(function(r){
-      if(r&&r.ok&&r.items&&r.items.length){ITEMS=r.items;V.year=null;render();}
+      if(r&&r.ok&&r.items&&r.items.length){ITEMS=r.items.filter(function(w){return w.type!=="goat";});V.year=null;render();}
     }).catch(function(){});
   }catch(e){}
 })();
