@@ -1,497 +1,773 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Kit Builder | City Wide Vendor Hub</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Starter Kits | City Wide Vendor Hub</title>
+<!-- build 2026-11-22: starter kit rebuild. Four questions size the kit (building, size, days, chemical program).
+     One mop system, color coded cloths and mops, a clean set per cleaning day. Catalog comes from the Shop Public
+     feed in shop/config.js. Photos use the local copies in shop/img/map.js. Orders post the same shop_order shape. -->
 <script src="shop/config.js?v=20261121b"></script>
+<script src="shop/img/map.js?v=20261122"></script>
 <style>
+/* Layout idea: one working column. Three questions at the top size the kit, then the kit reads
+   in the order a cleaner works. Totals stay in a bar at the bottom, as on the live page. */
 :root{
-  --cw-red:#D22730; --cw-black:#2D2A26; --cw-grey:#636466; --cw-white:#FFFFFF;
-  --cw-light-grey:#F5F5F5; --cw-border:#E5E5E5; --cw-placeholder:#E5E5E5;
-  --cw-green:#2D2A26;
+  color-scheme:light;
+  --red:#D22730; --black:#2D2A26; --grey:#636466; --white:#FFFFFF;
+  --light:#F5F5F5; --line:#E5E5E5; --edge:#BDBBB8;
+  --sw-red:#D22730; --sw-yellow:#F2C230; --sw-blue:#2F6FB7; --sw-green:#2E8B57;
+  --font:Verdana,'DejaVu Sans','Liberation Sans',Geneva,Tahoma,sans-serif;
+  --t12:12px; --t13:13px; --t15:15px; --t17:17px; --t21:21px; --t28:28px;
+  --r-ctl:6px; --r-card:11px; --r-pill:18px;
 }
-*{box-sizing:border-box; margin:0; padding:0;}
-body{
-  font-family:Verdana,'Liberation Sans','DejaVu Sans',Geneva,Tahoma,sans-serif;
-  color:var(--cw-black); background:var(--cw-white); font-size:13px; line-height:1.6;
+*{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-text-size-adjust:100%}
+body{font-family:var(--font);font-size:var(--t15);line-height:1.55;color:var(--black);background:var(--white);
+  font-variant-numeric:tabular-nums;accent-color:var(--black);caret-color:var(--red)}
+::selection{background:var(--black);color:var(--white)}
+button,input,select{font-family:inherit;color:inherit}
+button{cursor:pointer}
+a{color:var(--black);text-underline-offset:3px}
+:focus-visible{outline:3px solid var(--black);outline-offset:2px;border-radius:var(--r-ctl)}
+h1,h2,h3{text-wrap:balance;line-height:1.25}
+.vh{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+svg.i{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;flex:none}
+
+.wrap{max-width:1080px;margin:0 auto;padding:0 16px}
+.top{border-bottom:1px solid var(--line);background:var(--white)}
+.top .wrap{display:flex;gap:16px;align-items:center;flex-wrap:wrap;padding-top:12px;padding-bottom:12px}
+.top b{font-size:var(--t15)}
+.top span{font-size:var(--t12);color:var(--grey)}
+.status{margin-left:auto;font-size:var(--t12);border:1px solid var(--edge);border-radius:var(--r-pill);padding:4px 12px;background:var(--light)}
+nav.tabs{border-bottom:1px solid var(--line);background:var(--white);position:sticky;top:0;z-index:30}
+nav.tabs .wrap{display:flex;gap:4px;overflow-x:auto}
+nav.tabs a{display:flex;align-items:center;min-height:44px;padding:0 12px;font-size:var(--t13);font-weight:700;text-decoration:none;
+  color:var(--grey);border-bottom:3px solid transparent;white-space:nowrap}
+nav.tabs a[aria-current="page"]{color:var(--black);border-bottom-color:var(--red)}
+@media(hover:hover){nav.tabs a:hover{color:var(--black)}}
+
+main{padding:28px 0 148px}
+.view{display:none}
+.view.on{display:block}
+h1{font-size:var(--t28);margin-bottom:8px}
+.lead{font-size:var(--t17);color:var(--grey);max-width:68ch}
+h2{font-size:var(--t21);margin:40px 0 8px}
+h3{font-size:var(--t17);margin:24px 0 8px}
+p.body,ul.body{max-width:70ch;margin-bottom:12px}
+ul.body{padding-left:20px}
+ul.body li{margin-bottom:8px}
+.muted{color:var(--grey)}
+.small{font-size:var(--t13)}
+
+/* setup */
+.setup{border:1px solid var(--edge);border-radius:var(--r-card);padding:20px;margin-top:24px;display:grid;gap:20px}
+fieldset{border:0;min-width:0}
+legend{font-size:var(--t15);font-weight:700;margin-bottom:8px}
+.pick{display:grid;gap:8px}
+.pick.types{grid-template-columns:repeat(auto-fit,minmax(210px,1fr))}
+.pick.sizes{grid-template-columns:repeat(auto-fit,minmax(170px,1fr))}
+.pick.days{grid-template-columns:repeat(7,minmax(44px,64px))}
+.opt{position:relative;display:block}
+.opt input{position:absolute;opacity:0;inset:0;width:100%;height:100%;cursor:pointer;margin:0}
+.opt .face{display:block;border:1.5px solid var(--edge);border-radius:var(--r-ctl);padding:10px 12px;min-height:44px;background:var(--white);height:100%}
+.opt .face b{display:block;font-size:var(--t13)}
+.opt .face span{display:block;font-size:var(--t12);color:var(--grey);line-height:1.4}
+.opt input:checked + .face{border-color:var(--black);background:var(--light);box-shadow:inset 0 0 0 1px var(--black)}
+.opt input:focus-visible + .face{outline:3px solid var(--black);outline-offset:2px}
+.opt input:disabled + .face{color:var(--edge);border-style:dashed;cursor:not-allowed}
+.opt input:disabled{cursor:not-allowed}
+@media(hover:hover){.opt input:not(:disabled):not(:checked):hover + .face{border-color:var(--grey)}}
+.pick.days .face{text-align:center;font-weight:700;font-size:var(--t15);padding:10px 0}
+.recap{font-size:var(--t15);background:var(--light);border-radius:var(--r-ctl);padding:12px 16px}
+
+/* sections */
+.sec{margin-top:40px}
+.sec > h2{margin-top:0;scroll-margin-top:64px}
+.guide{max-width:70ch;margin-bottom:12px}
+.code{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:8px 24px;margin:12px 0 16px;padding:16px;border:1px solid var(--edge);border-radius:var(--r-card)}
+.code h3{grid-column:1/-1;margin:0 0 4px;font-size:var(--t15)}
+.code div{display:flex;gap:12px;align-items:flex-start;font-size:var(--t13)}
+.sw{width:20px;height:20px;border-radius:50%;border:1px solid var(--black);flex:none;margin-top:2px}
+.sw.red{background:var(--sw-red)} .sw.yellow{background:var(--sw-yellow)} .sw.blue{background:var(--sw-blue)} .sw.green{background:var(--sw-green)}
+.rule{font-size:var(--t13);color:var(--grey);max-width:70ch;margin-bottom:12px}
+
+.choice{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:8px;margin-bottom:12px}
+.choice .face{padding:12px 12px 12px 40px;position:relative}
+.choice .face:before{content:"";box-sizing:border-box;position:absolute;left:12px;top:14px;width:16px;height:16px;border-radius:50%;border:1.5px solid var(--grey);background:var(--white)}
+.choice input:checked + .face:before{border:5px solid var(--black)}
+.choice .face b{font-size:var(--t15)}
+.choice .face .price{font-size:var(--t13);color:var(--black);font-weight:700;margin-top:4px}
+.opt .face .tag,.tag{display:inline-block;width:fit-content;color:var(--black);font-size:var(--t12);font-weight:700;border:1px solid var(--black);border-radius:var(--r-pill);padding:0 8px;margin-top:4px;background:var(--white)}
+
+.rows{border:1px solid var(--edge);border-radius:var(--r-card);overflow:hidden}
+.row{display:grid;grid-template-columns:44px 56px minmax(0,1fr) auto 92px;gap:8px 12px;align-items:center;padding:8px 12px 8px 4px;border-top:1px solid var(--line)}
+.row:first-child{border-top:0}
+.row.off .nm,.row.off .amt{color:var(--grey)}
+.row.off .amt{text-decoration:line-through}
+.chk{width:44px;height:44px;display:grid;place-items:center}
+.pic{width:56px;height:56px;border:1px solid var(--line);border-radius:var(--r-ctl);overflow:hidden;background:var(--white)}
+.pic img{width:100%;height:100%;object-fit:contain;display:block}
+.choice .face.hasimg{padding-right:76px}
+.choice .oimg{position:absolute;right:12px;top:12px;width:52px;height:52px;object-fit:contain;border:1px solid var(--line);border-radius:var(--r-ctl);background:var(--white)}
+.find2{display:grid;grid-template-columns:minmax(0,1fr) minmax(160px,240px);gap:8px;margin-bottom:12px}
+.find2 input,.find2 select{height:44px;border:1.5px solid var(--edge);border-radius:var(--r-ctl);padding:0 12px;font-size:16px;background:var(--white);width:100%}
+.res .row{grid-template-columns:56px minmax(0,1fr) auto;padding-left:12px}
+.res .amt{text-align:left;font-weight:400;font-size:var(--t12);color:var(--grey)}
+.hint{font-size:var(--t13);color:var(--grey);margin-top:8px}
+.intag{font-size:var(--t12);font-weight:700;color:var(--grey);white-space:nowrap}
+.chk input{width:20px;height:20px}
+.nm{font-size:var(--t13);min-width:0}
+.nm b{font-size:var(--t13);display:block}
+.nm .sub{display:block;font-size:var(--t12);color:var(--grey)}
+.nm .math{display:block;font-size:var(--t12);color:var(--black)}
+.nm .flag{display:inline-block;font-size:var(--t12);border:1px solid var(--red);color:var(--black);border-radius:var(--r-ctl);padding:0 8px;margin-top:4px}
+.nm .sw{display:inline-block;width:12px;height:12px;margin:0 6px -1px 0}
+.qty{display:flex;align-items:center;border:1.5px solid var(--edge);border-radius:var(--r-ctl);height:44px;background:var(--white)}
+.qty button{width:40px;height:41px;border:0;background:none;display:grid;place-items:center}
+.qty input{width:44px;height:41px;border:0;text-align:center;font-size:16px;background:none;-moz-appearance:textfield}
+.qty input::-webkit-outer-spin-button,.qty input::-webkit-inner-spin-button{-webkit-appearance:none}
+@media(hover:hover){.qty button:hover{background:var(--light)}}
+.qty button:active{background:var(--line)}
+.amt{text-align:right;font-size:var(--t13);font-weight:700}
+.amt small{display:block;font-weight:400;color:var(--grey);font-size:var(--t12)}
+.reset{font-size:var(--t12);background:none;border:0;text-decoration:underline;text-underline-offset:3px;min-height:24px;padding:0}
+details.more{margin-top:12px}
+details.more summary{list-style:none;display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:0 12px;border:1.5px solid var(--edge);border-radius:var(--r-ctl);font-size:var(--t13);font-weight:700;cursor:pointer}
+details.more summary::-webkit-details-marker{display:none}
+details.more[open] summary{margin-bottom:12px}
+details.more[open] summary svg{transform:rotate(45deg)}
+
+/* bottom bar */
+.bar{position:fixed;left:0;right:0;bottom:0;background:var(--white);border-top:1px solid var(--edge);box-shadow:0 -4px 16px rgba(45,42,38,.08);z-index:40}
+.bar .wrap{display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:12px 24px;align-items:center;padding-top:12px;padding-bottom:12px}
+.disc b{font-size:var(--t13);display:block}
+.track{height:8px;border-radius:4px;background:var(--line);margin:6px 0 4px;position:relative;overflow:hidden;max-width:520px}
+.track i{position:absolute;left:0;top:0;bottom:0;background:var(--black);border-radius:4px;transition:width .25s cubic-bezier(.16,1,.3,1)}
+.ticks{display:flex;justify-content:space-between;font-size:var(--t12);color:var(--grey);max-width:520px}
+.ticks .hit{color:var(--black);font-weight:700}
+.tot{text-align:right}
+.tot .n{font-size:var(--t21);font-weight:700;line-height:1.2}
+.tot span{display:block;font-size:var(--t12);color:var(--grey)}
+.btn{min-height:44px;padding:0 20px;border-radius:var(--r-ctl);border:1.5px solid var(--black);background:var(--white);font-size:var(--t13);font-weight:700}
+.btn.primary{background:var(--red);border-color:var(--red);color:var(--white)}
+@media(hover:hover){.btn.primary:hover{background:#B81F27;border-color:#B81F27}.btn:not(.primary):hover{background:var(--light)}}
+.btn:active{transform:translateY(1px)}
+
+/* review drawer */
+.scrim{position:fixed;inset:0;background:rgba(45,42,38,.5);z-index:50;display:none}
+.drawer{position:fixed;top:0;right:0;bottom:0;width:min(520px,100%);background:var(--white);z-index:51;display:none;flex-direction:column;box-shadow:-8px 0 24px rgba(45,42,38,.16)}
+.open .scrim{display:block}
+.open .drawer{display:flex}
+.drawer header{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-bottom:1px solid var(--line)}
+.drawer header h2{margin:0;font-size:var(--t17)}
+.drawer header button{width:44px;height:44px;border:0;background:none;display:grid;place-items:center}
+.drawer .bd{padding:16px;overflow:auto;flex:1}
+.drawer .ft{padding:12px 16px;border-top:1px solid var(--line);display:grid;gap:8px}
+.rv h3{font-size:var(--t13);margin:16px 0 4px}
+.rv h3:first-child{margin-top:0}
+.rv .ln{display:flex;justify-content:space-between;gap:12px;font-size:var(--t13);padding:4px 0}
+.rv .ln span:last-child{white-space:nowrap;font-weight:700}
+.rv .sum{border-top:1px solid var(--edge);margin-top:16px;padding-top:8px}
+.rv .sum .ln.big{font-size:var(--t17)}
+.note{font-size:var(--t13);background:var(--light);border-radius:var(--r-ctl);padding:12px 16px;margin-top:16px}
+.msg{font-size:var(--t13);min-height:20px}
+
+/* tables on the review tabs */
+.tbl{width:100%;border-collapse:collapse;font-size:var(--t13);margin:12px 0 16px}
+.tbl th,.tbl td{text-align:left;padding:8px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+.tbl th{font-size:var(--t12);background:var(--light);color:var(--black)}
+.tbl td.n,.tbl th.n{text-align:right;white-space:nowrap}
+.scroll{overflow-x:auto}
+.find{display:grid;gap:0;border:1px solid var(--edge);border-radius:var(--r-card);overflow:hidden;margin-top:16px}
+.find article{padding:16px;border-top:1px solid var(--line);display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:8px 24px}
+.find article:first-child{border-top:0}
+.find h3{margin:0;font-size:var(--t15)}
+.find p{font-size:var(--t13);max-width:64ch}
+.find p + p{margin-top:8px}
+.cmp{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px;margin:16px 0}
+.cmp div{border:1px solid var(--edge);border-radius:var(--r-card);padding:16px}
+.cmp h3{margin:0 0 8px;font-size:var(--t15)}
+.cmp p{font-size:var(--t13);margin-bottom:4px}
+.cmp .n{font-size:var(--t21);font-weight:700}
+ol.dec{max-width:74ch;padding-left:24px;margin-top:12px}
+ol.dec li{margin-bottom:16px;font-size:var(--t15)}
+ol.dec li b{display:block}
+ol.dec li span{font-size:var(--t13);color:var(--grey);display:block}
+
+@media(max-width:700px){
+  h1{font-size:var(--t21)}
+  .lead{font-size:var(--t15)}
+  .pick.days{grid-template-columns:repeat(7,1fr);gap:4px}
+  .row{grid-template-columns:44px 56px minmax(0,1fr) auto;padding-right:12px}
+  .row .nm{grid-column:3/5}
+  .row .qty{grid-column:3/4;justify-self:start}
+  .row .amt{grid-column:4/5}
+  .res .row{grid-template-columns:56px minmax(0,1fr) auto}
+  .res .row .nm{grid-column:2/3}
+  .find2{grid-template-columns:1fr}
+  .bar .wrap{grid-template-columns:minmax(0,1fr) auto;gap:8px 12px}
+  .bar .disc{grid-column:1/-1}
+  .ticks{display:none}
+  .find article{grid-template-columns:1fr}
+  main{padding-bottom:188px}
 }
-img{max-width:100%;}
-button{font-family:inherit; cursor:pointer;}
-input,select,textarea{font-family:inherit; font-size:13px;}
+@media(prefers-reduced-motion:reduce){.track i{transition:none}.btn:active{transform:none}}
 
-header{position:sticky; top:0; z-index:50; background:var(--cw-white);
-  border-bottom:1px solid #E5E5E5; box-shadow:0 1px 6px rgba(0,0,0,.08);}
-.hdr-inner{max-width:1200px; margin:0 auto; padding:12px 16px; display:flex; align-items:center; gap:16px; flex-wrap:wrap;}
-.hdr-logo img{height:38px; width:auto; display:block; flex:none;}
-.hdr-title{font-size:17px; font-weight:700; line-height:1.2;}
-.hdr-title small{display:block; font-size:12px; font-weight:400; color:var(--cw-grey);}
-.hdr-sp{margin-left:auto;}
-.hdr-link{font-size:13px;font-weight:700;color:var(--cw-black);text-decoration:none;border:1.5px solid var(--cw-border);
-  border-radius:6px;padding:8px 16px;white-space:nowrap;}
-@media(hover:hover){.hdr-link:hover{color:#2D2A26;border-color:#BDBBB8;}}
-
-main{max-width:1200px; margin:0 auto; padding:0 16px 140px;}
-.hero{padding:28px 0 8px;}
-.hero h1{font-size:28px; line-height:1.25; margin-bottom:8px;}
-.hero p{color:var(--cw-grey); max-width:760px;}
-.accent{height:3px; width:56px; background:#2D2A26; margin:16px 0 24px;display:none}
-
-.section-title{font-size:17px; font-weight:700; margin-top:36px;}
-.section-sub{color:var(--cw-grey); font-size:12px; margin-top:2px; margin-bottom:12px; max-width:820px;}
-
-/* building type picker */
-.types{display:grid; grid-template-columns:repeat(auto-fit,minmax(190px,1fr)); gap:12px;}
-.type{border:2px solid var(--cw-border); border-radius:11px; padding:16px; background:var(--cw-white);
-  text-align:left; transition:.12s;}
-@media(hover:hover){.type:hover{border-color:var(--cw-grey);}}
-.type.on{border-color:#2D2A26; background:#F5F5F5;}
-.type b{display:block; font-size:15px; margin-bottom:4px;}
-.type span{color:var(--cw-grey); font-size:12px; line-height:1.45; display:block;}
-
-/* education */
-.edu{border:1.5px solid var(--cw-border); border:1px solid #BDBBB8; border-radius:6px;
-  padding:16px 16px; margin:16px 0; background:var(--cw-light-grey);}
-.edu h3{font-size:13px; margin-bottom:8px;}
-.edu p{font-size:12px; color:#2D2A26; margin-bottom:8px;}
-.edu p:last-child{margin-bottom:0;}
-.edu ul{margin:0 0 8px 20px; font-size:12px; color:#2D2A26;}
-.edu li{margin-bottom:4px;}
-.edu .src{font-size:12px; color:var(--cw-grey); font-style:italic;}
-details.edu summary{cursor:pointer; font-weight:700; font-size:13px; list-style:none;}
-details.edu summary::-webkit-details-marker{display:none;}
-details.edu summary:before{content:"+ "; color:#2D2A26; font-weight:700;}
-details.edu[open] summary:before{content:"\2212 "; }
-details.edu[open] summary{margin-bottom:8px;}
-
-/* item rows */
-.items{border:1.5px solid var(--cw-border); border-radius:11px; overflow:hidden;}
-.row{display:flex; gap:12px; align-items:center; padding:12px 12px; border-bottom:1px solid var(--cw-border);}
-.row:last-child{border-bottom:none;}
-.row.off{background:#FFFFFF; color:var(--cw-grey);}
-.row .thumb{width:46px; height:46px; flex:none; background:var(--cw-placeholder); border-radius:6px;
-  display:flex; align-items:center; justify-content:center; overflow:hidden;}
-.row .thumb img{max-width:100%; max-height:100%; object-fit:contain;}
-.row .nm{flex:1; min-width:0;}
-.row .nm b{font-size:13px; font-weight:700; display:block; line-height:1.35;}
-.row .nm span{font-size:12px; color:var(--cw-grey);}
-.row .why{font-size:12px; color:#2D2A26; font-weight:700; display:block; margin-top:2px;}
-.row .warn{display:block; margin-top:4px; padding:8px 8px; border:1px solid #BDBBB8; background:#FDF1F1; color:var(--cw-black); font-size:12px; line-height:1.45; font-weight:700;}
-.row .warn small{display:block; font-weight:400; color:var(--cw-grey);}
-.type.apt{border-color:#BDBBB8;}
-.type.apt b:after{content:" Apartment"; font-size:12px; color:#FFFFFF; background:#2D2A26; border-radius:6px; padding:1px 8px; margin-left:8px; vertical-align:middle;}
-.row .pr{width:82px; text-align:right; font-weight:700; font-size:13px; flex:none;}
-.qty{display:flex; align-items:center; gap:4px; flex:none;}
-.qty button{width:26px; height:26px; border:1.5px solid var(--cw-border); background:var(--cw-white);
-  border-radius:6px; font-weight:700; font-size:15px; line-height:1;}
-@media(hover:hover){.qty button:hover{border-color:var(--cw-red); color:var(--cw-red);}}
-.qty input{width:42px; height:26px; text-align:center; border:1.5px solid var(--cw-border); border-radius:6px;}
-.chk{width:18px; height:18px; flex:none; accent-color:var(--cw-red);}
-
-.grp-hd{background:var(--cw-black); color:var(--cw-white); padding:8px 12px; font-size:12px;
-  font-weight:700; letter-spacing:.03em; }
-
-/* browse */
-.searchrow{display:flex; gap:8px; margin-bottom:12px; flex-wrap:wrap;}
-.searchrow input,.searchrow select{padding:8px 12px; border:1.5px solid var(--cw-border); border-radius:6px;}
-.searchrow input{flex:1; min-width:200px;}
-
-/* summary bar */
-.bar{position:fixed; left:0; right:0; bottom:0; background:var(--cw-white); border-top:1px solid #E5E5E5;
-  box-shadow:0 -2px 12px rgba(0,0,0,.12); z-index:60;}
-.bar-inner{max-width:1200px; margin:0 auto; padding:12px 16px; display:flex; gap:16px; align-items:center; flex-wrap:wrap;}
-.tiers{flex:1; min-width:260px;}
-.track{height:8px; background:var(--cw-border); border-radius:99px; position:relative; margin:8px 0 4px;}
-.fill{height:100%; background:#2D2A26; border-radius:99px; width:0; transition:width .25s;}
-.ticks{display:flex; justify-content:space-between; font-size:12px; color:var(--cw-grey);}
-.tick.hit{color:var(--cw-green); font-weight:700;}
-.totals{text-align:right; font-size:12px; white-space:nowrap;}
-.totals .big{font-size:21px; font-weight:700; display:block;}
-.totals .save{color:var(--cw-green); font-weight:700;}
-.totals .strike{text-decoration:line-through; color:var(--cw-grey);}
-.cta{background:var(--cw-red); color:var(--cw-white); border:none; border-radius:6px; padding:12px 24px;
-  font-weight:700; font-size:15px;}
-@media(hover:hover){.cta:hover{background:#B01F27;}}
-.cta:disabled{background:var(--cw-border); color:var(--cw-grey); cursor:not-allowed;}
-
-/* drawer */
-.overlay{position:fixed; inset:0; background:rgba(0,0,0,.45); z-index:70; display:none;}
-.overlay.on{display:block;}
-.drawer{position:fixed; top:0; right:0; bottom:0; width:min(460px,100%); background:var(--cw-white);
-  z-index:80; transform:translateX(100%); transition:.22s; display:flex; flex-direction:column;}
-.drawer.on{transform:translateX(0);}
-.drawer-hd{padding:16px 16px; border-bottom:1px solid #E5E5E5; display:flex; align-items:center; justify-content:space-between;}
-.drawer-hd h2{font-size:17px;}
-.drawer-hd button{border:none; background:none; font-size:21px; line-height:1;}
-.drawer-bd{flex:1; overflow-y:auto; padding:16px;}
-.drawer-ft{padding:16px 16px; border-top:1.5px solid var(--cw-border); background:var(--cw-light-grey);}
-.form-grp{margin-bottom:12px;}
-.form-grp label{display:block; font-size:12px; font-weight:700; margin-bottom:4px;}
-.form-grp input,.form-grp textarea,.form-grp select{width:100%; padding:8px 12px; border:1.5px solid var(--cw-border); border-radius:6px; font-family:inherit; font-size:13px; background:#FFFFFF;}
-.req{color:var(--cw-red);}
-.ln{display:flex; justify-content:space-between; font-size:12px; padding:4px 0; gap:12px;}
-.ln.tot{border-top:1.5px solid var(--cw-border); margin-top:8px; padding-top:8px; font-weight:700; font-size:15px;}
-.ln.disc{color:var(--cw-green); font-weight:700;}
-.ack{display:flex; gap:8px; align-items:flex-start; font-size:12px; margin:12px 0;}
-.err{color:var(--cw-red); font-size:12px; font-weight:700; min-height:16px;}
-.notice{font-size:12px; color:var(--cw-grey); line-height:1.5; margin-top:8px;}
-.badge{display:inline-block; background:#2D2A26; color:#FFFFFF; font-size:12px; font-weight:700;
-  padding:2px 8px; border-radius:6px; vertical-align:middle; margin-left:8px; letter-spacing:.03em;}
-.badge.g{background:var(--cw-green);}
-.badge.k{background:var(--cw-black);}
-.shirts{border:1.5px solid var(--cw-border); border:1px solid #BDBBB8; border-radius:6px; padding:12px 16px; margin:16px 0 4px; background:var(--cw-white);}
-.shirts h3{font-size:15px; margin:0 0 2px;}
-.shirts .rec{font-size:12px; color:var(--cw-black); margin:0 0 4px;}
-.shirts .sub{font-size:12px; color:var(--cw-grey); margin:0 0 12px;}
-.fitpick{display:flex; gap:8px; flex-wrap:wrap; margin-bottom:12px;}
-.fitpick button{min-height:40px; padding:0 16px; border:1.5px solid var(--cw-border); border-radius:6px; background:var(--cw-white); font-weight:700; font-size:13px; color:var(--cw-black); cursor:pointer;}
-.fitpick button.on{border-color:#2D2A26; color:#2D2A26; background:#FDF1F1;}
-.shirts .row{padding:12px 0;}
-.shirts .row .thumb{width:58px; height:58px;}
-.size-sel{min-height:30px; border:1.5px solid var(--cw-border); border-radius:6px; padding:0 8px; font-size:12px; background:var(--cw-white); margin-top:4px;}
-.size-sel.need{border-color:#BDBBB8;}
-@media (max-width:600px){
-  .shirts{padding:12px 12px;}
-  .shirts .row{flex-wrap:wrap; row-gap:8px;}
-  .shirts .row .nm{flex:1 1 calc(100% - 70px);}
-  .shirts .row .qty{margin-left:72px;}
-  .shirts .row .pr{margin-left:auto;}
-  .shirts .size-sel{width:100%; min-height:40px; font-size:17px;}
-}
-.empty{padding:28px; text-align:center; color:var(--cw-grey); border:1.5px dashed var(--cw-border); border-radius:11px;}
-@media(max-width:640px){
-  .row .pr{width:66px;} .hdr-title{font-size:15px;}
-  .totals{text-align:left;} .bar-inner{gap:12px;}
-}
-
-/* 2026-11-22 Vendor Hub overhaul, round two. Nothing under 12px, and every control is at least 44px tall. */
-input:not([type=checkbox]):not([type=radio]):not([type=file]):not([type=hidden]):not([type=range]):not(.hp),select,textarea,button,a.btn,.btn{min-height:44px}
-.site-head nav a,.site-head nav button,.hp{min-height:0}
-:focus-visible{outline:3px solid #2D2A26;outline-offset:2px}
-small{font-size:max(12px,.83em)}
-.hubnav-toggle{min-height:44px;align-items:center;gap:8px;padding:0 16px;border:1px solid #BDBBB8;border-radius:6px;background:#FFFFFF;color:#2D2A26;font-family:inherit;font-size:13px;font-weight:700;cursor:pointer;flex:none}
-@media(max-width:700px){.head img,.hdr-logo img{height:28px}.head .t,.head .back,.hdr-title{display:none}.head .bar{gap:8px}.head .bar .hubnav-toggle,.hdr-inner .hubnav-toggle{margin-left:auto}}
-
-/* ---------- 2026-11-22 Impeccable pass. Same rules as the Ops Hub, Admin Hub and Vendor Hub home: six type sizes,
-   no small caps labels, no stripe down one side, flat fills, palette colours only, drawn icons, hover rules for mice only,
-   and no photo banner on a work page. ---------- */
-:root{--ic-right:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M9 6l6 6-6 6'/%3E%3C/svg%3E");--ic-left:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M15 6l-6 6 6 6'/%3E%3C/svg%3E");--ic-down:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");--ic-check:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12.5l4.5 4.5L19 7.5'/%3E%3C/svg%3E");--ic-x:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 6l12 12M18 6L6 18'/%3E%3C/svg%3E");--ic-camera:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 8h3l2-3h6l2 3h3a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1z'/%3E%3Ccircle cx='12' cy='13' r='3.5'/%3E%3C/svg%3E");--ic-clip:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2'/%3E%3Crect x='8' y='2' width='8' height='4' rx='1'/%3E%3Cpath d='M9 12h6M9 16h4'/%3E%3C/svg%3E");--ic-user:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='8' r='4'/%3E%3Cpath d='M4 21v-1a6 6 0 0 1 6-6h4a6 6 0 0 1 6 6v1'/%3E%3C/svg%3E");--ic-home:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3 11l9-8 9 8M5 10v10h14V10M10 20v-6h4v6'/%3E%3C/svg%3E");--ic-tag:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3 12V4h8l10 10-8 8z'/%3E%3Ccircle cx='7.5' cy='7.5' r='1.2'/%3E%3C/svg%3E");--ic-bank:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3 10l9-6 9 6M5 10v8M9 10v8M15 10v8M19 10v8M3 21h18'/%3E%3C/svg%3E");--ic-card:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='2' y='5' width='20' height='14' rx='2'/%3E%3Cpath d='M2 10h20M6 15h4'/%3E%3C/svg%3E");--ic-mail:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='2' y='4' width='20' height='16' rx='2'/%3E%3Cpath d='M2 7l10 7 10-7'/%3E%3C/svg%3E");--ic-pencil:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 20h4L19 9l-4-4L4 16zM13.5 6.5l4 4'/%3E%3C/svg%3E");--ic-phone:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z'/%3E%3C/svg%3E");--ic-plus:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 5v14M5 12h14'/%3E%3C/svg%3E");--ic-minus:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12h14'/%3E%3C/svg%3E");--ic-star:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath fill='%23000' d='M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z'/%3E%3C/svg%3E")}
-::selection{background:#2D2A26;color:#fff}
-[class^="ic-"]{display:inline-block;width:1em;height:1em;vertical-align:-.125em;background:currentColor;flex:none}
-.ic-right{-webkit-mask:var(--ic-right) center/contain no-repeat;mask:var(--ic-right) center/contain no-repeat}
-.ic-left{-webkit-mask:var(--ic-left) center/contain no-repeat;mask:var(--ic-left) center/contain no-repeat}
-.ic-down{-webkit-mask:var(--ic-down) center/contain no-repeat;mask:var(--ic-down) center/contain no-repeat}
-.ic-check{-webkit-mask:var(--ic-check) center/contain no-repeat;mask:var(--ic-check) center/contain no-repeat}
-.ic-x{-webkit-mask:var(--ic-x) center/contain no-repeat;mask:var(--ic-x) center/contain no-repeat}
-.ic-camera{-webkit-mask:var(--ic-camera) center/contain no-repeat;mask:var(--ic-camera) center/contain no-repeat}
-.ic-clip{-webkit-mask:var(--ic-clip) center/contain no-repeat;mask:var(--ic-clip) center/contain no-repeat}
-.ic-user{-webkit-mask:var(--ic-user) center/contain no-repeat;mask:var(--ic-user) center/contain no-repeat}
-.ic-home{-webkit-mask:var(--ic-home) center/contain no-repeat;mask:var(--ic-home) center/contain no-repeat}
-.ic-tag{-webkit-mask:var(--ic-tag) center/contain no-repeat;mask:var(--ic-tag) center/contain no-repeat}
-.ic-bank{-webkit-mask:var(--ic-bank) center/contain no-repeat;mask:var(--ic-bank) center/contain no-repeat}
-.ic-card{-webkit-mask:var(--ic-card) center/contain no-repeat;mask:var(--ic-card) center/contain no-repeat}
-.ic-mail{-webkit-mask:var(--ic-mail) center/contain no-repeat;mask:var(--ic-mail) center/contain no-repeat}
-.ic-pencil{-webkit-mask:var(--ic-pencil) center/contain no-repeat;mask:var(--ic-pencil) center/contain no-repeat}
-.ic-phone{-webkit-mask:var(--ic-phone) center/contain no-repeat;mask:var(--ic-phone) center/contain no-repeat}
-.ic-plus{-webkit-mask:var(--ic-plus) center/contain no-repeat;mask:var(--ic-plus) center/contain no-repeat}
-.ic-minus{-webkit-mask:var(--ic-minus) center/contain no-repeat;mask:var(--ic-minus) center/contain no-repeat}
-.ic-star{-webkit-mask:var(--ic-star) center/contain no-repeat;mask:var(--ic-star) center/contain no-repeat}
-.kicker,.kick{display:none!important}
-a:not([class]){text-decoration:underline;text-underline-offset:3px}
-input:not([type=checkbox]):not([type=radio]):not([type=file]):not([type=range]),select,textarea{font-size:16px}
-.site-foot{background:#fff!important;color:#636466!important;border-top:1px solid #E5E5E5;margin-top:32px}
-.site-foot a,.site-foot b{color:#2D2A26!important}
-.site-foot .fine{color:#636466!important}
-.hero,.hero2,.sup-hero,.ca-hero,.guide-hero,.inv-hero,.ev-hero,.nom-hero,.opps-hero,.r-hero{position:relative;background:#fff!important;background-image:none!important;color:#2D2A26!important;padding-top:24px!important;padding-bottom:20px!important;border-top:0!important;border-bottom:1px solid #E5E5E5!important;min-height:0!important}
-.hero .ph-bg,.hero .ph-scrim,.hero .bg,.hero .scrim,.hero .bgimg,.hero2 .ph-bg,.hero2 .ph-scrim,.hero2 .bg,.hero2 .scrim,.hero2 .bgimg,.sup-hero .ph-bg,.sup-hero .ph-scrim,.sup-hero .bg,.sup-hero .scrim,.sup-hero .bgimg,.ca-hero .ph-bg,.ca-hero .ph-scrim,.ca-hero .bg,.ca-hero .scrim,.ca-hero .bgimg,.guide-hero .ph-bg,.guide-hero .ph-scrim,.guide-hero .bg,.guide-hero .scrim,.guide-hero .bgimg,.inv-hero .ph-bg,.inv-hero .ph-scrim,.inv-hero .bg,.inv-hero .scrim,.inv-hero .bgimg,.ev-hero .ph-bg,.ev-hero .ph-scrim,.ev-hero .bg,.ev-hero .scrim,.ev-hero .bgimg,.nom-hero .ph-bg,.nom-hero .ph-scrim,.nom-hero .bg,.nom-hero .scrim,.nom-hero .bgimg,.opps-hero .ph-bg,.opps-hero .ph-scrim,.opps-hero .bg,.opps-hero .scrim,.opps-hero .bgimg,.r-hero .ph-bg,.r-hero .ph-scrim,.r-hero .bg,.r-hero .scrim,.r-hero .bgimg{display:none!important}
-.hero h1,.hero2 h1,.sup-hero h1,.ca-hero h1,.guide-hero h1,.inv-hero h1,.ev-hero h1,.nom-hero h1,.opps-hero h1,.r-hero h1{color:#2D2A26!important;font-size:28px!important;line-height:1.2!important;margin:0!important;text-wrap:balance}
-.hero h1::after,.hero2 h1::after,.sup-hero h1::after,.ca-hero h1::after,.guide-hero h1::after,.inv-hero h1::after,.ev-hero h1::after,.nom-hero h1::after,.opps-hero h1::after,.r-hero h1::after,.hero h1::before,.hero2 h1::before,.sup-hero h1::before,.ca-hero h1::before,.guide-hero h1::before,.inv-hero h1::before,.ev-hero h1::before,.nom-hero h1::before,.opps-hero h1::before,.r-hero h1::before{display:none!important}
-.hero h1 em,.hero2 h1 em,.sup-hero h1 em,.ca-hero h1 em,.guide-hero h1 em,.inv-hero h1 em,.ev-hero h1 em,.nom-hero h1 em,.opps-hero h1 em,.r-hero h1 em,.hero h1 span,.hero2 h1 span,.sup-hero h1 span,.ca-hero h1 span,.guide-hero h1 span,.inv-hero h1 span,.ev-hero h1 span,.nom-hero h1 span,.opps-hero h1 span,.r-hero h1 span,.hero h1 u,.hero2 h1 u,.sup-hero h1 u,.ca-hero h1 u,.guide-hero h1 u,.inv-hero h1 u,.ev-hero h1 u,.nom-hero h1 u,.opps-hero h1 u,.r-hero h1 u{color:inherit!important;font-style:normal;text-decoration:none!important;box-shadow:none!important;background:none!important}
-.hero p,.hero2 p,.sup-hero p,.ca-hero p,.guide-hero p,.inv-hero p,.ev-hero p,.nom-hero p,.opps-hero p,.r-hero p{color:#636466!important;font-size:15px!important;margin-top:8px!important;max-width:75ch}
-.hero p b,.hero2 p b,.sup-hero p b,.ca-hero p b,.guide-hero p b,.inv-hero p b,.ev-hero p b,.nom-hero p b,.opps-hero p b,.r-hero p b,.hero p strong,.hero2 p strong,.sup-hero p strong,.ca-hero p strong,.guide-hero p strong,.inv-hero p strong,.ev-hero p strong,.nom-hero p strong,.opps-hero p strong,.r-hero p strong{color:#2D2A26!important}
-.hero .crumbs,.hero2 .crumbs,.sup-hero .crumbs,.ca-hero .crumbs,.guide-hero .crumbs,.inv-hero .crumbs,.ev-hero .crumbs,.nom-hero .crumbs,.opps-hero .crumbs,.r-hero .crumbs,.hero .crumb,.hero2 .crumb,.sup-hero .crumb,.ca-hero .crumb,.guide-hero .crumb,.inv-hero .crumb,.ev-hero .crumb,.nom-hero .crumb,.opps-hero .crumb,.r-hero .crumb{font-size:13px!important;margin-bottom:8px!important;color:#636466!important}
-.hero .crumbs *,.hero2 .crumbs *,.sup-hero .crumbs *,.ca-hero .crumbs *,.guide-hero .crumbs *,.inv-hero .crumbs *,.ev-hero .crumbs *,.nom-hero .crumbs *,.opps-hero .crumbs *,.r-hero .crumbs *,.hero .crumb *,.hero2 .crumb *,.sup-hero .crumb *,.ca-hero .crumb *,.guide-hero .crumb *,.inv-hero .crumb *,.ev-hero .crumb *,.nom-hero .crumb *,.opps-hero .crumb *,.r-hero .crumb *{color:#636466!important}
-.hero .crumbs a,.hero2 .crumbs a,.sup-hero .crumbs a,.ca-hero .crumbs a,.guide-hero .crumbs a,.inv-hero .crumbs a,.ev-hero .crumbs a,.nom-hero .crumbs a,.opps-hero .crumbs a,.r-hero .crumbs a,.hero .crumb a,.hero2 .crumb a,.sup-hero .crumb a,.ca-hero .crumb a,.guide-hero .crumb a,.inv-hero .crumb a,.ev-hero .crumb a,.nom-hero .crumb a,.opps-hero .crumb a,.r-hero .crumb a{color:#2D2A26!important;font-weight:700}
-.hero a:not(.btn),.hero2 a:not(.btn),.sup-hero a:not(.btn),.ca-hero a:not(.btn),.guide-hero a:not(.btn),.inv-hero a:not(.btn),.ev-hero a:not(.btn),.nom-hero a:not(.btn),.opps-hero a:not(.btn),.r-hero a:not(.btn){color:#2D2A26!important}
-.hero .btn-ghost,.hero2 .btn-ghost,.sup-hero .btn-ghost,.ca-hero .btn-ghost,.guide-hero .btn-ghost,.inv-hero .btn-ghost,.ev-hero .btn-ghost,.nom-hero .btn-ghost,.opps-hero .btn-ghost,.r-hero .btn-ghost,.hero .btn-pdf,.hero2 .btn-pdf,.sup-hero .btn-pdf,.ca-hero .btn-pdf,.guide-hero .btn-pdf,.inv-hero .btn-pdf,.ev-hero .btn-pdf,.nom-hero .btn-pdf,.opps-hero .btn-pdf,.r-hero .btn-pdf{background:#fff!important;color:#2D2A26!important;border:1px solid #BDBBB8!important}
-.hero .live,.hero2 .live,.sup-hero .live,.ca-hero .live,.guide-hero .live,.inv-hero .live,.ev-hero .live,.nom-hero .live,.opps-hero .live,.r-hero .live{color:#2D2A26!important;background:#F5F5F5!important;border:1px solid #BDBBB8!important}
-@media(max-width:700px){.hero,.hero2,.sup-hero,.ca-hero,.guide-hero,.inv-hero,.ev-hero,.nom-hero,.opps-hero,.r-hero{padding-top:16px!important;padding-bottom:16px!important}.hero h1,.hero2 h1,.sup-hero h1,.ca-hero h1,.guide-hero h1,.inv-hero h1,.ev-hero h1,.nom-hero h1,.opps-hero h1,.r-hero h1{font-size:21px!important}}
-.type.apt b:after{display:inline-block;white-space:nowrap}
-details.edu summary:before{content:""!important;display:inline-block;width:14px;height:14px;margin-right:6px;vertical-align:-2px;background:currentColor;-webkit-mask:var(--ic-plus) center/contain no-repeat;mask:var(--ic-plus) center/contain no-repeat}
-details.edu[open] summary:before{-webkit-mask-image:var(--ic-minus);mask-image:var(--ic-minus)}
+/* site header, same parts as the other hub pages */
+header.site{position:sticky;top:0;z-index:45;background:var(--white);border-bottom:1px solid var(--line)}
+.hdr-inner{max-width:1080px;margin:0 auto;padding:12px 16px;display:flex;align-items:center;gap:16px}
+.hdr-logo img{height:38px;width:auto;display:block}
+.hdr-title{font-size:var(--t17);font-weight:700;line-height:1.2}
+.hdr-title small{display:block;font-size:var(--t12);font-weight:400;color:var(--grey)}
+.hdr-sp{margin-left:auto}
+.hubnav-toggle{min-height:44px;align-items:center;gap:8px;padding:0 16px;border:1px solid var(--edge);border-radius:var(--r-ctl);background:var(--white);font-size:var(--t13);font-weight:700}
+.hubnav-toggle svg{width:20px;height:20px}
+@media(max-width:700px){.hdr-logo img{height:28px}.hdr-title{display:none}.hdr-inner .hubnav-toggle{margin-left:auto}}
+/* line extras, polos, review form */
+.nm label{display:block;cursor:pointer}
+.szsel{height:44px;border:1.5px solid var(--edge);border-radius:var(--r-ctl);padding:0 8px;font-size:16px;background:var(--white);margin-top:4px;max-width:220px;width:100%}
+.szsel.need{border-color:var(--red)}
+.fit{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0 12px}
+.fit button{min-height:44px;padding:0 16px;border:1.5px solid var(--edge);border-radius:var(--r-ctl);background:var(--white);font-size:var(--t13);font-weight:700}
+.fit button[aria-pressed="true"]{border-color:var(--black);background:var(--light)}
+.loading{font-size:var(--t15);color:var(--grey);padding:24px 0}
+.fg{display:grid;gap:4px;margin-top:12px}
+.fg label{font-size:var(--t13);font-weight:700}
+.fg input,.fg select,.fg textarea{min-height:44px;border:1.5px solid var(--edge);border-radius:var(--r-ctl);padding:8px 12px;font-size:16px;background:var(--white);width:100%;font-family:inherit}
+.fg textarea{min-height:88px;resize:vertical}
+.ack{display:flex;gap:12px;align-items:flex-start;font-size:var(--t13);margin-top:16px}
+.ack input{width:20px;height:20px;flex:none;margin-top:2px}
+.err{font-size:var(--t13);color:var(--red);font-weight:700;min-height:20px}
+.done{text-align:center;padding:40px 8px}
+.done svg{width:40px;height:40px;stroke:var(--red)}
+.done h3{margin:12px 0 8px}
+.done p{font-size:var(--t13);color:var(--grey);margin-bottom:16px}
+a.btn{display:inline-flex;align-items:center;justify-content:center;text-decoration:none}
+.btn[disabled]{opacity:.5;cursor:not-allowed}
 </style>
 <link rel="stylesheet" href="https://citywidelv.github.io/cw-base.css">
 </head>
 <body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+  <symbol id="i-minus" viewBox="0 0 24 24"><path d="M5 12h14"/></symbol>
+  <symbol id="i-x" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12l5 5 9-10"/></symbol>
+</svg>
 
-<header>
+<header class="site">
   <div class="hdr-inner">
-    <a class="hdr-logo" href="./"><img src="https://emailer.emfluence.com/clients/citywide/uploadedfiles/signature_logo.png" alt="City Wide Facility Solutions"></a>
-    <div class="hdr-title">Kit Builder<small>New building kits and apartment community kits</small></div>
+    <a class="hdr-logo" href="./"><img src="https://emailer.emfluence.com/clients/citywide/uploadedfiles/signature_logo.png" alt="City Wide Facility Solutions" height="38"></a>
+    <div class="hdr-title">Starter Kits<small>New building kits and apartment community kits</small></div>
     <span class="hdr-sp"></span>
-    <button type="button" data-hubnav-toggle><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>Menu</button>
+    <button type="button" data-hubnav-toggle><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>Menu</button>
   </div>
 </header>
 <nav id="hubnav" data-base="" aria-label="Vendor Hub menu"></nav>
 <script src="nav.js"></script>
 <script src="hub-nav.js?v=20261122"></script>
 
-<main>
-  <div class="hero">
-    <h1 id="heroH">Build your start-up kit</h1>
-    <p id="heroP">Pick the building type and we will load a starting kit built around what that kind of facility actually needs. Change any quantity, uncheck what you already own, and add anything else from the full catalog. New building kits earn a bigger discount the more complete they are. Apartment community kits carry a flat kit discount on every item in the order.</p>
-    <div class="accent"></div>
-  </div>
+<main><div class="wrap">
 
-  <div class="section-title">1. What kind of building is this?</div>
-  <div class="section-sub">Each kit is a starting point, not a rule. You know the site.</div>
-  <div class="types" id="types"></div>
+<!-- ================= BUILDER ================= -->
+<section class="view on" id="v-builder">
+  <h1>Build a starter kit</h1>
+  <p class="lead">Answer four questions. The kit sizes itself. The right choices are already picked. Each section says what is in it and why. Uncheck anything you already own.</p>
 
-  <div id="kitArea" style="display:none">
+  <form class="setup" id="setup" onsubmit="return false">
+    <fieldset>
+      <legend>What kind of building is it?</legend>
+      <div class="pick types" id="pickType"></div>
+    </fieldset>
+    <fieldset id="fsSize">
+      <legend>How big is it? Cleanable square feet.</legend>
+      <div class="pick sizes" id="pickSize"></div>
+    </fieldset>
+    <fieldset>
+      <legend>How many days a week is it cleaned?</legend>
+      <div class="pick days" id="pickDays"></div>
+    </fieldset>
+    <fieldset id="fsProg">
+      <legend>Which chemical program does the building use?</legend>
+      <div class="pick sizes" id="pickProg"></div>
+      <p class="hint">Not sure? Ask your FSM. You can add TruShot cartridges to any of them.</p>
+    </fieldset>
+    <p class="recap" id="recap" aria-live="polite"></p>
+  </form>
 
-    <div id="bandStep">
-    <div class="section-title">2. How big is it?</div>
-    <div class="section-sub">Cleanable square feet. Quantities scale the same way the <a href="planner.html" style="color:#2D2A26">New Building Inventory Planner</a> scales them, with the 3x rotation already built in: one set in use, one in the laundry, one spare.</div>
-    <div class="types" id="bands"></div>
+  <div id="kit"></div>
+
+  <section class="sec" aria-labelledby="h-shop">
+    <h2 id="h-shop">Add anything else from the shop</h2>
+    <p class="guide">Need something that is not in the kit? Search the whole shop and add it. Everything you add earns the same kit discount.</p>
+    <div class="find2">
+      <div><label class="vh" for="shopQ">Search the shop by name or item number</label><input type="search" id="shopQ" placeholder="Search by name or item number" autocomplete="off"></div>
+      <div><label class="vh" for="shopCat">Shop category</label><select id="shopCat"></select></div>
     </div>
+    <div id="shopRes" class="res" aria-live="polite"></div>
+  </section>
+</section>
 
-    <div class="section-title" id="kitStepTitle">3. Your suggested kit</div>
-    <div class="section-sub" id="kitSub"></div>
-    <div id="eduWrap"></div>
-    <div class="items" id="coreItems"></div>
-    <div id="shirtWrap"></div>
+</div></main>
 
-    <div class="section-title" id="optStepTitle">4. Also worth adding</div>
-    <div class="section-sub">Not in the base kit. Check anything that fits the building.</div>
-    <div class="items" id="optItems"></div>
+<div class="bar" id="bar"><div class="wrap">
+  <div class="disc"><b id="discMsg"></b>
+    <div class="track" aria-hidden="true"><i id="fill"></i></div>
+    <div class="ticks" id="ticks"></div></div>
+  <div class="tot"><div class="n" id="grand">$0.00</div><span id="subLine"></span></div>
+  <button class="btn primary" id="reviewBtn" type="button">Review kit</button>
+</div></div>
 
-    <div class="section-title" id="browseStepTitle">5. Add anything else</div>
-    <div class="section-sub" id="browseSub">The full catalog. Search it and add to your kit.</div>
-    <div class="searchrow">
-      <input id="q" type="search" placeholder="Search the full catalog by name, SKU, or keyword...">
-      <select id="cat"><option value="">All categories</option></select>
-    </div>
-    <div class="items" id="browse"></div>
-    <div class="empty" id="browseEmpty" style="display:none">Nothing matches that search.</div>
-  </div>
-</main>
-
-<div class="bar">
-  <div class="bar-inner">
-    <div class="tiers">
-      <div style="font-size:12px;font-weight:700" id="tierMsg">Pick a building type to start</div>
-      <div class="track" id="track"><div class="fill" id="fill"></div></div>
-      <div class="ticks" id="ticks">
-        <span class="tick" id="t0">$500 &middot; 5%</span>
-        <span class="tick" id="t1">$1,200 &middot; 8%</span>
-        <span class="tick" id="t2">$2,500 &middot; 10%</span>
-      </div>
-    </div>
-    <div class="totals">
-      <span id="subLine" style="color:var(--cw-grey)">0 items</span>
-      <span class="big" id="grand">$0.00</span>
-      <span class="save" id="saveLine"></span>
-    </div>
-    <button class="cta" id="reviewBtn" onclick="openReview()" disabled>Review Kit</button>
-  </div>
+<div id="rvWrap">
+  <div class="scrim" id="scrim"></div>
+  <aside class="drawer" id="drawer" role="dialog" aria-modal="true" aria-labelledby="rvH" tabindex="-1">
+    <header><h2 id="rvH">Review your kit</h2><button type="button" id="rvClose" aria-label="Close review"><svg class="i"><use href="#i-x"/></svg></button></header>
+    <div class="bd rv" id="rvBody"></div>
+    <div class="ft" id="rvFt"><p class="err" id="rvErr" role="alert"></p><button class="btn primary" type="button" id="rvSubmit">Submit kit order</button></div>
+  </aside>
 </div>
-
-<div class="overlay" id="overlay" onclick="closeReview()"></div>
-<aside class="drawer" id="drawer">
-  <div class="drawer-hd">
-    <h2>Review your kit</h2>
-    <button onclick="closeReview()"><i class=ic-x></i></button>
-  </div>
-  <div class="drawer-bd" id="drawerBd"></div>
-  <div class="drawer-ft">
-    <div class="err" id="fErr"></div>
-    <button class="cta" style="width:100%" id="submitBtn" onclick="submitKit()">Submit Kit Order</button>
-  </div>
-</aside>
 
 <script>
 const CFG = window.CW_CONFIG || {};
-const TIERS = [
-  {min:500,  pct:5},
-  {min:1200, pct:8},
-  {min:2500, pct:10}
-];
-const MAX_PCT = 10;
-/* Apartment community kits are priced differently from new building kits. Shop prices
-   carry the regular margin; the apartment kit takes every item in the order down to the
-   kit margin. APT_KEEP is the ratio between the two, so the discount is 1 - APT_KEEP. */
-const APT_KEEP = 0.65/0.75;                 // 13.33% off every line
-const APT_PCT_LABEL = "13.3%";
-const APT_WARN = "Make sure you have this. You will need it to properly clean the property.";
+let CAT = {}, READY = false;
 
-/* Size bands and scaling mirror the New Building Inventory Planner so the two
-   pages never contradict each other. Sheet quantities are the MEDIUM, general
-   janitorial baseline; band and type multipliers scale from there. */
-const BANDS=[
-  {k:'s',  n:'Small',      s:'Up to 5,000 sq ft'},
-  {k:'m',  n:'Medium',     s:'5,001 to 15,000'},
-  {k:'l',  n:'Large',      s:'15,001 to 40,000'},
-  {k:'xl', n:'Very Large', s:'Over 40,000 sq ft'}
-];
-const BAND_MULT={
-  pads:      {s:0.5, m:1, l:2,   xl:3},
-  cloths:    {s:0.5, m:1, l:1.5, xl:2},
-  consumable:{s:0.5, m:1, l:1.5, xl:2},
-  durable:   {s:1,   m:1, l:2,   xl:2}
+/* ---------- rules ---------- */
+const SIZES=[
+  {k:'s', n:'Small',      s:'Up to 5,000'},
+  {k:'m', n:'Medium',     s:'5,001 to 15,000'},
+  {k:'l', n:'Large',      s:'15,001 to 40,000'},
+  {k:'xl',n:'Very large', s:'Over 40,000'}];
+const RATE={
+  cloth:{red:{s:2,m:3,l:6,xl:10}, yellow:{s:2,m:3,l:6,xl:10}, blue:{s:2,m:2,l:4,xl:6}, green:{s:3,m:5,l:10,xl:16}},
+  loop:{rr:{s:1,m:1,l:2,xl:3}, gen:{s:1,m:1,l:2,xl:3}},
+  pad:{rr:{s:1,m:2,l:4,xl:6}, gen:{s:2,m:4,l:8,xl:12}}
 };
-/* Type multipliers apply to pads and cloths only, exactly as the planner does. */
-const TYPE_MULT={
-  office:    {pads:1,   cloths:1},
-  school:    {pads:1.5, cloths:1.5},
-  medical:   {pads:1.5, cloths:1.5},
-  industrial:{pads:1.5, cloths:1.5},
-  cleanroom: {pads:1,   cloths:1},
-  gmp:       {pads:2,   cloths:1.5}
-};
-function scaleClass(p){
-  const n=p.name.toLowerCase();
-  if(/mop pad/.test(n)) return "pads";
-  if(/microfiber cloth/.test(n)) return "cloths";
-  if(/glove|wet floor sign|can liner|cone mop|wipe|bottle/.test(n)) return "consumable";
-  return "durable";
-}
-function scaledQty(p, base){
-  if(isApt()) return base;
-  const c=scaleClass(p);
-  const bm=(BAND_MULT[c]||BAND_MULT.durable)[BAND]||1;
-  const tm=(c==="pads"||c==="cloths") ? ((TYPE_MULT[TYPE]||{})[c]||1) : 1;
-  return Math.max(1, Math.round(base*bm*tm));
-}
+const MULT={ office:{cloth:1,pad:1}, medical:{cloth:1.5,pad:1.5}, school:{cloth:1.5,pad:1.5},
+             industrial:{cloth:1,pad:1}, gmp:{cloth:1.5,pad:2}, cleanroom:{cloth:1,pad:1} };
+const TIERS=[{min:500,pct:5},{min:1200,pct:8},{min:2500,pct:10}];
+const APT_KEEP=0.65/0.75, APT_LABEL='13.3%';
+const COLORS={
+  red:{n:'Red or pink', pid:'P018', use:'Toilets, urinals and the red zones in the restroom.'},
+  yellow:{n:'Yellow', pid:'P017', use:'Every other restroom surface. Sinks, counters, partitions, dispensers.'},
+  blue:{n:'Blue', pid:'P020', use:'Glass and mirrors.'},
+  green:{n:'Green', pid:'P019', use:'General cleaning and dusting.'}};
 
-const TYPES = [
-  {k:'office', n:'Office / Professional',
-   s:'Suites, banks, law and medical office common areas, small multi tenant.',
-   sub:'A general purpose kit. Dual chamber mopping, a corded backpack for after hours, and the everyday chemical set.'},
-  {k:'medical', n:'Medical / Clinic',
-   s:'Clinics, urgent care, dental, surgery centers, dialysis, labs.',
-   sub:'Flat mop and charging bucket instead of string mopping, color coded microfiber, a cordless backpack for day cleaning, and EPA registered disinfectants including a sporicidal.'},
-  {k:'school', n:'School / Education',
-   s:'K-12, charter, daycare, training centers, campus buildings.',
-   sub:'Built for restroom volume and day cleaning during instruction. Certified green chemistry where we carry it, since Nevada regulates cleaning products in schools.'},
-  {k:'industrial', n:'Industrial / Warehouse',
-   s:'Warehouse, distribution, manufacturing, shops, docks.',
-   sub:'Heavier soil, degreasers, large area sweeping, and the safety items an open floor with traffic needs.'},
-  {k:'cleanroom', n:'Cleanroom',
-   s:'Compounding pharmacy, medical device, controlled environments.',
-   sub:'Low lint and non shedding only, sterile 70% IPA, tacky mats, and dedicated tools that never leave the classified area.'},
-  {k:'gmp', n:'GMP / Food',
-   s:'Food production, packaging, beverage, allergen and segregated zones.',
-   sub:'Zone dedicated tools that never cross, doubled pad counts for production floors, food contact sanitizer, and drain discipline.'},
-  {k:'apt5', n:'Apartment Community, 5-Day Porter', apt:true, days:5,
-   s:'One day porter, Monday to Friday. Lobbies, elevators, clubhouse, pool, pet stations, dumpsters.',
-   sub:'Everything one porter needs to start an apartment community on a five day schedule. Backpack vacuum, a three shelf janitor cart, two WaveBrake buckets with the dirty water insert, microfiber loop mops with five green heads for common areas and five red heads for restrooms, color coded cloths with a laundry hamper, the TruShot chemical system, a push broom and dustpan for the parking lot, the rolling BRUTE trash can, and black uniform polos, one per service day. Every item ships from Staples Business Advantage as one order, and every item in this order carries the apartment kit discount.'},
-  {k:'apt7', n:'Apartment Community, 7-Day Porter', apt:true, days:7,
-   s:'One day porter, seven days a week. Lobbies, elevators, clubhouse, pool, pet stations, dumpsters.',
-   sub:'The same kit built for a seven day schedule: seven green and seven red mop heads, seven polos, an extra box of gloves and a second box of liners. Every item ships from Staples Business Advantage as one order, and every item in this order carries the apartment kit discount.'}
+const TYPES=[
+  {k:'office', n:'Office', s:'Suites, banks, professional buildings', mop:['flat','loop'], mopRec:'flat', vac:true, cart:'cart'},
+  {k:'medical', n:'Medical or clinic', s:'Clinics, urgent care, dental, labs', mop:['flat','loop'], mopRec:'flat', vac:true, cart:'cart'},
+  {k:'school', n:'School', s:'K-12, charter, daycare, training', mop:['loop','flat'], mopRec:'loop', vac:true, cart:'cart'},
+  {k:'industrial', n:'Industrial or warehouse', s:'Warehouse, distribution, shops', mop:['loop','flat'], mopRec:'loop', vac:true, cart:'brute'},
+  {k:'gmp', n:'GMP or food', s:'Food production and packaging', mop:['flat','loop'], mopRec:'flat', vac:true, cart:'cart'},
+  {k:'cleanroom', n:'Cleanroom', s:'Compounding and controlled rooms', mop:['flat'], mopRec:'flat', vac:false, cart:null},
+  {k:'apt', n:'Apartment community', s:'One day porter, 5 or 7 days', apt:true}
 ];
-function isApt(){ const t=TYPES.find(x=>x.k===TYPE); return !!(t&&t.apt); }
+const PROGS=[
+  {k:'fastdraw', n:'FastDraw building', s:'Betco wall cabinet. City Wide covers the cabinet.'},
+  {k:'envirox', n:'EnvirOx building', s:'The building runs on EnvirOx H2Orange2.'},
+  {k:'m3', n:'3M building', s:'3M Flow Control wall cabinet. Special order.'},
+  {k:'none', n:'No required cabinet', s:'Nothing is required. The kit uses TruShot.'}];
+const FREE={fd:false};
+/* FastDraw is live in the shop as P182 to P187. The cabinet is free while a FastDraw chemical is in the kit. */
+const CABINET={}, FDCHEM=['P183','P184','P185','P186','P187'];
+/* Supplied by City Wide at no charge: the FastDraw cabinet, the 3M cabinet and the bottle labels. The last two are switched off in the shop, so the kit reads them by id. */
+const GIFT={P182:1,P196:1,P201:1}, KITONLY=['P196','P201'];
+const q=(v,sz)=> typeof v==='number'? v : v[sz];
 
-const EDU = {
-  mopping: {
-    t:'Why we push a dual chamber bucket',
-    h:`<p><b>Two chambers keep the clean solution clean.</b> With one bucket you rinse soil back into the solution and then put it on the next floor. CDC environmental cleaning guidance calls for a two bucket method, solution plus rinse, for routine cleaning, and three buckets when you are disinfecting.</p>
-       <p><b>It is also faster.</b> Published ISSA cleaning times put a 32 oz mop with a double bucket at 8.40 minutes per 1,000 sq ft against 9.60 with a single bucket for damp mopping, and 15.00 against 18.00 for wet mop and rinse. The bigger the mop, the more the second chamber pays.</p>
-       <p>We build kits on the Rubbermaid WaveBrake 35 quart with the red 18 quart dirty water insert. That is the setup our crews already run.</p>
-       <p class="src">Sources: CDC Best Practices for Environmental Cleaning in Healthcare Facilities; ISSA cleaning times.</p>`
-  },
-  flat: {
-    t:'Flat mop or string mop, honestly',
-    h:`<p><b>Where flat mops genuinely win:</b> a fresh pad per room means no re-dipping, far less water and chemical, and much more consistent results across different people. In a controlled hospital study, a microfiber system with its own bucket removed 94.5% of microbial load using only detergent, against 67.8% for a cotton mop with detergent. The spread between operators also collapsed, which matters more than the average when several people clean the same building.</p>
-       <p><b>Where they do not win:</b> raw speed. On published ISSA times a 14 inch flat mop runs about 11.2 minutes per 1,000 sq ft, slower than a 32 oz string mop damp mopping with a double bucket at 8.40. Flat mops also hold less liquid, so string mops are still the right tool for spills, heavy grease, and stripping.</p>
-       <p><b>One trap worth knowing:</b> in that same study, microfiber pads dunked in a conventional bucket performed <i>worse</i> than cotton when a quat disinfectant was used. If you buy microfiber pads, buy the charging bucket or pre soak method with them. Microfiber dropped into the old workflow can make results go backwards.</p>
-       <p><b>On scuff marks:</b> a flat mop frame is a better carrier for a scrubbing or melamine pad than a string mop is, because it puts your weight over a flat plate. But the scuff removal is being done by the pad and the chemistry, not by the mop format. For real black marks on VCT, a melamine pad with light pressure or a low speed buffer with the right pad will beat any mop.</p>
-       <p class="src">Sources: Rutala, Gergen &amp; Weber, Am J Infect Control 2007;35:569-573; ISSA cleaning times; Hillyard floor care guidance.</p>`
-  },
-  vac: {
-    t:'Corded, cordless, or upright',
-    h:`<ul>
-        <li><b>Corded backpack</b> is the lowest cost per square foot and the right default for after hours routes. The ProTeam Super Coach Pro 6 in this kit runs at 69.7 dBA and carries the CRI Seal of Approval, with a 50 ft cord and HEPA media filtration.</li>
-        <li><b>Cordless backpack</b> earns its price when the building is occupied while you clean. A 50 ft cord across a clinic corridor or a school hallway during passing period is a real trip hazard, and OSHA 1910.22 puts that on you. Plan on roughly 75 minutes of runtime at full power, so budget a spare battery or design the route around a lower setting.</li>
-        <li><b>Upright</b> still wins on wide open unobstructed carpet, and it is the tool when you need a beater bar on deep pile. It loses badly in cubicles, on stairs, on edges, and on mixed hard and soft floor routes.</li>
-       </ul>
-       <p>One honest caution on productivity claims. Older ISSA figures put backpacks around 7,400 sq ft per hour against roughly 2,900 for a 14 inch upright, but a newer timed study found the two much closer. What really drives the number is how obstructed the space is, not the badge on the machine.</p>
-       <p class="src">Sources: ProTeam published specs; CRI Seal of Approval; ISSA 612 cleaning times; American Institute for Cleaning Sciences timed study.</p>`
-  },
-  medical: {
-    t:'Before you clean a medical building',
-    h:`<ul>
-        <li><b>Contact time is federal law, not a suggestion.</b> Every EPA registered disinfectant label carries the line that using it inconsistently with its labeling is a violation of federal law. The surface has to stay visibly wet for the full dwell time on the label. Wiping a ten minute product dry in forty seconds is a label violation.</li>
-        <li><b>Never put a chlorine or bleach product on microfiber.</b> CDC is explicit about this, and it is a real conflict because C. diff protocols call for a sporicidal. Use disposable pads for those rooms.</li>
-        <li><b>There is no national color code.</b> CDC gives an example, other authorities publish different schemes. Match whatever the building already uses. Changing a facility's colors forces retraining and raises risk during the switch.</li>
-        <li><b>Change mop water and pads often</b>, when visibly soiled, after every isolation room, and at least every one to two hours.</li>
-        <li>Work cleaner to dirtier, high to low, and from the far point back toward the door.</li>
-       </ul>
-       <p class="src">Sources: CDC environmental cleaning guidance and disinfectant regulatory framework (FIFRA); Minnesota Hospital Association EVS Cleaning Guidebook.</p>`
-  },
-  school: {
-    t:'Before you clean a school',
-    h:`<ul>
-        <li><b>Nevada regulates cleaning products in schools.</b> Green cleaning requirements apply here, so certified products are not just a preference on these accounts. Confirm the district's own approved product list before you substitute anything.</li>
-        <li><b>Clean first, disinfect where it matters.</b> Current CDC guidance for schools is routine cleaning with soap and water, sanitizing on anything that touches a child's mouth, and disinfecting in restrooms, on diaper changing surfaces, and when someone has been sick. Blanket daily disinfection of every classroom surface is not the standard anymore.</li>
-        <li><b>Ventilate, and store chemicals out of reach.</b> Some disinfectants trigger asthma, which is a large part of why these rules exist.</li>
-        <li><b>Never mix products</b> unless both labels say it is safe.</li>
-        <li><b>Gym floors are their own program.</b> Do not take an aggressive pad or a burnisher to a wood sport floor without the finish manufacturer's sign off.</li>
-       </ul>
-       <p class="src">Sources: CDC cleaning guidance for education settings; Environmental Law Institute survey of state school green cleaning laws. Verify the current Nevada requirement and the district's approved list before you buy.</p>`
-  },
-  industrial: {
-    t:'Industrial floors are a different job',
-    h:`<ul>
-        <li>The chemistry shifts from disinfectant to degreaser and enzyme. Quats are not the main spend here.</li>
-        <li>OSHA 1910.22 requires floors kept clean and, so far as feasible, dry, with drainage and dry standing places wherever a wet process runs. Your program either supports that or undermines it.</li>
-        <li>At real warehouse square footage a mop is marginal. Push sweepers and scrubbers carry the floor, and mopping is for spot work.</li>
-        <li>Carry the safety items: signage at scale, eye protection, chemical resistant gloves matched to the degreaser SDS, and high visibility where there is forklift traffic.</li>
-       </ul>
-       <p class="src">Source: OSHA 29 CFR 1910.22.</p>`
-  },
-  cleanroom: {
-    t:'Cleanroom rules that change the kit',
-    h:`<ul>
-        <li><b>Low lint or non shedding only</b>, and no wood handles anywhere. Tools are dedicated to the classified area and never leave it.</li>
-        <li><b>Sterile 70% IPA</b> is applied after cleaning and disinfection, immediately before compounding, and again every 30 minutes during work. It is not a substitute for the cleaning step that comes first.</li>
-        <li><b>Daily disinfectant, monthly sporicidal</b> on surfaces, floors, walls, and ceilings under current USP &lt;797&gt;. Category 3 compounding moves the sporicidal to weekly.</li>
-        <li>Clean to dirty always. The same mop may cross from buffer room to anteroom, but only in that direction.</li>
-        <li>Tacky mats are standard practice at entries. We carry them, but the facility's own SOP governs placement and change frequency.</li>
-       </ul>
-       <p class="src">Source: USP &lt;797&gt; compliance guidance; ISO 14644-1.</p>`
+/* ---------- state ---------- */
+const S={type:'office', size:'m', days:5, mop:null, vac:'corded', cart:null, prog:'fastdraw', ov:{}, added:{}, sizes:{}, shirt:{pick:'',rows:{}}};
+function sets(){ return Math.max(2,S.days); }
+function T(){ return TYPES.find(t=>t.k===S.type); }
+
+/* ---------- kit engine: returns sections of lines for the current answers ---------- */
+function L(pid,qty,o){ return Object.assign({pid,qty},o||{}); }
+function buildKit(){
+  const t=T(), sz=S.size, n=sets(), out=[];
+  if(t.apt) return buildApt();
+  const m=MULT[t.k];
+  const setWord = S.days>=2 ? `${S.days} cleaning days` : `2 sets, one in use and one spare`;
+
+  /* cloths */
+  if(t.k!=='cleanroom'){
+    const lines=Object.keys(COLORS).map(c=>{
+      const per=Math.ceil(RATE.cloth[c][sz]*m.cloth), need=per*n, packs=Math.ceil(need/12);
+      return L(COLORS[c].pid,packs,{sw:c,name:`${COLORS[c].n} cloths, pack of 12`,
+        math:`${per} a cleaning × ${setWord} = ${need} cloths. That is ${packs} ${packs===1?'pack':'packs'}.`});
+    });
+    out.push({id:'cloths',title:'Microfiber cloths',code:'cloth',
+      guide:'Cloths do most of the cleaning. Each color has one job, so a cloth that touched a toilet never touches a desk.',
+      rule:'Fold each cloth in quarters and use all eight faces. Take a fresh one for every restroom and every new area. You get a clean set for each cleaning day, so plan to wash once a week.'+(t.k==='gmp'?' Food plants add their own zone colors. The plant’s posted color map always wins.':'')+(t.k==='medical'?' If the clinic already runs its own color map, match theirs.':''),
+      lines});
+  } else {
+    out.push({id:'cloths',title:'Wipes and cloths',
+      guide:'The four color code does not apply inside the classified area. Use low lint wipes there and follow the facility’s own procedure. The blue cloths are for the gowning room and glass.',
+      lines:[L('P106',q({s:1,m:2,l:3,xl:4},sz)), L('P020',1)]});
   }
-};
 
-EDU.apt = {
-  t:'Before you start an apartment community',
-  h:`<ul>
-      <li><b>The porter is customer facing.</b> Residents and the leasing office see them all day. The client requires the black City Wide polo with the Independent Contractor logo, black slacks and closed non-slip shoes. No sweatpants, shorts, jeans or hoodies. The black Sport-Tek Strive polo with the Independent Contractor logo is part of this kit. Pick the fit and size below the kit items. One shirt per service day means laundry once a week.</li>
-      <li><b>The kit is the minimum, not a suggestion.</b> The quantities below match the day porter scope: restrooms serviced once and checked three times a shift, lobbies and elevators mopped daily, the pool deck and pet stations every pass. If you take something out, you will be short on site.</li>
-      <li><b>TruShot replaces spray bottles.</b> A cartridge snaps into the trigger and dilutes as you spray. Glass and multi-surface for the lobbies and elevators, restroom disinfectant for the restrooms and touch points, degreaser for the grills and pet stations. No mixing, no unlabeled bottles.</li>
-      <li><b>Color codes are not optional.</b> Red is restrooms only. Yellow is sinks and counters. Green is the kitchenette and fitness room. Blue is glass and general dusting. Mop heads follow the same rule. Red heads stay with the restroom bucket and green heads do everything else, one clean head per color every shift. The mesh wash bags keep the colors apart on laundry day.</li>
-      <li><b>The janitor cart carries the tools. The BRUTE carries the trash.</b> Chemicals, cloths, liners, the broom and the signs ride on the cart. Bagged trash from the lobbies, clubhouse and pet stations rides in the BRUTE to the dumpster, so leaking bags never cross a clean floor.</li>
-     </ul>`
-};
-const EDU_BY_TYPE = {
-  apt5:      ['apt','mopping','vac'],
-  apt7:      ['apt','mopping','vac'],
-  office:    ['mopping','vac','flat'],
-  medical:   ['medical','flat','vac','mopping'],
-  school:    ['school','vac','mopping','flat'],
-  industrial:['industrial','mopping','vac'],
-  cleanroom: ['cleanroom','flat'],
-  gmp:       ['industrial','flat','mopping']
-};
-/* Cleaning types on the New Building Inventory Planner map onto kit types here,
-   so a vendor arriving from planner.html lands on the right kit. */
-const PLANNER_TYPE={gen:'office', porter:'office', medical:'medical', cleanroom:'cleanroom', gmp:'gmp'};
+  /* mops */
+  const loop=()=>{ const rr=RATE.loop.rr[sz]*n, g=RATE.loop.gen[sz]*n, b=(sz==='l'||sz==='xl')?2:1;
+    return [
+      L('P190',rr,{sw:'red',math:`${RATE.loop.rr[sz]} a cleaning × ${setWord}. Restroom floors only.`}),
+      L(t.k==='industrial'?'P007':'P008',g,{sw:t.k==='industrial'?'green':'blue',math:`${RATE.loop.gen[sz]} a cleaning × ${setWord}. Every floor outside the restroom.`}),
+      L('P006',2,{sub:'One handle stays with the restroom mop. One does everything else.'}),
+      L('P060',b,{sub:'Two chambers keep the clean solution clean.'}),
+      L('P110',b,{sub:'Drops inside the bucket to hold the dirty water.'})]; };
+  const flat=()=>{ const rrPer=Math.ceil(RATE.pad.rr[sz]*m.pad), gPer=Math.ceil(RATE.pad.gen[sz]*m.pad);
+    const ls=[];
+    if(t.k!=='cleanroom') ls.push(L('P188',rrPer*n,{sw:'red',math:`${rrPer} a cleaning × ${setWord}. Restroom floors only.`}));
+    ls.push(L('P189',gPer*n,{sw:'green',math:`${gPer} a cleaning × ${setWord}. ${t.k==='cleanroom'?'Pads stay inside the room.':'Every floor outside the restroom.'}`}));
+    ls.push(L('P101',2,{sub:t.k==='cleanroom'?'Dedicated to the room. They never leave it.':'One frame stays with the restroom. One does everything else.'}));
+    ls.push(L('P102',2));
+    ls.push(L(t.k==='medical'?'P119':'P120',1,{sub:'Soak the clean pads in solution here. A used pad never goes back in.'}));
+    return ls; };
+  const MOP={
+    loop:{title:'Loop mop and wringer bucket', sub:'Also called a string or rag mop. Best for heavy soil, spills and big open floors like school halls and warehouses.', lines:loop},
+    flat:{title:'Flat mop and charging bucket', sub:'A fresh pad for every area and no wringing. Lowest cost to start. Best for offices, clinics and any floor that must look the same every night.', lines:flat}};
+  if(!S.mop || !t.mop.includes(S.mop)) S.mop=t.mopRec;
+  out.push({id:'mops',title:'Mops',code:t.k==='cleanroom'?null:'mop',
+    guide:t.mop.length>1?'Pick one way to mop. You do not need both. Either way you get a red mop for restrooms and a second color for every other floor.':'Flat mop only. No string mops and no wood handles in a cleanroom.',
+    choice:t.mop.length>1?{name:'mop',opts:t.mop.map(k=>({k,title:MOP[k].title,sub:MOP[k].sub,rec:k===t.mopRec,lines:MOP[k].lines().slice().sort((a,b)=>(/P060|P101/.test(b.pid)?1:0)-(/P060|P101/.test(a.pid)?1:0))}))}:null,
+    lines:MOP[S.mop].lines()});
 
-let PRODUCTS=[], TYPE=null, BAND='m', SEL={}, TOUCHED={}, CATS=[];
-/* Apartment kit polos. One row per fit (men's, women's), each with its own size and
-   quantity. Picking a fit sets that row to one shirt per service day. */
-let SHIRT={pick:"", rows:{}};
+  /* vacuum */
+  if(t.vac){
+    const V={
+      corded:{title:'Corded backpack',sub:'ProTeam Super Coach Pro 6. The workhorse for after hours routes.',lines:[L('P129',1)]},
+      budget:{title:'Budget corded backpack',sub:'Lavex 8 quart with HEPA. Lowest cost backpack in the shop.',lines:[L('P122',1)]},
+      cordless:{title:'Cordless backpack',sub:'Sanitaire Transport. Worth it when people are in the building while you clean.',lines:[L('P069',1)]},
+      upright:{title:'Upright',sub:'12 inch corded. Fine for a small suite that is mostly open carpet.',lines:[L('P062',1)]},
+      none:{title:'I already own one',sub:'A commercial vacuum with a clean filter and spare bags.',lines:[]}};
+    out.push({id:'vac',title:'Vacuum',guide:'Pick one. A backpack vacuum cleans carpet and hard floors, so it takes the place of daily sweeping.',
+      choice:{name:'vac',opts:Object.keys(V).map(k=>({k,title:V[k].title,sub:V[k].sub,rec:k==='corded',lines:V[k].lines}))},
+      lines:V[S.vac].lines});
+  }
 
-/* ---------- CSV ---------- */
+  /* restroom */
+  if(t.k!=='cleanroom'){
+    const ls=[L('P012',q({s:1,m:2,l:3,xl:4},sz),{sub:'For inside the bowl only. One for each group of restrooms.'})];
+    if(t.k==='medical') ls.push(L('P125',1,{sub:'Sporicidal. For rooms the clinic tells you need it.'}), L('P126',1));
+    ls.push(L('P032',1,{sub:'Opens the paper, soap and towel dispensers.'}));
+    out.push({id:'rest',title:'Restroom',guide:'The tools that stay in the restroom. You fill the dispensers from the building’s own stock, so there is no paper or soap here. The restroom cleaner and the bowl cleaner are in the two chemical sections below.',lines:ls});
+  }
+
+  /* sweeping and dusting */
+  if(t.k!=='cleanroom'){
+    const light=(t.k==='office'||t.k==='medical'), ls=[];
+    if(t.k==='office'||t.k==='medical'||t.k==='school') ls.push(L('P022',1,{sub:'Screens and monitors get dusted with this. Never wipe them.'}));
+    ls.push(L('P166',1,{extra:light,sub:'For wet debris, broken glass and the front door mat.'}), L('P014',1,{extra:light}));
+    if(t.k==='industrial'||t.k==='school'||t.k==='gmp') ls.push(L('P115',q({s:1,m:1,l:2,xl:2},sz),{sub:'For big open floors and docks.'}));
+    if(t.k==='industrial') ls.push(L('P057',1), L('P039',1));
+    out.push({id:'sweep',title:light?'Dusting and spot sweeping':'Sweeping and dusting',
+      guide:light?'Your backpack vacuum does the daily floors, so the broom and dustpan are not checked. Add them only if you want them for things a vacuum should not pick up.'
+                 :'This building has floors a vacuum will not keep up with. The brooms handle the big open areas and anything wet.',lines:ls});
+  }
+
+  /* chemicals */
+  if(t.k==='cleanroom'){
+    out.push({id:'chem',title:'Alcohol and tacky mats',guide:'Alcohol goes on after cleaning. Tacky mats go at the entry. The facility’s own procedure sets how often.',lines:[L('P105',2), L('P107',2)]});
+  } else {
+    const grease=(t.k==='industrial'||t.k==='gmp'), med=(t.k==='medical');
+    const SO='Special order. Allow extra days.';
+    const bottles=()=>[L('P191',3,{sub:'Bottle and sprayer together. One for each chemical you spray.'}),
+      L('P201',3,{sub:'City Wide supplies the labels. Put one on each bottle before you fill it.'})];
+    const tru=add=>[
+      L('P152',1,{extra:add,sub:'Four triggers in a carton. Keep one on each cartridge so you never swap.'}),
+      L('P031',1,{extra:add,sub:'Glass, mirrors and everyday surfaces. Use with the blue and green cloths.'}),
+      L('P154',1,{extra:add,sub:'Restroom cleaner and disinfectant in one step. Use with the red and yellow cloths.'}),
+      L('P028',1,{extra:true,sub:'Add for heavy soap scum in showers and locker rooms.'}),
+      L('P030',1,{extra:add||!grease,sub:grease?'Grease, oil and heavy soil.':'Add for kitchens, grills and greasy floors.'}),
+      L('P029',1,{extra:add||!med,sub:med?'Hospital grade disinfectant for exam rooms and touch points.':'Add if the building asks for a hospital grade disinfectant.'})];
+    const P={
+      fastdraw:{guide:'This building uses the Betco FastDraw system. One locked cabinet on the closet wall mixes each chemical into your bottles and mop bucket. City Wide supplies the cabinet and mounts it. You buy the refills.',
+        lines:[
+          L('P182',1,{sub:'No charge. City Wide supplies the cabinet and mounts it on your first day of service.'}),
+          L('P183',1,{sub:'Glass and mirrors. Use with the blue cloths.'}),
+          L('P184',1,{sub:'Cleans and disinfects toilets, sinks and restroom fixtures in one step. Use with the red and yellow cloths.'}),
+          L('P185',1,{sub:'Floor cleaner for the mop bucket.'}),
+          grease ? L('P187',1,{sub:'Grease, oil and heavy soil. Sold as a case of four.'})
+                 : L('P186',1,{sub:'Desks, counters and general cleaning. Use with the green cloths.'})].concat(bottles())},
+      envirox:{guide:'This building uses EnvirOx. H2Orange2 does the restrooms, the floors, the everyday surfaces and the carpet spots. Fill your bottles at the building’s EnvirOx station. You still need a real glass cleaner and a stainless polish. Both are in the next section.',
+        lines:[
+          L('P001',1,{sub:'One case of two half gallons. Also fills the mop bucket.'}),
+          L('P002',2,{sub:'Light mix. Desks, counters and everyday surfaces. Use with the green cloths.'}),
+          L('P003',1,{sub:'Heavy mix. Cleans and sanitizes the restrooms. Use with the red and yellow cloths.'}),
+          L('P005',1,{sub:'Your scale remover. Hard water spots, scale and soap scum.'}),
+          L('P004',1,{sub:'Ready to use disinfectant for restroom fixtures and touch points.'})]},
+      m3:{guide:'This building uses the 3M Flow Control system. It works like FastDraw. It costs about twice as much to stock and the cabinet and restroom chemical are special order, so order early.',
+        lines:[
+          L('P196',1,{flag:SO,sub:'No charge. City Wide supplies the cabinet and mounts it on your first day of service.'}),
+          L('P197',1,{sub:'Glass and mirrors. Use with the blue cloths.'}),
+          L('P198',1,{flag:SO,sub:'Cleans and disinfects toilets, sinks and restroom fixtures. Use with the red and yellow cloths.'}),
+          L('P199',1,{sub:'Floor cleaner for the mop bucket.'}),
+          L('P200',1,{sub:'Desks, counters and general cleaning. Use with the green cloths.'})].concat(bottles())},
+      none:{guide:'This building has no required cabinet, so the kit uses TruShot. One trigger takes snap in cartridges. Nothing to mix, nothing to mount, and every cartridge is labeled.',
+        lines:tru(false).concat(med?[]:[L('P041',1,{sub:'Mop bucket floor cleaner. One gallon makes 128.'})])}};
+    if(!P[S.prog]) S.prog='fastdraw';
+    out.push({id:'chem',title:'Chemicals',guide:P[S.prog].guide,lines:P[S.prog].lines});
+    if(S.prog!=='none') out.push({id:'tru',title:'Add TruShot cartridges',extra:true,
+      guide:'TruShot works in any building. One trigger takes snap in cartridges, with nothing to mix. Check the ones you want.',lines:tru(true)});
+
+    /* specialty cleaners, always by the single bottle */
+    const from={fastdraw:'the FastDraw cabinet',m3:'the 3M cabinet',none:'the TruShot glass cartridge'}[S.prog];
+    const sp=[L('P192',q({s:1,m:1,l:2,xl:3},sz),{sub:'Thick acid cleaner that clings under the rim. Inside toilets and urinals only. Wear the safety glasses.'})];
+    if(S.prog!=='envirox') sp.push(L('P193',1,{sub:'Hard water spots and scale on faucets, sinks and drinking fountains.'}));
+    sp.push(L('P194',1,{extra:t.k==='industrial' && S.prog!=='envirox',sub:'Elevator doors, drinking fountains and break room appliances. Spray the cloth, then wipe with the grain.'}));
+    sp.push(L('P195',1,{extra:S.prog!=='envirox',sub:S.prog==='envirox'?'Streak free glass and mirrors. Use with the blue cloths.':`Your glass cleaner already comes from ${from}. Add this if you also want a ready to use bottle.`}));
+    if(t.k==='office' && S.prog!=='envirox') sp.push(L('P033',1));
+    if(t.k==='school'){ sp.push(L('P043',1)); if(S.prog!=='envirox') sp.push(L('P033',1)); }
+    if(t.k==='industrial') sp.push(L('P040',1));
+    if(t.k==='gmp') sp.push(L('P043',2), L('P042',1), L('P040',1));
+    out.push({id:'spec',title:'Specialty cleaners',
+      guide:'Jobs the everyday chemicals do not do. Each one is sold by the single bottle, so you buy only what you will use.'+(S.prog==='envirox'?' Mineral Shock above is your scale remover.':''),lines:sp});
+  }
+
+  /* cart and trash */
+  if(t.cart){
+    if(!S.cart) S.cart=t.cart;
+    const C={
+      cart:{title:'Janitor cart',sub:'Three shelves and a bag. Carries the tools and the trash together. Best inside finished buildings.',lines:[L('P176',1)]},
+      brute:{title:'BRUTE can on wheels',sub:'A 44 gallon can, a dolly and a caddy bag. Best for warehouses and long trash runs.',lines:[L('P049',1),L('P016',1),L('P050',1)]},
+      none:{title:'I already own one',sub:'',lines:[]}};
+    out.push({id:'cart',title:'Cart and trash',guide:'Pick one way to carry your tools and haul trash. The liners are for your own cart. The building supplies liners for its cans.',
+      choice:{name:'cart',opts:Object.keys(C).map(k=>({k,title:C[k].title,sub:C[k].sub,rec:k===t.cart,lines:C[k].lines}))},
+      lines:C[S.cart].lines.concat([L('P111',1,{sub:'For your own cart and trash runs.'})])});
+  }
+
+  /* safety and laundry */
+  { const ls=[];
+    if(t.k!=='cleanroom') ls.push(L('P170',q({s:2,m:2,l:4,xl:4},sz),{sub:'One at each end of a wet floor.'}));
+    ls.push(L('P025',2,{sub:'Pick the size on this line.'}), L('P026',q({s:1,m:2,l:2,xl:4},sz)));
+    if(t.k!=='cleanroom') ls.push(L('P150',1,{sub:'Dirty cloths and mop heads go here during the shift.'}), L('P151',1,{sub:'One bag per color so red never washes with blue.'}));
+    else ls.push(L('P111',1));
+    out.push({id:'safe',title:t.k==='cleanroom'?'Safety and liners':'Safety and laundry',guide:t.k==='cleanroom'?'Gloves and eye protection for everyone in the room.':'Signs, gloves and glasses protect you and the people in the building. The hamper and wash bags keep the colors apart on laundry day.',lines:ls});
+  }
+
+  /* extras */
+  const X={
+    office:['P055','P080','P035','P052'],
+    medical:['P104','P105','P109','P033','P080'],
+    school:['P035','P057','P080','P104'],
+    industrial:['P067','P058','P080','P023'],
+    gmp:['P104','P125','P108','P032'],
+    cleanroom:['P108','P125']}[t.k];
+  out.push({id:'extra',title:'Often added for this kind of building',extra:true,lines:X.map(p=>L(p,1,{extra:true}))});
+  return withAdded(out);
+}
+
+function withAdded(out){
+  out.forEach(sec=>{ sec.lines=sec.lines.filter(l=>CAT[l.pid]); });
+  const apt=!!T().apt, ids=Object.keys(S.added).filter(p=>CAT[p] && CAT[p].act && (!apt || CAT[p].src==='Staples'));
+  if(ids.length) out.push({id:'added',title:'Added from the shop',guide:'These earn the same kit discount as the rest of the kit.',lines:ids.map(p=>L(p,1,{}))});
+  return out;
+}
+function buildApt(){
+  const d=S.days===7?7:5, key=d===7?'apt7':'apt5';
+  const G={cloths:['P146','P147','P148','P149'], mops:['P174','P173','P175','P141','P142'], vac:['P137'],
+    rest:['P169','P154'], sweep:['P166','P181','P179','P180','P168','P167','P158','P159'],
+    chem:['P152','P153','P155','P156','P157'], cart:['P176','P160','P161','P162','P163','P172'], safe:['P170','P171','P150','P151']};
+  const sw={P146:'red',P147:'yellow',P148:'green',P149:'blue',P174:'red',P173:'green'};
+  const mk=ids=>ids.filter(p=>CAT[p]&&CAT[p].k[key]).map(p=>L(p,CAT[p].k[key],{sw:sw[p],
+    math:(p==='P173'||p==='P174')?`One a day × ${d} service days.`:''}));
+  return withAdded([
+    {id:'cloths',title:'Microfiber cloths',code:'cloth',guide:'Cloths do most of the cleaning. Each color has one job, so a cloth that touched a toilet never touches a desk.',rule:'Fold each cloth in quarters and use all eight faces. The mesh wash bags keep the colors apart on laundry day.',lines:mk(G.cloths)},
+    {id:'mops',title:'Mops',code:'mop',guide:'One clean head of each color for every service day. Two buckets, so the restroom water never touches a lobby floor.',lines:mk(G.mops)},
+    {id:'vac',title:'Vacuum',guide:'The backpack does the clubhouse carpet and doubles as a blower for entries and walkways.',lines:mk(G.vac)},
+    {id:'rest',title:'Restroom',guide:'Restrooms are serviced once and checked three times a shift. Red cloths and the red mop stay here.',lines:mk(G.rest)},
+    {id:'sweep',title:'Sweeping, dusting and detail tools',guide:'A porter works outside as much as inside. The push broom is for the parking lot and the picker is for the grounds.',lines:mk(G.sweep)},
+    {id:'chem',title:'Chemicals',guide:'TruShot is one trigger with snap in cartridges. Nothing to mix and every bottle is labeled.',lines:mk(G.chem)},
+    {id:'cart',title:'Cart and trash',guide:'The cart carries the tools. The BRUTE carries the trash, so leaking bags never cross a clean floor.',lines:mk(G.cart)},
+    {id:'safe',title:'Safety and laundry',guide:'Signs and gloves protect you and the residents. The hamper and wash bags keep the colors apart on laundry day.',lines:mk(G.safe)},
+    {id:'polo',title:'Uniform polos',guide:`The property requires the black City Wide polo. One for each service day, so ${d} polos. Choose the fit, then the size.`,lines:[]}
+  ]);
+}
+
+/* ---------- pricing ---------- */
+function item(pid){ return CAT[pid]; }
+function priceOf(pid){ if(GIFT[pid]) return 0; const f=CABINET[pid]; return (f && FREE[f]) ? 0 : item(pid).p; }
+function ovKey(sec,l){ return S.type+'|'+sec.id+'|'+l.pid; }
+function state(sec,l){ const o=S.ov[ovKey(sec,l)]||{}; return {on:o.on!==undefined?o.on:!l.extra, qty:o.qty!==undefined?o.qty:l.qty, touched:o.qty!==undefined && o.qty!==l.qty}; }
+function linesTotal(sec,lines){ return lines.reduce((s,l)=>{ const st=state(sec,l); return s+(st.on?st.qty*priceOf(l.pid):0); },0); }
+function optTotal(lines){ return lines.reduce((s,l)=>s+(l.extra?0:l.qty*item(l.pid).p),0); }
+function money(){
+  const kit=buildKit(); let sub=0,count=0;
+  FREE.fd=kit.some(sec=>sec.lines.some(l=>{ const st=state(sec,l); return FDCHEM.includes(l.pid) && st.on && st.qty>0; }));
+  kit.forEach(sec=>sec.lines.forEach(l=>{ const st=state(sec,l); if(st.on&&st.qty>0){ sub+=st.qty*priceOf(l.pid); count+=st.qty; } }));
+  const apt=!!T().apt; let pct=0,label='';
+  if(apt) shirtLines().forEach(x=>{ sub+=x.line; count+=x.qty; });
+  sub=+sub.toFixed(2);
+  if(apt){ pct=(1-APT_KEEP)*100; label=APT_LABEL; }
+  else { TIERS.forEach(t=>{ if(sub>=t.min) pct=t.pct; }); label=pct+'%'; }
+  const disc=+(sub*pct/100).toFixed(2);
+  return {kit,sub,count,pct,label,disc,grand:+(sub-disc).toFixed(2),apt};
+}
+const fmt=n=>'$'+Number(n).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g,',');
+const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+/* ---------- render ---------- */
+function renderSetup(){
+  const t=T();
+  document.getElementById('pickType').innerHTML=TYPES.map(x=>
+    `<label class="opt"><input type="radio" name="type" id="type-${x.k}" value="${x.k}" ${x.k===S.type?'checked':''}><span class="face"><b>${esc(x.n)}</b><span>${esc(x.s)}</span></span></label>`).join('');
+  document.getElementById('fsSize').hidden=!!t.apt;
+  document.getElementById('fsProg').hidden=!!t.apt || t.k==='cleanroom';
+  document.getElementById('pickProg').innerHTML=PROGS.map(x=>
+    `<label class="opt"><input type="radio" name="prog" id="prog-${x.k}" value="${x.k}" ${x.k===S.prog?'checked':''}><span class="face"><b>${esc(x.n)}</b><span>${esc(x.s)}</span></span></label>`).join('');
+  document.getElementById('pickSize').innerHTML=SIZES.map(x=>
+    `<label class="opt"><input type="radio" name="size" id="size-${x.k}" value="${x.k}" ${x.k===S.size?'checked':''}><span class="face"><b>${x.n}</b><span>${x.s} sq ft</span></span></label>`).join('');
+  document.getElementById('pickDays').innerHTML=[1,2,3,4,5,6,7].map(d=>{
+    const dis=t.apt && d!==5 && d!==7;
+    return `<label class="opt"><input type="radio" name="days" id="days-${d}" value="${d}" ${d===S.days?'checked':''} ${dis?'disabled':''} aria-label="${d} ${d===1?'day':'days'} a week"><span class="face">${d}</span></label>`;}).join('');
+  const sz=SIZES.find(x=>x.k===S.size);
+  document.getElementById('recap').innerHTML = t.apt
+    ? `<b>Apartment community, ${S.days} day porter.</b> This kit is the minimum the property requires. Every item ships from Staples as one order and carries the ${APT_LABEL} kit discount.`
+    : `<b>${sz.n} ${t.n.toLowerCase()}, cleaned ${S.days} ${S.days===1?'day':'days'} a week.</b> You get ${sets()} clean sets of cloths and mop heads${S.days===1?', one in use and one spare':', one for each cleaning day'}. Wash once a week.`;
+}
+const CODE={
+  cloth:`<div class="code"><h3>The cloth color code</h3>`+Object.keys(COLORS).map(c=>`<div><span class="sw ${c}"></span><span><b>${COLORS[c].n}.</b> ${COLORS[c].use}</span></div>`).join('')+`</div>`,
+  mop:`<div class="code"><h3>The mop color code</h3><div><span class="sw red"></span><span><b>Red or pink.</b> Restroom floors. It never leaves the restroom.</span></div><div><span class="sw blue"></span><span><b>Blue or green.</b> The floors in every other room.</span></div></div>`};
+function imgOf(pid){ const u=(CAT[pid]&&CAT[pid].img)||''; const m=window.CW_IMG||{}; return m[u] ? 'shop/img/'+m[u] : u; }
+function imgFail(el){ const u=el.dataset.u; if(u && el.src!==u && !el.dataset.tried){ el.dataset.tried=1; el.src=u; } else el.remove(); }
+function pic(pid){ const u=imgOf(pid); return u?`<img src="${esc(u)}" data-u="${esc((CAT[pid]&&CAT[pid].img)||'')}" alt="" loading="lazy" width="56" height="56" onerror="imgFail(this)">`:''; }
+function rowHTML(sec,l){
+  const it=item(l.pid), st=state(sec,l), key=esc(ovKey(sec,l)), id='l-'+sec.id+'-'+l.pid;
+  const pr=priceOf(l.pid), covered=(CABINET[l.pid] && pr===0)||GIFT[l.pid], owed=CABINET[l.pid] && pr>0 && st.on;
+  const name=esc(l.name||it.n);
+  const sz=it.sz.length?`<select class="szsel${st.on&&!S.sizes[l.pid]?' need':''}" data-size="${l.pid}" id="${id}-z" aria-label="Size for ${name}"><option value="">Pick a size</option>${it.sz.map(z=>`<option${S.sizes[l.pid]===z?' selected':''}>${esc(z)}</option>`).join('')}</select>`:'';
+  return `<div class="row ${st.on?'':'off'}">
+    <div class="chk"><input type="checkbox" id="${id}" data-k="${key}" data-act="on" ${st.on?'checked':''} aria-label="Include ${name}"></div>
+    <div class="pic">${pic(l.pid)}</div>
+    <div class="nm"><label for="${id}"><b>${l.sw?`<span class="sw ${l.sw}"></span>`:''}${name}</b>
+      ${l.math?`<span class="math">${esc(l.math)}</span>`:''}${l.sub?`<span class="sub">${esc(l.sub)}</span>`:''}
+      ${l.flag?`<span class="flag">${esc(l.flag)}</span>`:''}</label>${sz}
+      ${st.touched?`<span class="sub">We suggest ${l.qty}. <button type="button" class="reset" data-k="${key}" data-act="reset">Use ${l.qty}</button></span>`:''}</div>
+    <div class="qty"><button type="button" data-k="${key}" data-act="dec" data-q="${l.qty}" aria-label="One fewer ${name}"><svg class="i"><use href="#i-minus"/></svg></button>
+      <input type="number" inputmode="numeric" min="0" id="${id}-q" value="${st.qty}" data-k="${key}" data-act="set" aria-label="Quantity of ${name}">
+      <button type="button" data-k="${key}" data-act="inc" data-q="${l.qty}" aria-label="One more ${name}"><svg class="i"><use href="#i-plus"/></svg></button></div>
+    <div class="amt">${fmt(st.qty*pr)}<small>${covered?'City Wide covers it':fmt(pr)+' each'}</small></div>
+  </div>`;
+}
+function renderKit(){
+  if(!READY){ document.getElementById('kit').innerHTML='<p class="loading" role="status">Loading the catalog.</p>'; return; }
+  const m=money();
+  document.getElementById('kit').innerHTML=m.kit.map(sec=>{
+    const rows=sec.lines.length?`<div class="rows">${sec.lines.map(l=>rowHTML(sec,l)).join('')}</div>`:'';
+    const choice=sec.choice?`<div class="choice" role="radiogroup" aria-label="${esc(sec.title)} choice">${sec.choice.opts.map(o=>
+      `<label class="opt"><input type="radio" name="${sec.choice.name}" id="${sec.choice.name}-${o.k}" value="${o.k}" ${S[sec.choice.name]===o.k?'checked':''}>
+        <span class="face ${o.lines.length&&imgOf(o.lines[0].pid)?'hasimg':''}">${o.lines.length&&imgOf(o.lines[0].pid)?`<img class="oimg" src="${esc(imgOf(o.lines[0].pid))}" alt="" loading="lazy" width="52" height="52" onerror="this.remove()">`:''}<b>${esc(o.title)}</b><span>${esc(o.sub)}</span><span class="price">${o.lines.length?fmt(optTotal(o.lines)):'$0.00'}</span>${o.rec?'<span class="tag">Our pick for this building</span>':''}</span></label>`).join('')}</div>`:'';
+    const body=`${sec.guide?`<p class="guide">${esc(sec.guide)}</p>`:''}${sec.code?CODE[sec.code]:''}${sec.rule?`<p class="rule">${esc(sec.rule)}</p>`:''}${choice}${rows}${sec.id==='polo'?'<div id="shirtWrap"></div>':''}`;
+    if(sec.extra) return `<section class="sec"><details class="more"><summary><svg class="i"><use href="#i-plus"/></svg>${esc(sec.title)}</summary>${sec.guide?`<p class="guide">${esc(sec.guide)}</p>`:''}${rows}</details></section>`;
+    return `<section class="sec" aria-labelledby="h-${sec.id}"><h2 id="h-${sec.id}">${esc(sec.title)}</h2>${body}</section>`;
+  }).join('');
+  renderShirts();
+  renderBar(m);
+  save();
+}
+function renderBar(m){
+  m=m||money();
+  document.getElementById('reviewBtn').disabled=!READY||m.count===0;
+  document.getElementById('grand').textContent=fmt(m.grand);
+  document.getElementById('subLine').textContent=m.count+' items'+(m.disc?', you save '+fmt(m.disc):'');
+  const msg=document.getElementById('discMsg'), fill=document.getElementById('fill'), ticks=document.getElementById('ticks');
+  if(m.apt){ msg.textContent=`Apartment kit discount ${APT_LABEL} on every item`; fill.style.width='100%'; ticks.innerHTML=''; return; }
+  const next=TIERS.find(t=>m.sub<t.min);
+  msg.textContent = m.pct ? (next?`${m.pct}% kit discount. Add ${fmt(next.min-m.sub)} more for ${next.pct}%.`:`${m.pct}% kit discount, the most a kit can earn.`)
+                          : `Add ${fmt(TIERS[0].min-m.sub)} more to earn 5% off the kit.`;
+  fill.style.width=Math.min(100,m.sub/TIERS[2].min*100)+'%';
+  ticks.innerHTML=TIERS.map(t=>`<span class="${m.sub>=t.min?'hit':''}">${fmt(t.min).replace('.00','')} is ${t.pct}% off</span>`).join('');
+}
+function renderAll(){ renderSetup(); renderKit(); renderShopCats(); renderShop(); }
+
+/* ---------- events ---------- */
+document.getElementById('setup').addEventListener('change',e=>{
+  const el=e.target; if(el.name==='type'){ S.type=el.value; S.mop=null; S.cart=null; if(T().apt && S.days!==7) S.days=5; }
+  if(el.name==='size') S.size=el.value;
+  if(el.name==='days') S.days=+el.value;
+  if(el.name==='prog') S.prog=el.value;
+  const id=el.id; renderAll(); const again=document.getElementById(id); if(again) again.focus();
+});
+document.getElementById('kit').addEventListener('change',e=>{
+  const el=e.target;
+  if(el.dataset.size){ S.sizes[el.dataset.size]=el.value; const id=el.id; renderKit(); const a=document.getElementById(id); if(a) a.focus(); return; }
+  if(el.dataset.shsize){ shirtRow(el.dataset.shsize).size=el.value; const id=el.id; renderKit(); const a=document.getElementById(id); if(a) a.focus(); return; }
+  if(el.dataset.shqty){ shirtRow(el.dataset.shqty).qty=Math.max(0,parseInt(el.value)||0); const id=el.id; renderKit(); const a=document.getElementById(id); if(a) a.focus(); return; }
+  if(el.type==='radio'){ S[el.name]=el.value; const id=el.id; renderKit(); const a=document.getElementById(id); if(a) a.focus(); return; }
+  const k=el.dataset.k; if(!k) return; const o=S.ov[k]||(S.ov[k]={});
+  if(el.dataset.act==='on'){ o.on=el.checked; }
+  if(k.indexOf('|added|')>0 && o.on===false){ delete S.added[k.split('|')[2]]; delete S.ov[k]; }
+  if(el.dataset.act==='set'){ o.qty=Math.max(0,parseInt(el.value)||0); if(o.qty===0) o.on=false; else o.on=true; }
+  const id=el.id; renderKit(); const a=document.getElementById(id); if(a) a.focus();
+});
+document.getElementById('kit').addEventListener('click',e=>{
+  const fb=e.target.closest('button[data-fit]');
+  if(fb){ const id=fb.dataset.fit; S.shirt.pick=id; const r=shirtRow(id); if(!r.qty) r.qty=(S.days===7?7:5); renderKit(); const a=document.querySelector('button[data-fit="'+id+'"]'); if(a) a.focus(); return; }
+  const sb=e.target.closest('button[data-shb]');
+  if(sb){ const r=shirtRow(sb.dataset.shb); r.qty=Math.max(0,(r.qty||0)+(+sb.dataset.d)); const lab=sb.getAttribute('aria-label'); renderKit(); const a=[...document.querySelectorAll('#kit button[aria-label]')].find(x=>x.getAttribute('aria-label')===lab); if(a) a.focus(); return; }
+  const b=e.target.closest('button[data-act]'); if(!b) return;
+  const k=b.dataset.k, o=S.ov[k]||(S.ov[k]={}), act=b.dataset.act;
+  const input=b.parentElement.querySelector('input'); const cur=input?(parseInt(input.value)||0):0;
+  if(act==='inc'){ o.qty=cur+1; o.on=true; }
+  if(act==='dec'){ o.qty=Math.max(0,cur-1); if(o.qty===0) o.on=false; }
+  if(act==='reset'){ delete o.qty; o.on=true; }
+  const lab=b.getAttribute('aria-label'); renderKit();
+  if(lab){ const again=[...document.querySelectorAll('#kit button[aria-label]')].find(x=>x.getAttribute('aria-label')===lab); if(again) again.focus(); }
+});
+
+/* add anything from the shop */
+const shopQ=document.getElementById('shopQ'), shopCat=document.getElementById('shopCat'), shopRes=document.getElementById('shopRes');
+function shopItems(){ const apt=!!T().apt; return Object.keys(CAT).filter(p=>CAT[p].act && CAT[p].p>0 && !GIFT[p] && !CAT[p].isShirt && (!apt||CAT[p].src==='Staples')); }
+function renderShopCats(){
+  const cats=[...new Set(shopItems().flatMap(p=>CAT[p].c))].filter(c=>!/Apartment/.test(c)).sort();
+  const cur=shopCat.value; shopCat.innerHTML='<option value="">All categories</option>'+cats.map(c=>`<option>${esc(c)}</option>`).join(''); if(cats.includes(cur)) shopCat.value=cur;
+}
+function inKitNow(){ const s=new Set(); buildKit().forEach(sec=>sec.lines.forEach(l=>{ if(state(sec,l).on) s.add(l.pid); })); return s; }
+function renderShop(){
+  const words=shopQ.value.toLowerCase().split(/\s+/).filter(Boolean), cat=shopCat.value;
+  if(!words.length && !cat){ shopRes.innerHTML='<p class="hint">Type a word like vacuum, liner or scraper, or pick a category.</p>'; return; }
+  const have=inKitNow();
+  const hits=shopItems().filter(p=>{ const it=CAT[p]; if(cat && !it.c.includes(cat)) return false;
+    const hay=(it.n+' '+p+' '+it.c.join(' ')).toLowerCase(); return words.every(w=>hay.includes(w)); });
+  if(!hits.length){ shopRes.innerHTML='<p class="hint">Nothing in the shop matches that. Try one shorter word.</p>'; return; }
+  shopRes.innerHTML='<div class="rows">'+hits.slice(0,12).map(p=>{ const it=CAT[p];
+    return `<div class="row"><div class="pic">${pic(p)}</div><div class="nm"><b>${esc(it.n)}</b><span class="amt">${fmt(it.p)} each</span></div>`+
+      (have.has(p)?'<span class="intag">In your kit</span>':`<button type="button" class="btn" data-add="${p}" aria-label="Add ${esc(it.n)} to the kit">Add to kit</button>`)+'</div>'; }).join('')+'</div>'+
+    (hits.length>12?`<p class="hint">Showing 12 of ${hits.length}. Add a word to narrow it down.</p>`:'');
+}
+shopQ.addEventListener('input',renderShop); shopCat.addEventListener('change',renderShop);
+shopRes.addEventListener('click',e=>{ const b=e.target.closest('button[data-add]'); if(!b) return; const p=b.dataset.add;
+  S.added[p]=1; const k=S.type+'|added|'+p; S.ov[k]={on:true}; renderKit(); renderShop(); });
+
+/* uniform polos, apartment kits only. One row per fit, each with its own size and quantity. */
+function aptKey(){ return S.days===7?'apt7':'apt5'; }
+function shirtIds(){ return T().apt ? Object.keys(CAT).filter(p=>CAT[p].shirt[aptKey()]) : []; }
+function shirtRow(id){ return S.shirt.rows[id]||(S.shirt.rows[id]={size:'',qty:0}); }
+function shirtUnit(id,size){ const it=CAT[id]; return (size && it.sp[size]!==undefined) ? it.sp[size] : it.p; }
+function fitLabel(it){ return /women/i.test(it.n)?"Women's fit":"Men's fit"; }
+function shirtLines(){
+  return shirtIds().map(id=>{ const r=S.shirt.rows[id]||{}; if(!(r.qty>0)) return null;
+    const unit=shirtUnit(id,r.size); return {pid:id,qty:r.qty,unit,line:+(r.qty*unit).toFixed(2),size:r.size||''}; }).filter(Boolean);
+}
+function renderShirts(){
+  const w=document.getElementById('shirtWrap'); if(!w) return;
+  const ids=shirtIds(); if(!ids.length){ w.innerHTML=''; return; }
+  const days=S.days===7?7:5, have=ids.reduce((n,id)=>n+((S.shirt.rows[id]||{}).qty||0),0);
+  const rows=ids.map(id=>{ const it=CAT[id], r=shirtRow(id), q=r.qty||0, unit=shirtUnit(id,r.size), name=esc(it.n);
+    const opts='<option value="">Pick a size</option>'+it.sz.map(z=>{ const up=it.sp[z]!==undefined && it.sp[z]>it.p ? ' ('+fmt(it.sp[z])+')' : '';
+      return `<option value="${esc(z)}"${r.size===z?' selected':''}>${esc(z)}${up}</option>`; }).join('');
+    return `<div class="row ${q>0?'':'off'}">
+      <div class="chk"></div>
+      <div class="pic">${pic(id)}</div>
+      <div class="nm"><b>${name}</b><span class="sub">${esc(fitLabel(it))}. ${esc(it.colors||'Black')} only${it.logo?', '+esc(it.logo)+' logo':''}.</span>
+        <select class="szsel${q>0&&!r.size?' need':''}" id="sh-${id}-z" data-shsize="${id}" aria-label="Size for ${name}">${opts}</select></div>
+      <div class="qty"><button type="button" data-shb="${id}" data-d="-1" aria-label="One fewer ${name}"><svg class="i"><use href="#i-minus"/></svg></button>
+        <input type="number" inputmode="numeric" min="0" id="sh-${id}-q" value="${q}" data-shqty="${id}" aria-label="Quantity of ${name}">
+        <button type="button" data-shb="${id}" data-d="1" aria-label="One more ${name}"><svg class="i"><use href="#i-plus"/></svg></button></div>
+      <div class="amt">${fmt(q*unit)}<small>${fmt(unit)} each</small></div>
+    </div>`; }).join('');
+  w.innerHTML=`<div class="fit" role="group" aria-label="Polo fit">${ids.map(id=>`<button type="button" data-fit="${id}" aria-pressed="${S.shirt.pick===id?'true':'false'}">${esc(fitLabel(CAT[id]))}</button>`).join('')}</div>
+    <div class="rows">${rows}</div>${have>0&&have<days?`<p class="hint">The kit calls for ${days} polos. You have ${have}.</p>`:''}`;
+}
+
+/* ---------- catalog ---------- */
 function parseCSV(text){
   const rows=[]; let row=[], f="", q=false;
   for(let i=0;i<text.length;i++){
@@ -505,509 +781,205 @@ function parseCSV(text){
   if(f||row.length){ row.push(f); rows.push(row); }
   return rows.filter(r=>r.length>1);
 }
-async function fetchCatalogText(){
+function ingest(text){
+  const rows=parseCSV(text); if(!rows.length) throw new Error('empty catalog');
+  const hd=rows[0].map(h=>h.trim()), ix=k=>hd.indexOf(k), g=(r,k)=>ix(k)>=0?(r[ix(k)]||'').trim():'';
+  if(ix('id')<0||ix('price')<0) throw new Error('bad catalog');
+  const cat={};
+  rows.slice(1).forEach(r=>{
+    const id=g(r,'id'); if(!id) return;
+    const act=g(r,'active')!=='0';
+    if(!act && !KITONLY.includes(id)) return;
+    const k={}, shirt={};
+    g(r,'kits').split(';').map(x=>x.trim()).filter(Boolean).forEach(part=>{ const b=part.split(':').map(x=>x.trim());
+      if(b[1]==='core') k[b[0]]=parseInt(b[2]||'1')||1; if(b[1]==='shirt') shirt[b[0]]=1; });
+    const sp={}; g(r,'size_prices').split('|').forEach(x=>{ const a=x.split('='); if(a[0]&&a[1]&&!isNaN(parseFloat(a[1]))) sp[a[0].trim()]=parseFloat(a[1]); });
+    cat[id]={n:g(r,'name'), p:parseFloat(g(r,'price'))||0, src:g(r,'source'), k, shirt, isShirt:Object.keys(shirt).length>0,
+      c:g(r,'categories').split(';').map(x=>x.trim()).filter(Boolean), sz:g(r,'sizes').split(',').map(x=>x.trim()).filter(Boolean), sp,
+      img:g(r,'image'), sku:g(r,'sku'), ssku:g(r,'supplier_sku'), ful:g(r,'fulfillment'), colors:g(r,'colors'), logo:g(r,'logo'), act};
+  });
+  if(Object.keys(cat).length<20) throw new Error('short catalog');
+  return cat;
+}
+/* A copy from the last ten minutes paints at once. Otherwise the live feed, then the last copy, then the file in the repo. */
+const CAT_KEY='cw_kit_catalog';
+async function loadCatalog(){
+  let cached=null;
+  try{ cached=JSON.parse(localStorage.getItem(CAT_KEY)||'null'); }catch(e){}
+  if(cached && cached.text && Date.now()-cached.t<600000){ try{ return ingest(cached.text); }catch(e){} }
   if(CFG.CATALOG_URL){
     try{
-      const res=await fetch(CFG.CATALOG_URL+(CFG.CATALOG_URL.includes("?")?"&":"?")+"cachebust="+Date.now());
-      if(res.ok){ const t=await res.text(); if(t && t.split("\n")[0].includes("id")) return t; }
+      const res=await fetch(CFG.CATALOG_URL+(CFG.CATALOG_URL.includes('?')?'&':'?')+'cachebust='+Date.now());
+      if(res.ok){ const t=await res.text(); const cat=ingest(t);
+        try{ localStorage.setItem(CAT_KEY,JSON.stringify({t:Date.now(),text:t})); }catch(e){}
+        return cat; }
     }catch(e){}
   }
-  const res=await fetch("shop/catalog.csv?v="+Date.now());
-  return res.text();
-}
-function displayPrice(p){
-  if(p.price>0) return p.price;
-  const m=parseFloat(String(p.margin_pct||"").replace("%",""));
-  const pct=isNaN(m)?(CFG.DEFAULT_MARGIN_PCT||25):m;
-  return p.cost>0 ? +(p.cost/(1-pct/100)).toFixed(2) : 0;
-}
-const fmt = n => "$"+Number(n).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g,",");
-const esc = s => String(s==null?"":s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
-
-async function load(){
-  const rows=parseCSV(await fetchCatalogText());
-  const hd=rows[0].map(h=>h.trim());
-  const idx=k=>hd.indexOf(k);
-  PRODUCTS=rows.slice(1).map(r=>({
-    id:r[idx("id")], name:r[idx("name")], sku:r[idx("sku")],
-    categories:(r[idx("categories")]||"").split(";").map(s=>s.trim()).filter(Boolean),
-    fulfillment:r[idx("fulfillment")], source:r[idx("source")],
-    cost:parseFloat(r[idx("cost")])||0, margin_pct:r[idx("margin_pct")],
-    price:parseFloat(r[idx("price")])||0,
-    image:r[idx("image")], description:r[idx("description")],
-    supplier_sku:idx("supplier_sku")>=0?(r[idx("supplier_sku")]||"").trim():"",
-    sizes:idx("sizes")>=0?(r[idx("sizes")]||"").split(",").map(x=>x.trim()).filter(Boolean):[],
-    size_prices:parseSizePrices(idx("size_prices")>=0?(r[idx("size_prices")]||""):""),
-    colors:idx("colors")>=0?(r[idx("colors")]||"").trim():"",
-    logo:idx("logo")>=0?(r[idx("logo")]||"").trim():"",
-    active:r[idx("active")]!=="0",
-    kits:parseKits(idx("kits")>=0 ? (r[idx("kits")]||"") : "")
-  })).filter(p=>p.active && p.id);
-  PRODUCTS.forEach(p=>p.unit=displayPrice(p));
-  CATS=[...new Set(PRODUCTS.flatMap(p=>p.categories))].sort();
-  buildCats();
-  renderTypes();
-  restore();
-}
-function parseSizePrices(s){
-  const o={};
-  s.split("|").forEach(x=>{ const [k,v]=x.split("="); if(k&&v&&!isNaN(parseFloat(v))) o[k.trim()]=parseFloat(v); });
-  return o;
-}
-function parseKits(s){
-  const out={};
-  s.split(";").map(x=>x.trim()).filter(Boolean).forEach(part=>{
-    const bits=part.split(":").map(x=>x.trim());
-    if(bits.length>=2){ out[bits[0]]={tier:bits[1]||"opt", qty:parseInt(bits[2]||"1")||1}; }
-  });
-  return out;
+  if(cached && cached.text){ try{ return ingest(cached.text); }catch(e){} }
+  const res=await fetch('shop/catalog.csv?v='+Date.now());
+  return ingest(await res.text());
 }
 
-/* ---------- render ---------- */
-function renderTypes(){
-  document.getElementById("types").innerHTML = TYPES.map(t=>
-    `<button class="type${TYPE===t.k?" on":""}${t.apt?" apt":""}" onclick="pickType('${t.k}')">
-       <b>${esc(t.n)}</b><span>${esc(t.s)}</span></button>`).join("");
-  document.getElementById("bands").innerHTML = BANDS.map(b=>
-    `<button class="type${BAND===b.k?" on":""}" onclick="pickBand('${b.k}')">
-       <b>${esc(b.n)}</b><span>${esc(b.s)}</span></button>`).join("");
-}
-function applyKit(){
-  // (re)seed core quantities at the current band and type, keeping anything
-  // the vendor deliberately added or removed by hand.
-  PRODUCTS.forEach(p=>{
-    const kk=p.kits[TYPE];
-    if(kk && kk.tier==="core" && !TOUCHED[p.id]) SEL[p.id]=scaledQty(p,kk.qty);
-  });
-}
-function showType(k){
-  const t=TYPES.find(x=>x.k===k); if(!t) return;
-  document.getElementById("kitArea").style.display="";
-  document.getElementById("kitSub").textContent=t.sub;
-  document.getElementById("browseSub").textContent=t.apt
-    ? "Staples items only. Apartment community kits ship from Staples Business Advantage as one order, so only Staples items can be added."
-    : "The full catalog. Search it and add to your kit.";
-  buildCats();
-  const apt=!!t.apt;
-  document.getElementById("bandStep").style.display=apt?"none":"";
-  document.getElementById("kitStepTitle").textContent=apt?"2. Your apartment community kit":"3. Your suggested kit";
-  document.getElementById("optStepTitle").textContent=apt?"3. Also worth adding":"4. Also worth adding";
-  document.getElementById("browseStepTitle").textContent=apt?"4. Add anything else":"5. Add anything else";
-  document.getElementById("heroH").textContent=apt?"Build your apartment community kit":"Build your start-up kit";
-  document.getElementById("eduWrap").innerHTML =
-    (EDU_BY_TYPE[k]||[]).map((e,i)=>{
-      const b=EDU[e]; if(!b) return "";
-      return `<details class="edu"${i===0?" open":""}><summary>${esc(b.t)}</summary>${b.h}</details>`;
-    }).join("");
-}
-function pickType(k){
-  if(TYPE!==k){ SEL={}; TOUCHED={}; SHIRT={pick:"", rows:{}}; }
-  TYPE=k; showType(k); applyKit();
-  renderTypes(); renderAll(); save();
-  document.getElementById("kitArea").scrollIntoView({behavior:"smooth",block:"start"});
-}
-function pickBand(b){
-  BAND=b; applyKit(); renderTypes(); renderAll(); save();
-}
-function inKit(p){ return SEL[p.id]>0 && kitAllowed(p); }
-/* Apartment community kits ship as one Staples Business Advantage order. Only Staples
-   items can go in them. The one exception is the kit polos (Bennett), which have their
-   own section. New building kits are not restricted. */
-const APT_SOURCE="Staples";
-function isKitShirt(p){ return Object.values(p.kits).some(k=>k.tier==="shirt"); }
-function kitAllowed(p){ return !isApt() || p.source===APT_SOURCE || (isKitShirt(p) && p.kits[TYPE]); }
-function buildCats(){
-  const sel=document.getElementById("cat"); if(!sel) return;
-  const keep=sel.value;
-  const cats=[...new Set(PRODUCTS.filter(p=>kitAllowed(p) && !isKitShirt(p)).flatMap(p=>p.categories))].sort();
-  sel.innerHTML='<option value="">All categories</option>'+cats.map(c=>`<option value="${esc(c)}">${esc(c)}</option>`).join("");
-  sel.value=cats.includes(keep)?keep:"";
-}
-
-function rowHTML(p, note){
-  const on=inKit(p);
-  const q=SEL[p.id]||0;
-  // Apartment kits: the quantity on the row is what the scope needs. Dropping below it
-  // (or unchecking) shows the warning on that row. The vendor can still do it.
-  const kk=p.kits[TYPE];
-  const need=(isApt() && kk && kk.tier==="core") ? scaledQty(p,kk.qty) : 0;
-  const warn = need>0 && q<need
-    ? `<span class="warn">${esc(APT_WARN)}<small>The kit calls for ${need}. You have ${q}.</small></span>` : "";
-  return `<div class="row${on?"":" off"}">
-    <input class="chk" type="checkbox" ${on?"checked":""} onchange="toggle('${p.id}',this.checked)" aria-label="include">
-    <div class="thumb">${p.image?`<img src="${esc(p.image)}" alt="" loading="lazy" onerror="this.remove()">`:""}</div>
-    <div class="nm">
-      <b>${esc(p.name)}</b>
-      <span>SKU ${esc(p.sku)}${p.fulfillment==="Warehouse"?' <span class="badge">In Stock</span>':""}</span>
-      ${note?`<span class="why">${esc(note)}</span>`:""}
-      ${warn}
-    </div>
-    <div class="qty">
-      <button onclick="bump('${p.id}',-1)">&minus;</button>
-      <input type="number" min="0" value="${q}" onchange="setQty('${p.id}',this.value)">
-      <button onclick="bump('${p.id}',1)">+</button>
-    </div>
-    <div class="pr">${fmt((q||1)*p.unit)}</div>
-  </div>`;
-}
-const NOTES={
-  P060:'Dual chamber. Clean solution stays clean.',
-  P110:'The red insert that makes it dual chamber.',
-  P119:'Charge pads here. Do not dunk microfiber in a mop bucket.',
-  P069:'Cordless. No cord across an occupied corridor.',
-  P129:'69.7 dBA and CRI certified. Best value for after hours.',
-  P103:'One fresh pad per room. Do not re-use across rooms.',
-  P068:'Adds flat mop wringing to a WaveBrake you already own.',
-  P125:'Sporicidal. Use disposable pads with it, never microfiber.',
-  P005:'Hard water and scum. Not part of the H2Orange2 program.',
-  P137:'The least expensive backpack vacuum we carry. Converts to a blower for the breezeways.',
-  P141:'Two buckets: one for restrooms, one for lobbies and corridors.',
-  P142:'Drops inside the WaveBrake. Rinse water stays out of the clean solution.',
-  P145:'One fresh pad per service day. Dirty pads go in the hamper.',
-  P146:'Red is restrooms only.',
-  P150:'Dirty cloths and pads live here during the shift.',
-  P152:'Snap a cartridge in and spray. No bottles to mix or label.',
-  P160:'The rolling can the scope calls for. Add the dolly, skirt and caddy.',
-  P163:'The skirt. Hangs on the rim and carries the small tools.',
-  P171:'Black gloves. The porter is customer facing.',
-  P179:'Stiff palmyra bristles for the parking lot, carports and dumpster pads.',
-  P180:'Threads into the push broom head.',
-  P181:'Picks up what the push broom gathers outside.'
-};
-const GROUPS=[
-  ["Mopping &amp; Floor Care", /mop|bucket|wringer|wavebrake|scrubber|sweeper|burnish|floor pad|scraper|squeegee/i],
-  ["Vacuums",                  /vacuum|backpack/i],
-  ["Microfiber &amp; Cloths",  /microfiber cloth|cloth,|terry|wiper/i],
-  ["Chemicals",                /cleaner|disinfect|sanitiz|degreas|polish|spotter|prespray|soap|shock|peroxy|alcohol|remover|treatment|enzyme|wipes/i],
-  ["Tools, Carts &amp; Waste", /broom|dust pan|cart|brute|caddy|dolly|container|liner|duster|pole|sign|wagon|shelv|truck|window|key/i],
-  ["PPE &amp; Safety",         /glove|glasses|vest|boot|mat/i],
-];
-function groupOf(p){
-  // Brooms and dustpans carry the "Sweeping & Dust Mopping" category, which would
-  // otherwise drop them into the mopping group.
-  if(/broom|dust ?pan/i.test(p.name)) return "Tools, Carts &amp; Waste";
-  const hay=p.name+" "+p.categories.join(" ");
-  for(const [g,re] of GROUPS){ if(re.test(hay)) return g; }
-  return "Other Supplies";
-}
-/* ---------- apartment kit polos ---------- */
-function shirtProducts(){ return PRODUCTS.filter(p=>p.kits[TYPE] && p.kits[TYPE].tier==="shirt"); }
-function kitDays(){ const t=TYPES.find(x=>x.k===TYPE); return (t&&t.days)||0; }
-function shirtUnit(p,size){ return (size && p.size_prices[size]!==undefined) ? p.size_prices[size] : p.unit; }
-function shirtRow(id){ return SHIRT.rows[id]||(SHIRT.rows[id]={size:"",qty:0}); }
-function fitLabel(p){ return /women/i.test(p.name)?"Women's fit":"Men's fit"; }
-function pickFit(id){
-  SHIRT.pick=id;
-  const r=shirtRow(id);
-  if(!r.qty) r.qty=kitDays();
-  renderAll(); save();
-}
-function shirtQty(id,v){ shirtRow(id).qty=Math.max(0,parseInt(v)||0); renderAll(); save(); }
-function shirtBump(id,d){ const r=shirtRow(id); r.qty=Math.max(0,(r.qty||0)+d); renderAll(); save(); }
-function shirtSize(id,v){ shirtRow(id).size=v; renderAll(); save(); }
-function shirtCount(){ return shirtProducts().reduce((n,p)=>n+((SHIRT.rows[p.id]||{}).qty||0),0); }
-function shirtNeedsSize(){ return shirtProducts().filter(p=>{ const r=SHIRT.rows[p.id]||{}; return r.qty>0 && !r.size; }); }
-function renderShirts(){
-  const wrap=document.getElementById("shirtWrap");
-  const list=isApt()?shirtProducts():[];
-  if(!list.length){ wrap.innerHTML=""; return; }
-  const days=kitDays(), have=shirtCount();
-  const rows=list.map(p=>{
-    const r=shirtRow(p.id), q=r.qty||0, unit=shirtUnit(p,r.size);
-    const opts=['<option value="">Pick a size</option>'].concat(p.sizes.map(z=>{
-      const up=p.size_prices[z]!==undefined && p.size_prices[z]>p.unit ? ` (${fmt(p.size_prices[z])})` : "";
-      return `<option value="${esc(z)}"${r.size===z?" selected":""}>${esc(z)}${up}</option>`;
-    })).join("");
-    return `<div class="row${q>0?"":" off"}">
-      <div class="thumb">${p.image?`<img src="${esc(p.image)}" alt="${esc(p.name)}" loading="lazy" onerror="this.remove()">`:""}</div>
-      <div class="nm">
-        <b>${esc(p.name)}</b>
-        <span>${esc(fitLabel(p))}. ${esc(p.colors||"Black")} only${p.logo?`, ${esc(p.logo)} logo`:""}. SKU ${esc(p.sku)}</span>
-        <select class="size-sel${q>0&&!r.size?" need":""}" onchange="shirtSize('${p.id}',this.value)" aria-label="Size for ${esc(p.name)}">${opts}</select>
-        ${q>0&&!r.size?`<span class="warn">Pick a size before you order.</span>`:""}
-      </div>
-      <div class="qty">
-        <button onclick="shirtBump('${p.id}',-1)" aria-label="one less">&minus;</button>
-        <input type="number" min="0" value="${q}" onchange="shirtQty('${p.id}',this.value)" aria-label="Quantity">
-        <button onclick="shirtBump('${p.id}',1)" aria-label="one more">+</button>
-      </div>
-      <div class="pr">${fmt((q||1)*unit)}</div>
-    </div>`;
-  }).join("");
-  const short = have>0 && have<days
-    ? `<span class="warn" style="margin-top:8px">${esc(APT_WARN)}<small>The kit calls for ${days} shirts. You have ${have}.</small></span>` : "";
-  wrap.innerHTML=`<div class="shirts">
-    <h3>Uniform polos</h3>
-    <p class="rec">We recommend 5 shirts for a 5-day kit and 7 shirts for a 7-day kit. One clean shirt for every service day means laundry once a week.</p>
-    <p class="sub">Choose the fit. That row starts at ${days} shirts and you can change it. You can order both fits.</p>
-    <div class="fitpick">${list.map(p=>`<button class="${SHIRT.pick===p.id?"on":""}" onclick="pickFit('${p.id}')">${esc(fitLabel(p))}</button>`).join("")}</div>
-    ${rows}${short}
-  </div>`;
-}
-function renderAll(){
-  const core=PRODUCTS.filter(p=>p.kits[TYPE] && p.kits[TYPE].tier==="core" && kitAllowed(p));
-  const opt =PRODUCTS.filter(p=>p.kits[TYPE] && p.kits[TYPE].tier==="opt" && kitAllowed(p));
-  const order=GROUPS.map(g=>g[0]).concat(["Other Supplies"]);
-  const grouped = list => {
-    const by={};
-    list.forEach(p=>{ const g=groupOf(p); (by[g]=by[g]||[]).push(p); });
-    return order.filter(g=>by[g]).map(g=>
-      `<div class="grp-hd">${g}</div>`+by[g].map(p=>rowHTML(p,NOTES[p.id])).join("")).join("");
-  };
-  document.getElementById("coreItems").innerHTML = core.length?grouped(core):`<div style="padding:16px;color:var(--cw-grey)">No base items mapped for this type yet.</div>`;
-  document.getElementById("optItems").innerHTML  = opt.length?grouped(opt):`<div style="padding:16px;color:var(--cw-grey)">Nothing extra suggested for this type.</div>`;
-  renderShirts(); renderBrowse(); renderBar();
-}
-function renderBrowse(){
-  const q=(document.getElementById("q").value||"").toLowerCase().trim();
-  const c=document.getElementById("cat").value;
-  const inKitIds=new Set(PRODUCTS.filter(p=>p.kits[TYPE]).map(p=>p.id));
-  let list=PRODUCTS.filter(p=>!inKitIds.has(p.id) && !isKitShirt(p) && kitAllowed(p));
-  if(c) list=list.filter(p=>p.categories.includes(c));
-  if(q) list=list.filter(p=>(p.name+" "+p.sku+" "+p.categories.join(" ")+" "+(p.description||"")).toLowerCase().includes(q));
-  if(!q && !c) list=list.filter(p=>inKit(p)).concat(list.filter(p=>!inKit(p)).slice(0,12));
-  document.getElementById("browseEmpty").style.display=list.length?"none":"";
-  document.getElementById("browse").innerHTML=list.map(p=>rowHTML(p,null)).join("");
-}
-function toggle(id,on){
-  const p=PRODUCTS.find(x=>x.id===id);
-  if(!p || !kitAllowed(p)) return;
-  const base=(p.kits[TYPE]&&p.kits[TYPE].qty)||1;
-  SEL[id]= on ? (SEL[id]>0?SEL[id]:scaledQty(p,base)) : 0;
-  TOUCHED[id]=1; renderAll(); save();
-}
-function bump(id,d){ if(!kitAllowed(PRODUCTS.find(x=>x.id===id)||{kits:{}})) return; SEL[id]=Math.max(0,(SEL[id]||0)+d); TOUCHED[id]=1; renderAll(); save(); }
-function setQty(id,v){ if(!kitAllowed(PRODUCTS.find(x=>x.id===id)||{kits:{}})) return; SEL[id]=Math.max(0,parseInt(v)||0); TOUCHED[id]=1; renderAll(); save(); }
-
-/* ---------- totals ---------- */
-function lines(){
-  const out=PRODUCTS.filter(inKit).map(p=>({p,qty:SEL[p.id],unit:p.unit,line:+(SEL[p.id]*p.unit).toFixed(2),size:"",spec:""}));
-  if(isApt()) shirtProducts().forEach(p=>{
-    const r=SHIRT.rows[p.id]||{}; if(!(r.qty>0)) return;
-    const unit=shirtUnit(p,r.size);
-    const spec=[r.size?"Size "+r.size:"Size not picked",p.colors||"Black",p.logo?p.logo+" logo":""].filter(Boolean).join(" / ");
-    out.push({p,qty:r.qty,unit,line:+(r.qty*unit).toFixed(2),size:r.size||"",spec});
-  });
-  return out;
-}
-function subtotal(){ return lines().reduce((s,l)=>s+l.line,0); }
-function tierFor(sub){
-  if(isApt()) return sub>0 ? +((1-APT_KEEP)*100).toFixed(2) : 0;
-  let pct=0;
-  TIERS.forEach(t=>{ if(sub>=t.min) pct=t.pct; });
-  return Math.min(pct,MAX_PCT);
-}
-// One place computes the money so the bar, the review and the order never disagree.
-function money(){
-  const sub=+subtotal().toFixed(2);
-  const pct=tierFor(sub);
-  const disc=isApt() ? +(sub-sub*APT_KEEP).toFixed(2) : +(sub*pct/100).toFixed(2);
-  return {sub, pct, disc, grand:+(sub-disc).toFixed(2), label: isApt()?APT_PCT_LABEL:pct+"%"};
-}
-function renderBar(){
-  const {sub,pct,disc,grand,label}=money();
-  const n=lines().reduce((s,l)=>s+l.qty,0);
-  document.getElementById("subLine").textContent = n===1?"1 item":n+" items";
-  document.getElementById("grand").textContent = fmt(grand);
-  document.getElementById("saveLine").innerHTML = pct
-    ? `${label} kit discount, you save ${fmt(disc)} <span class="strike">${fmt(sub)}</span>`
-    : "";
-  const apt=isApt();
-  document.getElementById("track").style.display=apt?"none":"";
-  document.getElementById("ticks").style.display=apt?"none":"";
-  const next=TIERS.find(t=>sub<t.min);
-  document.getElementById("tierMsg").textContent = !TYPE ? "Pick a building type to start"
-    : apt ? `Apartment community kit pricing: ${APT_PCT_LABEL} off every item in this order. Quantities are what the scope needs.`
-    : next ? `Add ${fmt(next.min-sub)} more to reach ${next.pct}% off`
-           : `Top tier unlocked. ${MAX_PCT}% is the most we can offer.`;
-  const cap=TIERS[TIERS.length-1].min;
-  document.getElementById("fill").style.width=Math.min(100,(sub/cap)*100)+"%";
-  TIERS.forEach((t,i)=>document.getElementById("t"+i).className="tick"+(sub>=t.min?" hit":""));
-  document.getElementById("reviewBtn").disabled = n===0;
-}
-
-/* ---------- persistence ---------- */
-function save(){ try{ localStorage.setItem("cw_kit",JSON.stringify({t:TYPE,b:BAND,s:SEL,x:TOUCHED,w:SHIRT})); }catch(e){} }
+/* ---------- saved answers ---------- */
+const KIT_KEY='cw_kit2';
+function save(){ try{ localStorage.setItem(KIT_KEY,JSON.stringify({type:S.type,size:S.size,days:S.days,mop:S.mop,vac:S.vac,cart:S.cart,prog:S.prog,ov:S.ov,added:S.added,sizes:S.sizes,shirt:S.shirt})); }catch(e){} }
 function restore(){
-  // A link from the New Building Inventory Planner wins over saved state so the
-  // vendor lands on exactly the kit and size they just configured over there.
-  const q=new URLSearchParams(location.search);
-  const qt=q.get("type"), qb=q.get("band");
-  const mapped=qt?(PLANNER_TYPE[qt]||qt):null;
-  if(mapped && TYPES.some(t=>t.k===mapped)){
-    TYPE=mapped;
-    if(qb && BANDS.some(b=>b.k===qb)) BAND=qb;
-    SEL={}; TOUCHED={}; SHIRT={pick:"", rows:{}}; showType(TYPE); applyKit(); renderTypes(); renderAll(); save();
-    return;
-  }
   try{
-    const d=JSON.parse(localStorage.getItem("cw_kit")||"null");
-    if(d && d.t && TYPES.some(t=>t.k===d.t)){
-      TYPE=d.t; BAND=d.b||"m"; SEL=d.s||{}; TOUCHED=d.x||{};
-      SHIRT=(d.w&&d.w.rows)?d.w:{pick:"",rows:{}};
-      showType(TYPE); renderTypes(); renderAll(); return;
+    const d=JSON.parse(localStorage.getItem(KIT_KEY)||'null');
+    if(d && TYPES.some(t=>t.k===d.type)){
+      S.type=d.type; if(SIZES.some(x=>x.k===d.size)) S.size=d.size; if(d.days>=1&&d.days<=7) S.days=d.days;
+      S.mop=d.mop||null; S.vac=d.vac||'corded'; S.cart=d.cart||null; if(PROGS.some(x=>x.k===d.prog)) S.prog=d.prog;
+      S.ov=d.ov||{}; S.added=d.added||{}; S.sizes=d.sizes||{}; S.shirt=(d.shirt&&d.shirt.rows)?d.shirt:{pick:'',rows:{}};
     }
   }catch(e){}
-  renderBar();
+  /* A link from the planner, the shop or an opportunity wins over saved answers. */
+  const qp=new URLSearchParams(location.search), qt=qp.get('type'), qb=qp.get('band');
+  const MAP={gen:'office',porter:'office',office:'office',medical:'medical',school:'school',industrial:'industrial',gmp:'gmp',cleanroom:'cleanroom',apt:'apt',apt5:'apt',apt7:'apt'};
+  if(qt && MAP[qt]){
+    Object.assign(S,{type:MAP[qt],mop:null,cart:null,ov:{},added:{},sizes:{},shirt:{pick:'',rows:{}}});
+    if(qt==='apt5') S.days=5; if(qt==='apt7') S.days=7;
+    if(qb && SIZES.some(x=>x.k===qb)) S.size=qb;
+  }
+  if(T().apt && S.days!==7) S.days=5;
 }
 
-/* ---------- review + submit ---------- */
+/* ---------- review and order ---------- */
+const wrap=document.getElementById('rvWrap'); let lastFocus=null;
+/* What the vendor typed stays put if they close the panel to fix a line. */
+let DRAFT={};
+function keepDraft(){ if(!document.getElementById('f-building')) return; ['building','name','company','email','phone','region','notes'].forEach(k=>{ DRAFT[k]=v('f-'+k); }); DRAFT.ack=document.getElementById('f-ack').checked; }
+function kitName(){
+  const t=T(); if(t.apt) return `Apartment community, ${S.days} day porter`;
+  const sz=SIZES.find(x=>x.k===S.size), pg=PROGS.find(x=>x.k===S.prog);
+  return `${t.n}, ${sz.n.toLowerCase()}, ${S.days} ${S.days===1?'day':'days'} a week`+(t.k==='cleanroom'?'':`, ${pg.n}`);
+}
+function orderLines(m){
+  const out=[];
+  m.kit.forEach(sec=>sec.lines.forEach(l=>{ const st=state(sec,l); if(!(st.on&&st.qty>0)) return;
+    const it=item(l.pid), unit=priceOf(l.pid), free=(CABINET[l.pid]&&unit===0)||GIFT[l.pid];
+    out.push({pid:l.pid,it,sec:sec.title,qty:st.qty,unit,line:+(st.qty*unit).toFixed(2),size:it.sz.length?(S.sizes[l.pid]||''):'',needSize:it.sz.length>0,
+      note:free?'No charge, supplied by City Wide':''}); }));
+  if(m.apt) shirtLines().forEach(x=>{ const it=CAT[x.pid];
+    out.push({pid:x.pid,it,sec:'Uniform polos',qty:x.qty,unit:x.unit,line:x.line,size:x.size,needSize:true,
+      note:[it.colors||'Black',it.logo?it.logo+' logo':''].filter(Boolean).join(' / ')}); });
+  return out;
+}
+function v(id){ const e=document.getElementById(id); return e?(e.value||'').trim():''; }
 function openReview(){
-  const {sub,pct,disc,grand,label}=money();
-  const saved=JSON.parse(localStorage.getItem("cw_vendor")||"{}");
-  const t=TYPES.find(x=>x.k===TYPE);
-  const apt=isApt();
-  const short=PRODUCTS.filter(p=>apt && p.kits[TYPE] && p.kits[TYPE].tier==="core" && (SEL[p.id]||0)<p.kits[TYPE].qty);
-  document.getElementById("drawerBd").innerHTML=`
-    <div style="font-weight:700;margin-bottom:2px">${esc(t?t.n:"")} kit</div>
-    <div style="font-size:12px;color:var(--cw-grey);margin-bottom:12px">${apt?"Apartment community start up order":"New building start up order"}</div>
-    ${short.length?`<div class="notice" style="border-color:var(--cw-red);background:#FDF3F3"><b>${esc(APT_WARN)}</b><br>Below the kit quantity: ${short.map(p=>esc(p.name)+" ("+(SEL[p.id]||0)+" of "+p.kits[TYPE].qty+")").join("; ")}.</div>`:""}
-    ${apt&&shirtProducts().length&&shirtCount()<kitDays()?`<div class="notice" style="border-color:var(--cw-red);background:#FDF3F3"><b>Uniform polos</b><br>We recommend ${kitDays()} shirts for this kit. You have ${shirtCount()}.</div>`:""}
-    ${lines().map(l=>`<div class="ln"><span>${l.qty} &times; ${esc(l.p.name)}${l.size?" ("+esc(l.size)+")":""}</span><span>${fmt(l.line)}</span></div>`).join("")}
-    <div class="ln" style="border-top:1.5px solid var(--cw-border);margin-top:8px;padding-top:8px"><span>Subtotal</span><span>${fmt(sub)}</span></div>
-    ${pct?`<div class="ln disc"><span>${apt?"Apartment community kit discount":"New building kit discount"} (${label})</span><span>-${fmt(disc)}</span></div>`:""}
-    <div class="ln tot"><span>Total</span><span>${fmt(grand)}</span></div>
-    ${(!apt&&pct<MAX_PCT)?`<div style="font-size:12px;color:var(--cw-grey);margin-top:6px">${(function(){const nx=TIERS.find(x=>sub<x.min);return nx?`Add ${fmt(nx.min-sub)} more and this becomes ${nx.pct}% off.`:"";})()}</div>`:""}
-    <div style="height:14px"></div>
-    <div class="form-grp"><label>Building / Account Name <span class="req">*</span></label><input id="f-building" placeholder="The new building this kit is for"></div>
-    <div class="form-grp"><label>Your Name <span class="req">*</span></label><input id="f-name" value="${esc(saved.name||"")}"></div>
-    <div class="form-grp"><label>Company Name <span class="req">*</span></label><input id="f-company" value="${esc(saved.company||"")}"></div>
-    <div class="form-grp"><label>Email <span class="req">*</span></label><input id="f-email" type="email" value="${esc(saved.email||"")}"></div>
-    <div class="form-grp"><label>Phone</label><input id="f-phone" value="${esc(saved.phone||"")}"></div>
-    <div class="form-grp"><label>Which City Wide office? <span class="req">*</span></label>
-      <select id="f-region">
-        <option value=""${saved.region?"":" selected"}>Select your region</option>
-        <option value="Las Vegas"${saved.region==="Las Vegas"?" selected":""}>Las Vegas (Las Vegas, Henderson, North Las Vegas)</option>
-        <option value="Northern Nevada"${saved.region==="Northern Nevada"?" selected":""}>Northern Nevada (Reno, Sparks, Carson City)</option>
-      </select></div>
-    <div class="form-grp"><label>Notes</label><textarea id="f-notes" rows="3" placeholder="Start date, delivery notes, anything we should know"></textarea></div>
-    <label class="ack"><input type="checkbox" id="f-ack" class="chk">
-      <span>I authorize City Wide to charge this order by pay deduction on my next statement.</span></label>
-    <div class="notice">${esc(CFG.PRICING_NOTICE||"")}</div>
-    ${apt
-      ? `<div class="notice"><b>Kit discount terms.</b> The apartment community kit discount (${APT_PCT_LABEL}) applies to every item in a kit order placed on this page for an apartment community account. It is applied to the City Wide price shown and confirmed by City Wide when the order is processed. Items ship from Staples Business Advantage as one order.</div>`
-      : `<div class="notice"><b>Kit discount terms.</b> The new building kit discount applies to kits built on this page for a new account start. Maximum discount is ${MAX_PCT}%. Discounts are applied to the City Wide price shown and are confirmed by City Wide when the order is processed.</div>`}`;
-  document.getElementById("overlay").classList.add("on");
-  document.getElementById("drawer").classList.add("on");
+  const m=money(), lines=orderLines(m); lastFocus=document.activeElement;
+  let saved={}; try{ saved=JSON.parse(localStorage.getItem('cw_vendor')||'{}'); }catch(e){}
+  const d=k=>esc(DRAFT[k]!==undefined?DRAFT[k]:(saved[k]||'')), reg=DRAFT.region!==undefined?DRAFT.region:(saved.region||'');
+  const secs=[]; lines.forEach(l=>{ let s=secs.find(x=>x.t===l.sec); if(!s) secs.push(s={t:l.sec,ls:[]}); s.ls.push(l); });
+  const next=m.apt?null:TIERS.find(t=>m.sub<t.min);
+  let h=`<p class="small"><b>${esc(kitName())}</b></p>`;
+  secs.forEach(s=>{ h+=`<h3>${esc(s.t)}</h3>`+s.ls.map(l=>`<div class="ln"><span>${l.qty} × ${esc(l.it.n)}${l.size?' ('+esc(l.size)+')':''}</span><span>${fmt(l.line)}</span></div>`).join(''); });
+  h+=`<div class="sum"><div class="ln"><span>Subtotal</span><span>${fmt(m.sub)}</span></div>`+
+     (m.disc?`<div class="ln"><span>${m.apt?'Apartment community kit discount':'New building kit discount'} (${m.label})</span><span>-${fmt(m.disc)}</span></div>`:'')+
+     `<div class="ln big"><span><b>Kit total</b></span><span>${fmt(m.grand)}</span></div></div>`+
+     (next?`<p class="hint">Add ${fmt(next.min-m.sub)} more and the kit discount becomes ${next.pct}%.</p>`:'')+
+     `<div class="fg"><label for="f-building">Building or account name</label><input id="f-building" autocomplete="off" placeholder="The building this kit is for" value="${d('building')}"></div>
+      <div class="fg"><label for="f-name">Your name</label><input id="f-name" autocomplete="name" value="${d('name')}"></div>
+      <div class="fg"><label for="f-company">Company name</label><input id="f-company" autocomplete="organization" value="${d('company')}"></div>
+      <div class="fg"><label for="f-email">Email</label><input id="f-email" type="email" autocomplete="email" value="${d('email')}"></div>
+      <div class="fg"><label for="f-phone">Phone, if you want a call back</label><input id="f-phone" type="tel" autocomplete="tel" value="${d('phone')}"></div>
+      <div class="fg"><label for="f-region">Which City Wide office?</label>
+        <select id="f-region"><option value="">Select your region</option>
+          <option value="Las Vegas"${reg==='Las Vegas'?' selected':''}>Las Vegas (Las Vegas, Henderson, North Las Vegas)</option>
+          <option value="Northern Nevada"${reg==='Northern Nevada'?' selected':''}>Northern Nevada (Reno, Sparks, Carson City)</option></select></div>
+      <div class="fg"><label for="f-notes">Notes</label><textarea id="f-notes" rows="3" placeholder="Start date, delivery notes, anything we should know">${d('notes')}</textarea></div>
+      <label class="ack"><input type="checkbox" id="f-ack"${DRAFT.ack?' checked':''}><span>I authorize City Wide to charge this order by pay deduction on my next statement.</span></label>
+      ${CFG.PRICING_NOTICE?`<p class="note">${esc(CFG.PRICING_NOTICE)}</p>`:''}
+      <p class="note">${m.apt
+        ? `<b>Kit discount terms.</b> The apartment community kit discount (${APT_LABEL}) applies to every item in a kit order placed on this page for an apartment community account. It is applied to the City Wide price shown and confirmed by City Wide when the order is processed. Items ship from Staples Business Advantage as one order.`
+        : `<b>Kit discount terms.</b> The new building kit discount applies to kits built on this page for a new account start. The most a kit can earn is ${TIERS[TIERS.length-1].pct}%. Discounts are applied to the City Wide price shown and are confirmed by City Wide when the order is processed.`}</p>`;
+  document.getElementById('rvBody').innerHTML=h; document.getElementById('rvErr').textContent='';
+  document.getElementById('rvFt').style.display=''; const old=document.getElementById('mailFb'); if(old) old.remove();
+  const btn=document.getElementById('rvSubmit'); btn.disabled=false; btn.textContent='Submit kit order';
+  wrap.classList.add('open'); document.getElementById('drawer').focus();
 }
-function closeReview(){
-  document.getElementById("overlay").classList.remove("on");
-  document.getElementById("drawer").classList.remove("on");
-}
-function v(id){ const e=document.getElementById(id); return e?(e.value||"").trim():""; }
-
-function orderText(info,sub,pct,disc,grand){
-  const t=TYPES.find(x=>x.k===TYPE);
-  const apt=isApt(), label=apt?APT_PCT_LABEL:pct+"%";
+function closeReview(){ keepDraft(); wrap.classList.remove('open'); if(lastFocus && document.contains(lastFocus)) lastFocus.focus(); }
+function orderText(info,m,lines){
   return [
-    `${apt?"APARTMENT COMMUNITY KIT ORDER":"NEW BUILDING KIT ORDER"} - ${new Date().toLocaleString()}`,
-    `Building: ${info.building}`,
-    `Kit Type: ${t?t.n:TYPE}`,
+    `${m.apt?'APARTMENT COMMUNITY KIT ORDER':'NEW BUILDING KIT ORDER'} - ${new Date().toLocaleString()}`,
+    `Building: ${info.building}`, `Kit: ${kitName()}`,
     `Name: ${info.name}`, `Company: ${info.company}`, `Email: ${info.email}`,
-    info.phone?`Phone: ${info.phone}`:null,
-    info.region?`Region: ${info.region}`:null,
-    info.notes?`Notes: ${info.notes}`:null,
+    info.phone?`Phone: ${info.phone}`:null, `Region: ${info.region}`, info.notes?`Notes: ${info.notes}`:null,
     ``, `ITEMS:`,
-    ...lines().map(l=>`${l.qty} x ${l.p.name}${l.spec?" ["+l.spec+"]":""} (SKU ${l.p.sku}${l.p.supplier_sku?(l.p.source==="Bennett"?" / Bennett ":" / Staples ")+l.p.supplier_sku:""}) @ ${fmt(l.unit)} = ${fmt(l.line)} [${l.p.fulfillment}]`),
-    ``,
-    `Subtotal: ${fmt(sub)}`,
-    pct?`${apt?"Apartment Community Kit Discount":"New Building Kit Discount"} (${label}): -${fmt(disc)}`:`Kit Discount: none`,
-    `Estimated Total: ${fmt(grand)}`,
-    `Payment: Pay deduction (authorized at checkout)`,
-  ].filter(x=>x!==null).join("\n");
+    ...lines.map(l=>`${l.qty} x ${l.it.n}${l.size?' [Size '+l.size+']':''}${l.note?' ['+l.note+']':''} (SKU ${l.it.sku}${l.it.ssku?(l.it.src==='Bennett'?' / Bennett ':' / Staples ')+l.it.ssku:''}) @ ${fmt(l.unit)} = ${fmt(l.line)} [${l.it.ful}]`),
+    ``, `Subtotal: ${fmt(m.sub)}`,
+    m.disc?`${m.apt?'Apartment Community Kit Discount':'New Building Kit Discount'} (${m.label}): -${fmt(m.disc)}`:`Kit Discount: none`,
+    `Estimated Total: ${fmt(m.grand)}`, `Payment: Pay deduction (authorized at checkout)`
+  ].filter(x=>x!==null).join('\n');
 }
-function payloadItems(pct,disc){
-  // Same item shape the Vendor Shop sends, so ShopOrders.gs writes the Orders row,
-  // the Ops Hub Alerts card picks it up, and the service inbox gets the same email.
-  // The backend labels supplier_sku as a Bennett number, so only Bennett items send it.
-  // Staples item numbers ride in the spec instead.
-  return lines().map(l=>{
-    const ben=l.p.source==="Bennett";
-    const spec=[l.spec, (!ben&&l.p.supplier_sku)?"Staples "+l.p.supplier_sku:""].filter(Boolean).join(" / ");
-    return {id:l.p.id,sku:l.p.sku,supplier_sku:ben?(l.p.supplier_sku||""):"",name:l.p.name,size:l.size||"",color:ben?(l.p.colors||""):"",logo:l.p.logo||"",spec,qty:l.qty,unit:l.unit,line:l.line,fulfillment:l.p.fulfillment||""};
-  });
+/* Same item shape the Vendor Shop sends, so the Orders row, the Ops Hub alert and the service
+   inbox email all work without a backend change. The backend labels supplier_sku as a Bennett
+   number, so only Bennett items send it. Staples item numbers ride in the spec. */
+function payloadItems(lines){
+  return lines.map(l=>{ const ben=l.it.src==='Bennett';
+    const spec=[l.size?'Size '+l.size:'', l.note, (!ben&&l.it.ssku)?'Staples '+l.it.ssku:''].filter(Boolean).join(' / ');
+    return {id:l.pid,sku:l.it.sku,supplier_sku:ben?(l.it.ssku||''):'',name:l.it.n,size:l.size||'',color:ben?(l.it.colors||''):'',logo:l.it.logo||'',spec,qty:l.qty,unit:l.unit,line:l.line,fulfillment:l.it.ful||''}; });
 }
-async function submitKit(){
-  const {sub,pct,disc,grand,label}=money();
-  const t=TYPES.find(x=>x.k===TYPE);
-  const apt=isApt();
-  const info={ building:v("f-building"), name:v("f-name"), company:v("f-company"),
-               email:v("f-email"), phone:v("f-phone"), notes:v("f-notes"), region:v("f-region"),
-               account:v("f-building") };
-  const err=document.getElementById("fErr");
-  if(!info.building||!info.name||!info.company||!info.email){ err.textContent="Please fill in all required fields."; return; }
-  if(!info.region){ err.textContent="Please select your region."; return; }
-  if(!document.getElementById("f-ack").checked){ err.textContent="Please check the authorization box to submit."; return; }
-  if(isApt() && shirtNeedsSize().length){ err.textContent="Pick a size for the uniform polos before you submit."; return; }
-  err.textContent="";
-  try{ localStorage.setItem("cw_vendor",JSON.stringify({name:info.name,company:info.company,email:info.email,phone:info.phone,region:info.region})); }catch(e){}
-  const btn=document.getElementById("submitBtn");
-  btn.disabled=true; btn.textContent="Submitting...";
-  const text=orderText(info,sub,pct,disc,grand);
-  const items=payloadItems(pct,disc);
-  // The kit type and the discount ride in the notes so the Orders row and the email
-  // show them without a backend change.
-  const kitNote=`${apt?"APARTMENT COMMUNITY KIT":"NEW BUILDING KIT"}: ${t?t.n:TYPE}`+(pct?` | Kit discount ${label}: -${fmt(disc)} on ${fmt(sub)}`:"")+(info.phone?` | Phone ${info.phone}`:"");
-
-  if(CFG.ORDERS_WEBHOOK){
-    try{
-      const res=await fetch(CFG.ORDERS_WEBHOOK,{method:"POST",headers:{"Content-Type":"text/plain"},
-        body:JSON.stringify({kind:"shop_order",
-          vendor:{name:info.name,company:info.company,email:info.email,account:info.building,region:info.region,pay:"deduct",
-                  notes:(info.notes?info.notes+" | ":"")+kitNote},
-          items:items, subtotal:sub, coupon:"", coupon_label:"", discount:disc, total:grand})});
-      const r=await res.json();
-      if(r && r.ok){ done(); return; }
-      throw new Error((r&&r.error)||"Order service error");
-    }catch(e){
-      btn.disabled=false; btn.textContent="Submit Kit Order";
-      err.textContent=(e&&e.message&&!/fetch/i.test(e.message)?e.message+" ":"Could not reach the order service. ")+"Your order was not submitted. Try again, or use the email link below.";
-      mailFallback(text,info); return;
-    }
-  }
-  if(CFG.ORDER_ENDPOINT){
-    try{
-      const res=await fetch(CFG.ORDER_ENDPOINT,{method:"POST",
-        headers:{"Content-Type":"application/json","Accept":"application/json"},
-        body:JSON.stringify({_subject:`New Building Kit: ${info.company} - ${info.building} (${fmt(grand)})`,
-          _replyto:info.email, email:info.email, order:text, items, vendor:info, total:grand})});
-      if(!res.ok) throw new Error("HTTP "+res.status);
-      done(); return;
-    }catch(e){
-      btn.disabled=false; btn.textContent="Submit Kit Order";
-      err.textContent="Could not reach the order service. Use the email link below.";
-      mailFallback(text,info); return;
-    }
-  }
-  mailFallback(text,info); done(true);
-}
-function mailFallback(text,info){
-  if(document.getElementById("mailFb")) return;
-  const a=document.createElement("a");
-  a.id="mailFb"; a.className="cta"; a.style.cssText="display:block;text-align:center;margin-top:8px;text-decoration:none";
-  a.href="mailto:"+(CFG.ORDER_EMAIL||"")+"?"+(CFG.ORDER_EMAIL_CC?"cc="+encodeURIComponent(CFG.ORDER_EMAIL_CC)+"&":"")
-    +"subject="+encodeURIComponent((isApt()?"Apartment Community Kit: ":"New Building Kit: ")+info.company)+"&body="+encodeURIComponent(text);
-  a.textContent="Send by Email Instead";
-  document.querySelector(".drawer-ft").appendChild(a);
+function mailFallback(text,info,apt){
+  if(document.getElementById('mailFb')) return;
+  const a=document.createElement('a'); a.id='mailFb'; a.className='btn';
+  a.href='mailto:'+(CFG.ORDER_EMAIL||'')+'?'+(CFG.ORDER_EMAIL_CC?'cc='+encodeURIComponent(CFG.ORDER_EMAIL_CC)+'&':'')
+    +'subject='+encodeURIComponent((apt?'Apartment Community Kit: ':'New Building Kit: ')+info.company)+'&body='+encodeURIComponent(text);
+  a.textContent='Send by email instead';
+  document.getElementById('rvFt').appendChild(a);
 }
 function done(mail){
-  document.getElementById("drawerBd").innerHTML=
-    `<div style="text-align:center;padding:40px 10px">
-      <div style="font-size:40px;color:var(--cw-red);line-height:1"><i class=ic-check></i></div>
-      <h3 style="margin:12px 0 6px">Kit order submitted</h3>
-      <p style="color:var(--cw-grey);font-size:12px">Your service team has it${mail?" by email":""}. They will confirm current supplier pricing and the kit discount, then schedule the delivery with you.</p>
-      <button class="cta" style="margin-top:18px" onclick="resetKit()">Build Another Kit</button>
-    </div>`;
-  document.querySelector(".drawer-ft").style.display="none";
-  SEL={}; SHIRT={pick:"", rows:{}}; save(); renderAll();
+  document.getElementById('rvBody').innerHTML=`<div class="done"><svg class="i" aria-hidden="true"><use href="#i-check"/></svg>
+    <h3>Kit order submitted</h3>
+    <p>Your service team has it${mail?' by email':''}. They will confirm current supplier pricing and the kit discount, then schedule the delivery with you.</p>
+    <button type="button" class="btn" id="againBtn">Build another kit</button></div>`;
+  document.getElementById('rvFt').style.display='none'; DRAFT={};
+  S.ov={}; S.added={}; S.sizes={}; S.shirt={pick:'',rows:{}}; renderKit(); renderShop();
+  document.getElementById('againBtn').addEventListener('click',()=>{ try{ localStorage.removeItem(KIT_KEY); }catch(e){} location.href=location.pathname; });
+  document.getElementById('againBtn').focus();
 }
-function resetKit(){
-  try{ localStorage.removeItem("cw_kit"); }catch(e){}
-  location.href=location.pathname;
+async function submitKit(){
+  const m=money(), lines=orderLines(m), err=document.getElementById('rvErr');
+  const info={building:v('f-building'),name:v('f-name'),company:v('f-company'),email:v('f-email'),phone:v('f-phone'),notes:v('f-notes'),region:v('f-region')};
+  if(!lines.length){ err.textContent='The kit is empty.'; return; }
+  if(!info.building||!info.name||!info.company||!info.email){ err.textContent='Fill in the building, your name, your company and your email.'; return; }
+  if(!/^\S+@\S+\.\S+$/.test(info.email)){ err.textContent='Check the email address.'; return; }
+  if(!info.region){ err.textContent='Select your City Wide office.'; return; }
+  const ns=lines.find(l=>l.needSize&&!l.size);
+  if(ns){ err.textContent=`Pick a size for ${ns.it.n}. Close this panel and set it on that line.`; return; }
+  if(!document.getElementById('f-ack').checked){ err.textContent='Check the authorization box to submit.'; return; }
+  err.textContent='';
+  try{ localStorage.setItem('cw_vendor',JSON.stringify({name:info.name,company:info.company,email:info.email,phone:info.phone,region:info.region})); }catch(e){}
+  const btn=document.getElementById('rvSubmit'); btn.disabled=true; btn.textContent='Submitting';
+  const text=orderText(info,m,lines), items=payloadItems(lines);
+  const kitNote=`${m.apt?'APARTMENT COMMUNITY KIT':'NEW BUILDING KIT'}: ${kitName()}`+(m.disc?` | Kit discount ${m.label}: -${fmt(m.disc)} on ${fmt(m.sub)}`:'')+(info.phone?` | Phone ${info.phone}`:'');
+  const fail=msg=>{ btn.disabled=false; btn.textContent='Submit kit order'; err.textContent=msg; mailFallback(text,info,m.apt); };
+  if(CFG.ORDERS_WEBHOOK){
+    try{
+      const res=await fetch(CFG.ORDERS_WEBHOOK,{method:'POST',headers:{'Content-Type':'text/plain'},
+        body:JSON.stringify({kind:'shop_order',
+          vendor:{name:info.name,company:info.company,email:info.email,account:info.building,region:info.region,pay:'deduct',
+                  notes:(info.notes?info.notes+' | ':'')+kitNote},
+          items:items, subtotal:m.sub, coupon:'', coupon_label:'', discount:m.disc, total:m.grand})});
+      const r=await res.json();
+      if(r && r.ok){ done(); return; }
+      throw new Error((r&&r.error)||'Order service error');
+    }catch(e){
+      fail((e&&e.message&&!/fetch/i.test(e.message)?e.message+' ':'Could not reach the order service. ')+'Your order was not submitted. Try again, or use the email button below.');
+      return;
+    }
+  }
+  mailFallback(text,info,m.apt); done(true);
 }
-document.getElementById("q").addEventListener("input",renderBrowse);
-document.getElementById("cat").addEventListener("change",renderBrowse);
-load();
+document.getElementById('reviewBtn').addEventListener('click',openReview);
+document.getElementById('rvClose').addEventListener('click',closeReview);
+document.getElementById('scrim').addEventListener('click',closeReview);
+document.addEventListener('keydown',e=>{ if(e.key==='Escape'&&wrap.classList.contains('open')) closeReview(); });
+document.getElementById('rvSubmit').addEventListener('click',submitKit);
+
+/* ---------- start ---------- */
+restore(); renderSetup(); renderKit(); renderBar();
+loadCatalog().then(cat=>{ CAT=cat; READY=true; renderAll(); })
+  .catch(()=>{ document.getElementById('kit').innerHTML='<p class="loading" role="alert">The catalog did not load. Refresh the page, or order from the <a href="shop/">shop</a>.</p>'; });
 </script>
 </body>
 </html>
