@@ -6,7 +6,9 @@
 <title>City Wide Vendor Shop</title>
 <!-- build 2026-09-21: Vendor of the Month award codes at checkout (server-checked, one-time, up to $150). -->
 <!-- build 2026-10-02: orders post straight to the Team Portal backend (kind shop_order), which writes the Orders tab row first and emails second. Formspree retired. Region picker added at checkout. -->
-<script src="config.js?v=20261002"></script>
+<!-- build 2026-11-21: Vendor Hub overhaul. First view is Warehouse Quick Order, the category list and the feature row; products draw once a category is picked or a search is typed. Shared hub menu (../hub-nav.js). Phone cards are rows. Checkout labels tied to fields. Product photos served from img/ when a copy exists (img/map.js). Cart, checkout, award code and the shop_order post are unchanged. Page before this build is commit 5c90f24. -->
+<script src="config.js?v=20261121"></script>
+<script src="img/map.js?v=20261121"></script>
 <style>
 :root{
   --cw-red:#D22730; --cw-black:#2D2A26; --cw-grey:#636466; --cw-white:#FFFFFF;
@@ -281,6 +283,83 @@ footer b{color:var(--cw-black);}
   .card .add-btn{flex-basis:100%;}
   .paymethods{grid-template-columns:1fr;}
 }
+
+/* ---------- 2026-11-21 overhaul ---------- */
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+body{background:var(--cw-light-grey);}
+:focus-visible{outline:3px solid var(--cw-black);outline-offset:2px;}
+::selection{background:var(--cw-black);color:#fff;}
+.hdr-logo{display:flex;align-items:center;min-height:44px;}
+.hdr-search input{min-height:44px;font-size:16px;}
+.hdr-search .clear-btn{min-width:44px;}
+.chipstrip,.filterbar-sub{flex-wrap:wrap;overflow:visible;}
+.filterbar-inner{flex-wrap:wrap;}
+.subchip{min-height:44px;}
+.qty button{width:44px;}
+.add-btn.added{background:#fff;color:var(--cw-black);box-shadow:inset 0 0 0 1.5px var(--cw-black);}
+.spot,.catnote,.kituni{border-left-width:1.5px;border-left-color:var(--cw-border);}
+.kituni{border:1.5px solid var(--cw-border);background:#fff;}
+.catnote{background:#fff;}
+#spotNote,#gridHead .accent{display:none;}
+.section-title:first-child{margin-top:8px;}
+/* Warehouse Quick Order: short rows */
+.featured.quick{display:block;background:#fff;border:1.5px solid var(--cw-border);border-radius:var(--r-card);padding:0 16px;margin-bottom:24px;}
+.quick .card{border:0;border-radius:0;padding:12px 0;display:grid;grid-template-columns:56px minmax(0,1fr) auto;column-gap:16px;align-items:center;box-shadow:none;}
+.quick .card+.card{border-top:1px solid var(--cw-border);}
+.quick .card .imgwrap{grid-column:1;grid-row:1 / span 3;width:56px;height:56px;margin:0;}
+.quick .card h3,.quick .card .price,.quick .card .stockline,.quick .card .logoline,.quick .card .opts{grid-column:2;margin-bottom:2px;}
+.quick .card .price{font-size:var(--fs-lead);}
+.quick .card .sku,.quick .card .desc,.quick .card .more-link{display:none;}
+.quick .card .logoline{background:none;padding:0;font-size:var(--fs-caption);color:var(--cw-grey);}
+.quick .card .opts{flex-direction:row;flex-wrap:wrap;gap:8px 16px;margin-top:6px;}
+.quick .card .controls{grid-column:3;grid-row:1 / span 3;margin:0;align-items:center;}
+.quick .card .add-btn{flex:none;min-width:120px;}
+/* Shop by Category */
+.catdir{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;margin-bottom:16px;align-items:start;}
+.catdir details{background:#fff;border:1.5px solid var(--cw-border);border-radius:var(--r-card);padding:4px 8px 8px;}
+.catdir summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:8px;min-height:48px;padding:0 8px;font-size:var(--fs-body);font-weight:700;}
+.catdir summary::-webkit-details-marker{display:none;}
+.catdir summary span{margin-left:auto;white-space:nowrap;padding-left:8px;font-size:var(--fs-caption);font-weight:400;color:var(--cw-grey);}
+.catdir summary svg{width:16px;height:16px;flex:none;fill:none;stroke:var(--cw-grey);stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;transition:transform 180ms cubic-bezier(.16,1,.3,1);}
+.catdir details[open] summary svg{transform:rotate(90deg);}
+.catdir button{display:flex;align-items:center;width:100%;min-height:44px;padding:4px 8px;border:0;border-radius:var(--r-ctl);background:none;font-size:var(--fs-ui);font-weight:700;text-align:left;color:var(--cw-black);}
+.catdir button span{margin-left:auto;font-weight:400;color:var(--cw-grey);font-variant-numeric:tabular-nums;padding-left:8px;}
+@media(hover:hover){.catdir button:hover{background:var(--cw-light-grey);}}
+/* Feature row */
+.featrow{background:#fff;border:1.5px solid var(--cw-border);border-radius:var(--r-card);padding:16px;display:flex;align-items:center;gap:12px 16px;flex-wrap:wrap;margin-bottom:16px;}
+.featrow img{width:72px;height:72px;object-fit:contain;flex:none;}
+.featrow .ft{flex:1 1 260px;min-width:0;}
+.featrow h3{font-size:var(--fs-lead);line-height:1.3;}
+.featrow p{font-size:var(--fs-ui);color:var(--cw-grey);}
+.featrow button{flex:none;min-height:44px;padding:0 16px;border:1.5px solid var(--cw-border);border-radius:var(--r-ctl);background:#fff;font-size:var(--fs-ui);font-weight:700;color:var(--cw-black);white-space:nowrap;}
+@media(hover:hover){.featrow button:hover{border-color:var(--cw-black);}}
+.form-grp [aria-invalid="true"]{border-color:var(--cw-red);background:#FDF3F3;}
+.hdr-nav .hubnav-toggle{font-size:var(--fs-ui);font-weight:700;color:var(--cw-black);background:#fff;border:1.5px solid var(--cw-border);border-radius:var(--r-ctl);padding:0 14px;min-height:44px;align-items:center;gap:8px;}
+@media(max-width:700px){
+  .filterbar{position:static;}
+}
+@media(max-width:640px){
+  .hdr-inner{flex-wrap:nowrap;}
+  .hdr-nav{margin-left:auto;width:auto;}
+  .filterbar-inner{overflow:visible;}
+  .chipstrip{flex:1 1 100%;min-width:0;}
+  .sort-sel{width:100%;}
+  .chip{min-height:44px;}
+  .featured,.grid{grid-template-columns:1fr;}
+  .grid .card,.spot .card{display:grid;grid-template-columns:84px minmax(0,1fr);column-gap:12px;}
+  .grid .card>*{grid-column:2;}
+  .grid .card .imgwrap{grid-column:1;grid-row:1 / span 4;width:84px;height:84px;margin:0;}
+  .grid .card .desc,.grid .card .more-link,.grid .card .opts,.grid .card .logoline,.grid .card .controls,.grid .card .kitlist,.grid .card .kituni,.grid .card .save{grid-column:1 / -1;}
+  .grid .card .desc{margin-top:8px;}
+  .grid .card .controls{flex-wrap:nowrap;}
+  .grid .card .add-btn{flex:1 1 auto;}
+  .quick .card{grid-template-columns:56px minmax(0,1fr);}
+  .quick .card .controls,.quick .card .opts,.quick .card .logoline{grid-column:1 / -1;grid-row:auto;}
+  .quick .card .controls{margin-top:8px;}
+  .quick .card .add-btn{flex:1 1 auto;}
+  .catdir{grid-template-columns:1fr;gap:8px;}
+}
+@media(prefers-reduced-motion:reduce){.catdir summary svg,.card{transition:none;}}
 </style>
   <link rel="icon" href="favicon.ico" sizes="any">
   <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
@@ -293,24 +372,27 @@ footer b{color:var(--cw-black);}
 
 <header>
   <div class="hdr-inner">
-    <a class="hdr-logo" href="#" onclick="resetView();return false;">
+    <a class="hdr-logo" href="../" aria-label="Vendor Hub home">
       <img src="https://emailer.emfluence.com/clients/citywide/uploadedfiles/signature_logo.png" alt="City Wide Facility Solutions">
     </a>
     <div class="hdr-title">Vendor Shop<small>Supplies, Equipment &amp; Uniforms</small></div>
-    <nav class="hdr-nav">
-      <a class="hdr-res" href="../kit-builder.html">Kit Builder</a>
-      <a class="hdr-res" href="../">Vendor Hub</a>
-    </nav>
+    <div class="hdr-nav">
+      <button type="button" data-hubnav-toggle><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>Menu</button>
+    </div>
   </div>
 </header>
+<nav id="hubnav" data-base="../" aria-label="Vendor Hub menu"></nav>
+<script src="../nav.js"></script>
+<script src="../hub-nav.js"></script>
 
 <div class="shopbar" id="shopbar">
   <div class="shopbar-inner">
     <div class="hdr-search">
+      <label class="sr" for="search">Search products</label>
       <input id="search" type="search" placeholder="Search products, SKUs, keywords..." autocomplete="off">
       <button class="clear-btn" aria-label="Clear search" onclick="document.getElementById('search').value='';onSearch();">&#10005;</button>
     </div>
-    <button class="cart-btn" onclick="openCart()">Cart <span class="count" id="cartCount">0</span></button>
+    <button class="cart-btn" onclick="openCart()" aria-label="Open cart">Cart <span class="count" id="cartCount">0</span></button>
   </div>
 </div>
 
@@ -331,18 +413,28 @@ footer b{color:var(--cw-black);}
 <main>
   <!-- Spotlight bands (CFG.SPOTLIGHT and CFG.KIT_BAND). Each one names a catalog category;
        rows carrying that category render in the band on the home view. -->
-  <div id="bands"></div>
-
   <div id="featuredWrap">
     <div class="section-title">Warehouse Quick Order</div>
     <div class="section-sub">Stocked at the City Wide office. Fastest turnaround.</div>
-    <div class="accent"></div>
-    <div class="featured" id="featured"></div>
+    <div class="featured quick" id="featured"></div>
   </div>
 
+  <div id="catWrap">
+    <div class="section-title">Shop by Category</div>
+    <div class="section-sub" id="catCount"></div>
+    <div class="catdir" id="catdir"></div>
+  </div>
+
+  <!-- Feature row (CFG.SPOTLIGHT and CFG.KIT_BAND). One row per band on the first view; the
+       full write-up shows inside the category. -->
+  <div id="bands"></div>
+
+  <div id="gridHead">
   <div class="section-title" id="gridTitle">All Products</div>
   <div class="section-sub" id="gridCount"></div>
   <div class="accent"></div>
+  </div>
+  <div class="catnote" id="spotNote"></div>
   <div class="catnote" id="aptNote" style="display:none"><b>Starting an apartment community?</b>
     These are the items in the apartment community porter kit. Order them one at a time here at the regular price, or
     <a id="aptKitLink" href="../kit-builder.html?type=apt5">build the whole kit on the Kit Builder</a> and the apartment kit discount applies to every item in the order, with the quantities already set to the schedule.
@@ -357,7 +449,7 @@ footer b{color:var(--cw-black);}
 <aside class="drawer" id="drawer">
   <div class="drawer-hd">
     <h2 id="drawerTitle">Your Order</h2>
-    <button onclick="closeCart()">&#10005;</button>
+    <button onclick="closeCart()" aria-label="Close">&#10005;</button>
   </div>
   <div class="drawer-body" id="drawerBody"></div>
   <div class="drawer-ft" id="drawerFoot"></div>
@@ -517,11 +609,12 @@ function buildChips(){
     const b=document.createElement("button");
     const on = activeGroup===key;
     b.className="chip"+(on?" active":"");
+    b.setAttribute("aria-pressed",on?"true":"false");
     b.textContent=label;
     b.onclick=()=>{
       activeGroup = on ? null : key;
       // Leaving a group clears a category filter that belongs to it.
-      if(activeCat!=="All" && activeCat!=="__WH__" && groupFor(activeCat)!==activeGroup) activeCat="All";
+      if(activeCat==="__ALL__" || (activeCat!=="All" && activeCat!=="__WH__" && groupFor(activeCat)!==activeGroup)) activeCat="All";
       buildChips(); render();
     };
     top.appendChild(b);
@@ -533,9 +626,10 @@ function buildChips(){
     b.onclick=()=>{activeCat=val; activeGroup=null; buildChips(); render();};
     top.appendChild(b);
   };
-  mkTop("All","All");
-  mkTop("Warehouse Items","__WH__");
+  mkTop("Shop Home","All");
+  mkTop("In Stock at City Wide","__WH__");
   GROUPS.forEach(g=>{ if(groupCats(g.key).length) mkGroup(g.key,g.key); });
+  mkTop("All Products","__ALL__");
 
   if(activeGroup) groupCats(activeGroup).forEach(c=>mk(sub,c,c,"subchip"));
   measureBar();
@@ -557,7 +651,7 @@ function filtered(){
   const gset = (activeGroup && activeCat==="All") ? new Set(groupCats(activeGroup)) : null;
   let list=PRODUCTS.filter(p=>{
     if(activeCat==="__WH__" && p.fulfillment!=="Warehouse") return false;
-    if(activeCat!=="All" && activeCat!=="__WH__" && !p.categories.includes(activeCat)) return false;
+    if(activeCat!=="All" && activeCat!=="__WH__" && activeCat!=="__ALL__" && !p.categories.includes(activeCat)) return false;
     if(gset && !p.categories.some(c=>gset.has(c))) return false;
     if(q){
       const hay=(p.name+" "+p.sku+" "+p.description+" "+p.categories.join(" ")+" "+p.source).toLowerCase();
@@ -578,10 +672,10 @@ function filtered(){
 
 // ---------- Rendering ----------
 function cardHTML(p){
-  const sizes=p.sizes.length?`<div class="optrow"><span class="ol">Size</span><select class="size-sel" id="size-${p.id}" onchange="livePrice('${p.id}')">${p.sizes.map(s=>{
+  const sizes=p.sizes.length?`<div class="optrow"><span class="ol">Size</span><select class="size-sel" id="size-${p.id}" aria-label="Size" onchange="livePrice('${p.id}')">${p.sizes.map(s=>{
       const extra=p.size_prices[s]?` (${fmt(p.size_prices[s])})`:"";
       return `<option value="${s}">${s}${extra}</option>`;}).join("")}</select></div>`:"";
-  const colors=p.colors.length>1?`<div class="optrow"><span class="ol">Color</span><select class="color-sel" id="color-${p.id}">${p.colors.map(c=>`<option value="${esc(c)}">${esc(c)}</option>`).join("")}</select></div>`
+  const colors=p.colors.length>1?`<div class="optrow"><span class="ol">Color</span><select class="color-sel" id="color-${p.id}" aria-label="Color">${p.colors.map(c=>`<option value="${esc(c)}">${esc(c)}</option>`).join("")}</select></div>`
     :(p.colors.length===1?`<div class="optrow"><span class="ol">Color</span><input type="hidden" id="color-${p.id}" value="${esc(p.colors[0])}"><span>${esc(p.colors[0])}</span></div>`:"");
   const logo=p.logo?`<div class="logoline"><b>${esc(p.logo)}</b> logo, embroidered</div>`:"";
   const oos = p.fulfillment==="Warehouse" && p.stock!==null && p.stock<=0;
@@ -597,7 +691,7 @@ function cardHTML(p){
     ? `<span class="was">${fmt(p.list_price)}</span>${fmt(displayPrice(p))}<small>kit price, ${p.kit_items.length} items</small>`
     : `${fmt(displayPrice(p))}${p.size_prices&&Object.keys(p.size_prices).length?' <small>larger sizes cost more</small>':''}`;
   return `<div class="card" data-id="${p.id}">
-    <div class="imgwrap"><img loading="lazy" src="${p.image}" alt="" onerror="this.style.display='none'"></div>
+    <div class="imgwrap"><img loading="lazy" decoding="async" src="${esc(imgSrc(p))}" alt="" onerror="imgFail(this,'${p.id}')"></div>
     <h3>${esc(p.name)}</h3>
     <div class="price${saving>0?' kitprice':''}" id="price-${p.id}">${priceHTML}</div>
     ${saving>0?`<span class="save">Kit discount: you save ${fmt(saving)}</span>`:""}
@@ -611,9 +705,9 @@ function cardHTML(p){
     ${sizes||colors?`<div class="opts">${sizes}${colors}</div>`:""}
     <div class="controls">
       <div class="qty">
-        <button onclick="stepQty('${p.id}',-1)">&minus;</button>
-        <input id="qty-${p.id}" type="number" value="1" min="1" max="999">
-        <button onclick="stepQty('${p.id}',1)">+</button>
+        <button onclick="stepQty('${p.id}',-1)" aria-label="One less">&minus;</button>
+        <input id="qty-${p.id}" type="number" inputmode="numeric" value="1" min="1" max="999" aria-label="Quantity">
+        <button onclick="stepQty('${p.id}',1)" aria-label="One more">+</button>
       </div>
       ${oos
         ?'<button class="add-btn" disabled style="background:var(--cw-grey);cursor:not-allowed">Out of Stock</button>'
@@ -622,6 +716,25 @@ function cardHTML(p){
   </div>`;
 }
 function esc(s){return (s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");}
+// Product photos. img/map.js lists the photos copied into this repo, keyed by the catalog's
+// image address. A product whose address is not in the map (a new item, or a changed photo)
+// loads from the catalog address as before. If a local copy fails, fall back the same way.
+function imgSrc(p){ const m=window.CW_IMG||{}; return m[p.image] ? "img/"+m[p.image] : p.image; }
+function imgFail(el,id){
+  const p=PRODUCTS.find(x=>x.id===id);
+  if(p && p.image && el.getAttribute("src")!==p.image && !el.dataset.tried){ el.dataset.tried="1"; el.src=p.image; }
+  else el.style.visibility="hidden";
+}
+// Shop by Category (first view) and the feature row both open a category through here.
+function openCat(cat){
+  activeCat=cat; activeGroup=groupFor(cat);
+  document.getElementById("search").value="";
+  buildChips(); render();
+  const m=document.querySelector("main"); if(m) window.scrollTo({top:Math.max(0,m.getBoundingClientRect().top+window.scrollY-120)});
+}
+document.addEventListener("click",function(e){
+  const b=e.target.closest("[data-cat]"); if(b) openCat(b.getAttribute("data-cat"));
+});
 // Kit contents. Each entry is "qty x name (supplier item)". The supplier item moves to a
 // second line so the list scans.
 function kitListHTML(p){
@@ -660,21 +773,39 @@ function render(){
     .filter(b=>b.items.length>0);
   const showSpot = showFeat && bands.length>0;
   const bandsEl=document.getElementById("bands");
-  bandsEl.innerHTML = showSpot ? bands.map(b=>`<div class="spot">
-      <span class="spot-kicker">${esc(b.cfg.kicker||"Featured")}</span>
-      <div class="section-title">${esc(b.cfg.title||b.cfg.category)}</div>
-      <div class="section-sub">${esc(b.cfg.sub||"")}</div>
-      ${b.cfg.note?`<p class="spot-note">${esc(b.cfg.note)}</p>`:""}
-      <div class="featured">${b.items.map(cardHTML).join("")}</div>
+  bandsEl.innerHTML = showSpot ? bands.map(b=>`<div class="featrow">
+      ${b.items[0].image?`<img src="${esc(imgSrc(b.items[0]))}" alt="" onerror="this.style.visibility='hidden'">`:""}
+      <div class="ft"><h3>${esc(b.cfg.kicker||"Featured")}. ${esc(b.cfg.title||b.cfg.category)}</h3><p>${esc(b.cfg.sub||"")}</p></div>
+      <button type="button" data-cat="${esc(b.cfg.category)}">See All ${b.items.length}</button>
     </div>`).join("") : "";
+  // First view: the category list. Counts come from the live catalog.
+  document.getElementById("catWrap").style.display=showFeat?"":"none";
+  if(showFeat){
+    document.getElementById("catCount").textContent=`${PRODUCTS.length} products`;
+    const wide=window.matchMedia("(min-width:641px)").matches;
+    document.getElementById("catdir").innerHTML=GROUPS.map(g=>{
+      const cats=groupCats(g.key); if(!cats.length) return "";
+      return `<details${wide?" open":""}><summary><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>${esc(g.key)}<span>${cats.length} ${cats.length===1?"category":"categories"}</span></summary>${
+        cats.map(c=>`<button type="button" data-cat="${esc(c)}">${esc(c)}<span>${PRODUCTS.filter(p=>p.categories.includes(c)).length}</span></button>`).join("")}</details>`;
+    }).join("");
+  }
+  // Inside a featured category, show its write-up above the products.
+  const spotNote=document.getElementById("spotNote");
+  const sb=[CFG.KIT_BAND, CFG.SPOTLIGHT].find(b=>b&&b.category&&b.category===activeCat&&!q);
+  spotNote.style.display=sb?"block":"none";
+  spotNote.innerHTML=sb?`<b>${esc(sb.sub||sb.title||"")}</b>${esc(sb.note||"")}`:"";
   const grid=document.getElementById("grid");
   const spotIds = showSpot ? new Set(bands.flatMap(b=>b.items.map(p=>p.id))) : new Set();
-  const items=showFeat?list.filter(p=>!p.featured && !spotIds.has(p.id)):list;
+  // The first view no longer draws the whole catalog. Products draw for a category, a search, or All Products.
+  const items=showFeat?[]:list;
+  document.getElementById("gridHead").style.display=showFeat?"none":"";
+  document.getElementById("sortsel").style.display=showFeat?"none":"";
   grid.innerHTML=items.map(cardHTML).join("");
-  document.getElementById("empty").style.display=items.length?"none":"";
+  document.getElementById("empty").style.display=(items.length||showFeat)?"none":"";
   document.getElementById("gridTitle").textContent =
     q ? `Results for "${q}"`
-    : activeCat==="__WH__" ? "Warehouse Items"
+    : activeCat==="__WH__" ? "In Stock at City Wide"
+    : activeCat==="__ALL__" ? "All Products"
     : activeCat!=="All" ? activeCat
     : activeGroup ? activeGroup
     : "All Products";
@@ -767,14 +898,14 @@ function renderDrawer(){
   if(!checkoutMode){
     body.innerHTML=cartLines().map(l=>`
       <div class="ci">
-        <img src="${l.p.image}" alt="" onerror="this.style.visibility='hidden'">
+        <img src="${esc(imgSrc(l.p))}" alt="" onerror="imgFail(this,'${l.p.id}')">
         <div>
           <div class="ci-name">${esc(l.p.name)}</div>
           <div class="ci-meta">SKU ${esc(l.p.sku)}${l.spec?" &middot; "+esc(l.spec):""} &middot; ${fmt(l.unit)} each</div>
           <div class="qty">
-            <button onclick="chQty('${l.id}','${esc(l.size)}','${esc(l.color||"")}',-1)">&minus;</button>
-            <input value="${l.qty}" readonly>
-            <button onclick="chQty('${l.id}','${esc(l.size)}','${esc(l.color||"")}',1)">+</button>
+            <button onclick="chQty('${l.id}','${esc(l.size)}','${esc(l.color||"")}',-1)" aria-label="One less">&minus;</button>
+            <input value="${l.qty}" readonly aria-label="Quantity">
+            <button onclick="chQty('${l.id}','${esc(l.size)}','${esc(l.color||"")}',1)" aria-label="One more">+</button>
           </div>
         </div>
         <div class="ci-right">
@@ -788,23 +919,23 @@ function renderDrawer(){
     const saved=JSON.parse(localStorage.getItem("cw_vendor")||"{}");
     body.innerHTML=`
       <button class="back-link" onclick="checkoutMode=false;renderDrawer()">&larr; Back to cart</button>
-      <div class="form-grp"><label>Your Name <span class="req">*</span></label><input id="f-name" value="${esc(saved.name||"")}"></div>
-      <div class="form-grp"><label>Company Name <span class="req">*</span></label><input id="f-company" value="${esc(saved.company||"")}"></div>
-      <div class="form-grp"><label>Email <span class="req">*</span></label><input id="f-email" type="email" value="${esc(saved.email||"")}"></div>
-      <div class="form-grp"><label>Primary Account These Supplies Are For <span class="req">*</span></label>
+      <div class="form-grp"><label for="f-name">Your Name <span class="req">*</span></label><input id="f-name" value="${esc(saved.name||"")}"></div>
+      <div class="form-grp"><label for="f-company">Company Name <span class="req">*</span></label><input id="f-company" value="${esc(saved.company||"")}"></div>
+      <div class="form-grp"><label for="f-email">Email <span class="req">*</span></label><input id="f-email" type="email" value="${esc(saved.email||"")}"></div>
+      <div class="form-grp"><label for="f-account">Primary Account These Supplies Are For <span class="req">*</span></label>
         <input id="f-account" placeholder="Building or account name" value="${esc(saved.account||"")}">
       </div>
-      <div class="form-grp"><label>Which City Wide office? <span class="req">*</span></label>
+      <div class="form-grp"><label for="f-region">Which City Wide office? <span class="req">*</span></label>
         <select id="f-region">
           <option value=""${saved.region?"":" selected"}>Select your region</option>
           <option value="Las Vegas"${saved.region==="Las Vegas"?" selected":""}>Las Vegas (Las Vegas, Henderson, North Las Vegas)</option>
           <option value="Northern Nevada"${saved.region==="Northern Nevada"?" selected":""}>Northern Nevada (Reno, Sparks, Carson City)</option>
         </select>
       </div>
-      <div class="form-grp"><label>Special Requests / Name Badge Names</label><textarea id="f-notes" rows="3"></textarea></div>
+      <div class="form-grp"><label for="f-notes">Special Requests / Name Badge Names</label><textarea id="f-notes" rows="3"></textarea></div>
       ${couponHTML()}
       <div class="notice"><b>Pricing Notice:</b> ${esc(CFG.PRICING_NOTICE||"")}</div>
-      <div class="form-grp"><label>How would you like to pay? <span class="req">*</span></label>
+      <div class="form-grp" role="group" aria-labelledby="pay-lab"><label id="pay-lab">How would you like to pay? <span class="req">*</span></label>
         <div class="paymethods">
           <label id="pm-lab-deduct" class="${saved.pay==="card"?"":"on"}">
             <input type="radio" name="paymethod" value="deduct" ${saved.pay==="card"?"":"checked"} onchange="setPay('deduct')">
@@ -824,7 +955,7 @@ function renderDrawer(){
       <div class="ack"><input type="checkbox" id="f-ack">
         <label for="f-ack" id="f-ack-lab">I understand prices are estimates, and I authorize this order to be settled by pay deduction. <span class="req">*</span></label>
       </div>
-      <div id="f-err" style="color:var(--cw-red);font-size:var(--fs-ui);font-weight:700;line-height:1.5;"></div>`;
+      <div id="f-err" role="alert" style="color:var(--cw-red);font-size:var(--fs-ui);font-weight:700;line-height:1.5;"></div>`;
     foot.innerHTML=totalsHTML()+`
       <button class="checkout-btn" id="submitBtn" onclick="submitOrder()">Submit Order</button>`;
   }
@@ -849,7 +980,7 @@ function couponHTML(){
   }
   return `
       <div class="form-grp">
-        <label>Coupon or award code</label>
+        <label for="f-coupon">Coupon or award code</label>
         <div class="coupon-row"><input id="f-coupon" placeholder="VOTM-0826-XXXXX" autocomplete="off" autocapitalize="characters" spellcheck="false" onkeydown="if(event.key==='Enter'){event.preventDefault();applyCoupon();}"><button type="button" id="applyBtn" onclick="applyCoupon()">Apply</button></div>
         <div class="coupon-msg" id="coupon-msg">Vendor of the Month? Enter the code from your award email.</div>
       </div>`;
@@ -939,6 +1070,12 @@ async function submitOrder(){
     account:val("f-account"), region:val("f-region"), notes:val("f-notes"), pay:payMethod(),
   };
   const err=document.getElementById("f-err");
+  let firstBad=null;
+  [["f-name",info.name],["f-company",info.company],["f-email",info.email],["f-account",info.account],["f-region",info.region]].forEach(([fid,v])=>{
+    const el=document.getElementById(fid); if(!el) return;
+    if(v) el.removeAttribute("aria-invalid"); else { el.setAttribute("aria-invalid","true"); if(!firstBad) firstBad=el; }
+  });
+  if(firstBad) firstBad.focus();
   if(!info.name||!info.company||!info.email||!info.account){err.textContent="Please fill in all required fields.";return;}
   if(!info.region){err.textContent="Please select your region.";return;}
   if(!document.getElementById("f-ack").checked){err.textContent="Please check the acknowledgment box to submit.";return;}

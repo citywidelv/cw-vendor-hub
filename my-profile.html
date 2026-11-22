@@ -35,7 +35,9 @@ a:hover{color:var(--cw-red-dark)}
 .site-head .site-name{font-size:13px;font-weight:700;color:var(--cw-grey);
   border-left:2px solid var(--cw-border);padding-left:14px;letter-spacing:.02em;
   text-transform:uppercase;white-space:nowrap}
-.site-head nav{margin-left:auto;display:flex;gap:4px;align-items:center}
+.site-head nav{margin-left:auto;display:flex;gap:0;align-items:center}
+/* 2026-11-21: the menu has seven groups now. Tighter top level links so it stays on one row. */
+@media(min-width:1081px){.site-head .bar nav>a,.site-head .bar nav>.dd>a{font-size:12px;padding:8px 5px}.site-head .bar nav>a.btn-order{padding:9px 12px;margin-left:4px}}
 .site-head nav a{font-size:12.5px;font-weight:700;color:var(--cw-black);text-decoration:none;
   padding:8px 10px;border-radius:6px;white-space:nowrap}
 .site-head nav a:hover{background:var(--cw-light);color:var(--cw-red)}

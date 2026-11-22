@@ -3,221 +3,176 @@
 <title>Vendor Resource Hub | City Wide Facility Solutions</title>
 <meta name="description" content="The City Wide Facility Solutions Vendor Resource Hub for Las Vegas and Northern Nevada crews: open opportunities, onboarding, invoices, supply orders, paperwork, and crew guides.">
 <link rel="canonical" href="https://citywidelv.github.io/cw-vendor-hub/">
+<!-- build 2026-11-21: Vendor Hub overhaul. Tasks first, menus named for the job (hub-nav.js), search over every link.
+     Same tokens and six step type scale as the Ops Hub and Admin Hub: 12 caption, 13 UI, 15 body, 17 lead, 21 h2, 28 h1.
+     Spacing on a 4px grid. Radius 6 controls, 11 cards, 18 pills. Every control is 44px tall. Red is the Order Supplies
+     button and an invoice that is nearly due. The page before this build is commit 5c90f24. -->
 <style>
 :root{
-  --cw-red:#D22730; --cw-red-dark:#B01F27; --cw-black:#2D2A26; --cw-grey:#636466;
-  --cw-white:#FFFFFF; --cw-light:#F5F5F5; --cw-border:#E5E5E5; --cw-teal:#0AA6A9; --cw-gold:#E5B423;
-  --radius:12px; --shadow:0 1px 3px rgba(45,42,38,.08),0 4px 14px rgba(45,42,38,.06);
-  --shadow-lift:0 4px 10px rgba(45,42,38,.10),0 14px 34px rgba(45,42,38,.14);
+  --red:#D22730; --red-dark:#B01F27; --black:#2D2A26; --grey:#636466;
+  --line:#BDBBB8; --border:#E5E5E5; --soft:#F5F5F5; --white:#FFFFFF; --tint:#FDF1F1;
+  --font:Verdana,'Liberation Sans','DejaVu Sans',Geneva,Tahoma,sans-serif;
+  --r-ctl:6px; --r-card:11px; --r-pill:18px;
+  --lift:0 4px 10px rgba(45,42,38,.10),0 12px 28px rgba(45,42,38,.12);
+  color-scheme:light;
 }
 *{box-sizing:border-box;margin:0;padding:0}
-html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
-body{font-family:Verdana,'Liberation Sans','DejaVu Sans',Geneva,Tahoma,sans-serif;color:var(--cw-black);background:var(--cw-white);line-height:1.6;font-size:15px}
-img{max-width:100%;display:block}
-a{color:var(--cw-red);font-weight:700}
-a:hover{color:var(--cw-red-dark)}
-.wrap{max-width:1120px;margin:0 auto;padding:0 22px}
-.kicker{display:inline-flex;align-items:center;gap:8px;font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--cw-red)}
-.kicker::before{content:"";width:22px;height:3px;background:var(--cw-red);border-radius:2px}
+html{-webkit-text-size-adjust:100%;scrollbar-color:var(--line) var(--soft)}
+body{font-family:var(--font);font-size:15px;line-height:1.5;color:var(--black);background:var(--soft);caret-color:var(--red)}
+::selection{background:var(--black);color:#fff}
+a{color:inherit;text-underline-offset:3px}
+img{max-width:100%}
+button,input,select{font-family:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--black);outline-offset:2px}
+[hidden]{display:none!important}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.wrap{max-width:1160px;margin:0 auto}
+svg.i{width:20px;height:20px;flex:none;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.num{font-variant-numeric:tabular-nums}
+h1,h2,h3{text-wrap:balance}
+h2{font-size:21px;line-height:1.25}
+h3{font-size:17px;line-height:1.3}
+.tag{display:inline-flex;align-items:center;min-height:24px;padding:0 8px;border:1px solid var(--line);border-radius:var(--r-pill);font-size:12px;font-weight:700;color:var(--grey);white-space:nowrap;background:var(--white)}
+.tag.urgent{border-color:var(--red);color:var(--red-dark);background:var(--tint)}
+.tag:empty{display:none}
+.site{background:var(--white);box-shadow:0 1px 8px rgba(45,42,38,.10);position:relative;z-index:60}
+.mtoggle{margin-left:auto;flex:none}
+.hhead{background:var(--white);display:flex;align-items:center;gap:12px 16px;padding:8px 20px;flex-wrap:wrap}
+.hhead>a:first-child{display:flex;align-items:center;min-height:44px;flex:none}
+.hhead img{height:34px;width:auto;display:block}
+.short{display:none}
+.hname{font-size:13px;font-weight:700;color:var(--grey);border-left:1px solid var(--border);padding-left:16px;white-space:nowrap}
+.search{position:relative;flex:1 1 260px;max-width:420px;margin-left:auto}
+.search input{width:100%;height:44px;border:1px solid var(--line);border-radius:var(--r-ctl);padding:0 40px;font-size:16px;background:var(--white)}
+.search input::placeholder{color:var(--grey)}
+.search input::-webkit-search-cancel-button{display:none}
+.search>svg.i{position:absolute;left:12px;top:12px;color:var(--grey);pointer-events:none}
+.search kbd{position:absolute;right:8px;top:10px;height:24px;min-width:24px;display:flex;align-items:center;justify-content:center;border:1px solid var(--border);border-radius:4px;font-family:inherit;font-size:12px;font-weight:700;color:var(--grey);pointer-events:none}
+.results{display:none;position:absolute;left:0;right:0;top:calc(100% + 4px);z-index:40;background:var(--white);border:1px solid var(--border);border-radius:var(--r-card);box-shadow:var(--lift);padding:8px;max-height:400px;overflow:auto}
+.results.open{display:block}
+.results a{display:flex;align-items:center;gap:8px;min-height:44px;padding:4px 12px;border-radius:var(--r-ctl);text-decoration:none;font-size:13px;font-weight:700}
+.results a span{margin-left:auto;font-weight:400;font-size:12px;color:var(--grey);white-space:nowrap}
+.results a.on{background:var(--soft);outline:2px solid var(--black);outline-offset:-2px}
+.results p{padding:12px;font-size:13px;color:var(--grey)}
+.results p b{display:block;color:var(--black);font-size:15px}
+.btn{min-height:44px;display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:0 16px;border:1px solid var(--line);border-radius:var(--r-ctl);background:var(--white);font-size:13px;font-weight:700;text-decoration:none;cursor:pointer;white-space:nowrap}
+.btn.primary{background:var(--red);border-color:var(--red);color:#fff}
+.btn.blk{background:var(--black);border-color:var(--black);color:#fff}
+.btn:active{transform:translateY(1px)}
 
-/* header */
-.site-head{position:sticky;top:0;z-index:50;background:var(--cw-white);border-bottom:1px solid var(--cw-border);box-shadow:0 1px 2px rgba(45,42,38,.05)}
-.site-head .bar{display:flex;align-items:center;gap:16px;height:64px}
-.site-head .bar>a:first-child{flex:none;display:block;line-height:0}
-.site-head img.logo{height:38px;width:auto;max-width:none;object-fit:contain}
-.site-head nav{margin-left:auto;display:flex;gap:4px;align-items:center}
-.site-head nav a{font-size:12.5px;font-weight:700;color:var(--cw-black);text-decoration:none;padding:8px 10px;border-radius:6px;white-space:nowrap}
-.site-head nav a:hover{background:var(--cw-light);color:var(--cw-red)}
-.site-head nav a.active{color:var(--cw-red)}
-.site-head nav a.btn-order{background:var(--cw-red);color:#fff;padding:9px 16px}
-.site-head nav a.btn-order:hover{background:var(--cw-red-dark);color:#fff}
-.site-head nav a.nav-opps{color:var(--cw-red);position:relative}
-.site-head nav a.nav-opps::after{content:"";display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--cw-red);margin-left:6px;vertical-align:2px;animation:oppPulse 2s infinite}
-@keyframes oppPulse{0%,100%{opacity:1}50%{opacity:.35}}
-.dd{position:relative}
-.dd>a.dd-label::after{content:" \25BE";font-size:10px;color:var(--cw-grey)}
-.dd-menu{display:none;position:absolute;top:100%;left:0;min-width:230px;background:#fff;border:1px solid var(--cw-border);border-radius:10px;box-shadow:var(--shadow-lift);padding:8px;z-index:60}
-.dd:hover .dd-menu,.dd:focus-within .dd-menu{display:block}
-.dd-menu a{display:block;padding:9px 12px;border-radius:6px;font-size:13px}
-.dd-menu .dd-head{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--cw-teal);padding:8px 12px 4px}
-.menu-toggle{display:none;margin-left:auto;background:none;border:1px solid var(--cw-border);border-radius:6px;padding:8px 10px;cursor:pointer;font-size:16px;line-height:1;color:var(--cw-black)}
-@media(max-width:1080px){
-  .menu-toggle{display:block}
-  .site-head nav{display:none;position:absolute;top:64px;left:0;right:0;background:#fff;flex-direction:column;align-items:stretch;padding:10px 16px 16px;gap:2px;border-bottom:1px solid var(--cw-border);box-shadow:0 12px 24px rgba(45,42,38,.12);max-height:calc(100vh - 64px);overflow:auto}
-  .site-head nav.open{display:flex}
-  .site-head nav a{padding:12px 10px;border-radius:8px}
-  .site-head nav a.btn-order{text-align:center;margin-top:8px}
-  .dd{display:contents}
-  .dd>a.dd-label{display:none}
-  .dd-menu{display:block;position:static;border:none;box-shadow:none;padding:0;min-width:0}
-  .dd-menu a{padding:12px 10px;font-size:13px}
-  .dd-menu .dd-head{padding:10px 10px 2px}
+.hbody{padding:20px;display:grid;gap:16px}
+.phead{display:flex;align-items:center;gap:8px 16px;flex-wrap:wrap}
+.ptitle{font-size:28px;line-height:1.2}
+.psub{font-size:13px;color:var(--grey);margin-right:auto}
+.strips{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.strip{background:var(--white);border:1px solid var(--border);border-radius:var(--r-card);padding:16px;display:grid;grid-template-columns:44px minmax(0,1fr);gap:12px 16px;align-content:start}
+.strip .ico{width:44px;height:44px;border-radius:var(--r-ctl);background:var(--soft);display:flex;align-items:center;justify-content:center;flex:none;color:var(--red)}
+.strip .st{min-width:0;align-self:center}
+.strip h3{font-size:15px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.strip p{font-size:13px;color:var(--grey)}
+.strip .sb{grid-column:2;display:flex;gap:8px;flex-wrap:wrap}
+.sec{background:var(--white);border:1px solid var(--border);border-radius:var(--r-card);padding:20px}
+.sechead{display:flex;align-items:baseline;gap:4px 16px;flex-wrap:wrap;margin-bottom:12px}
+.sechead p{font-size:13px;color:var(--grey)}
+.jobs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+.job{background:var(--white);border:1px solid var(--border);border-radius:var(--r-card);padding:16px 8px 8px}
+.job h2{font-size:17px;padding:0 12px 8px}
+.job ul{list-style:none}
+.job li+li{border-top:1px solid var(--border)}
+.task{display:flex;align-items:center;gap:12px;min-height:60px;padding:8px 12px;border-radius:var(--r-ctl);text-decoration:none}
+.task .ico{width:36px;height:36px;border-radius:var(--r-ctl);background:var(--soft);display:flex;align-items:center;justify-content:center;flex:none;color:var(--red)}
+.task .tx{flex:1;min-width:0}
+.task b{display:block;font-size:15px;line-height:1.3}
+.task .tx span{display:block;font-size:13px;color:var(--grey);line-height:1.4}
+.task>svg.i{width:16px;height:16px;color:var(--grey)}
+.winners{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.win{border:1px solid var(--border);border-radius:var(--r-ctl);padding:16px;display:grid;gap:12px;justify-items:start;align-content:space-between}
+.win .wt{min-width:0}
+.win .when{font-size:13px;color:var(--grey)}
+.win .who{font-size:17px;font-weight:700;line-height:1.3;text-wrap:balance}
+details.past{margin-top:12px;border-top:1px solid var(--border)}
+details.past summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:8px;min-height:48px;font-size:13px;font-weight:700}
+details.past summary::-webkit-details-marker{display:none}
+details.past summary svg.i{width:16px;height:16px;color:var(--grey);transition:transform .18s cubic-bezier(.16,1,.3,1)}
+details.past[open] summary svg.i{transform:rotate(90deg)}
+.years{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+.years button{min-height:44px;padding:0 16px;border:1px solid var(--line);border-radius:var(--r-pill);background:var(--white);font-size:13px;font-weight:700;cursor:pointer}
+.years button[aria-pressed="true"]{background:var(--black);border-color:var(--black);color:#fff}
+.plist{display:grid;grid-template-columns:1fr 1fr;gap:16px 32px}
+.plist h3{font-size:13px;color:var(--grey);padding-bottom:8px;border-bottom:1px solid var(--border)}
+.plist ol{list-style:none}
+.plist li{display:grid;grid-template-columns:96px 1fr;gap:12px;padding:8px 0;border-bottom:1px solid var(--border);font-size:13px}
+.plist li span{color:var(--grey)}
+.plist li b small{display:block;font-weight:400;font-size:13px;color:var(--grey);margin-top:4px;max-width:60ch}
+.plist li.none b{font-weight:400;color:var(--grey)}
+.newv{display:grid;grid-template-columns:minmax(0,1fr) 260px;gap:20px 24px;align-items:start}
+.newv img{width:100%;height:auto;aspect-ratio:3/2;object-fit:cover;border-radius:var(--r-ctl);display:block}
+.steps{list-style:none;display:grid;gap:0}
+.steps li{display:grid;grid-template-columns:36px 1fr;gap:4px 12px;padding:12px 0;border-top:1px solid var(--border)}
+.steps li:first-child{border-top:0;padding-top:0}
+.steps .n{width:36px;height:36px;border-radius:50%;background:var(--black);color:#fff;font-weight:700;display:flex;align-items:center;justify-content:center;grid-row:span 3}
+.steps b{font-size:15px}
+.steps p{font-size:13px;color:var(--grey);max-width:65ch}
+.steps .sb{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+.guides{list-style:none;display:grid;grid-template-columns:1fr 1fr;gap:0 24px}
+.guides li{border-top:1px solid var(--border)}
+.guides a{display:flex;align-items:center;gap:12px;min-height:56px;padding:8px 4px;text-decoration:none;border-radius:var(--r-ctl)}
+.guides a>svg.i{color:var(--red)}
+.guides .tx{flex:1;min-width:0}
+.guides b{display:block;font-size:15px;line-height:1.3}
+.guides .tx span{display:block;font-size:13px;color:var(--grey);line-height:1.4}
+.contact{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr) minmax(0,1fr);gap:16px 24px;align-items:start}
+.contact p{font-size:13px;color:var(--grey);margin-top:4px;max-width:44ch}
+.reg h3{font-size:15px;margin-bottom:4px}
+.reg a{display:flex;align-items:center;gap:8px;min-height:44px;font-size:15px;font-weight:700;text-decoration:none;overflow-wrap:anywhere}
+.reg a svg.i{color:var(--red);width:18px;height:18px}
+.reg span{display:block;font-size:13px;color:var(--grey);overflow-wrap:anywhere}
+.hfoot{padding:16px 20px;border-top:1px solid var(--border);background:var(--white);font-size:12px;color:var(--grey)}
+.hfoot b{color:var(--black)}
+
+@media(max-width:860px){
+  .jobs{grid-template-columns:1fr}
+  .strips,.winners,.plist,.guides,.contact{grid-template-columns:1fr}
+  .newv{grid-template-columns:1fr}
+  .newv img{max-width:420px}
+}
+@media(max-width:700px){
+  .hhead{padding:8px 16px}
+  .hhead img{height:24px}
+  .mtoggle{flex:none}
+  #orderbtn .long{display:none}
+  #orderbtn .short{display:inline}
+  .hname{display:none}
+  .search{flex:1 1 150px;max-width:none;margin-left:0}
+  .search kbd{display:none}
+  .hbody{padding:16px}
+  .ptitle{font-size:21px}
+  .phead .btn{flex:1 1 100%}
+  .strip{grid-template-columns:36px minmax(0,1fr);gap:12px}
+  .strip .ico{width:36px;height:36px}
+  .strip .sb{grid-column:1 / -1}
+  .strip .sb .btn{flex:1 1 auto}
+  #dueSub{display:none}
+  .sec{padding:16px}
+  .plist li{grid-template-columns:84px 1fr}
 }
 
-/* buttons */
-.btn{display:inline-flex;align-items:center;gap:8px;font-family:inherit;font-size:14px;font-weight:700;text-decoration:none;border-radius:8px;padding:13px 22px;cursor:pointer;border:2px solid transparent;transition:all .15s}
-.btn-red{background:var(--cw-red);color:#fff}
-.btn-red:hover{background:var(--cw-red-dark);color:#fff;transform:translateY(-1px);box-shadow:var(--shadow)}
-.btn-ghost{background:#fff;color:var(--cw-black);border-color:var(--cw-border)}
-.btn-ghost:hover{border-color:var(--cw-black);color:var(--cw-black)}
 
-/* hero */
-.hero{position:relative;overflow:hidden;background:var(--cw-black);color:#fff}
-.hero .bg{position:absolute;inset:0;background:url('images/bldg-commercial-palms.jpg') center 40%/cover no-repeat;filter:grayscale(100%);opacity:.34}
-.hero .scrim{position:absolute;inset:0;background:linear-gradient(95deg,rgba(24,22,20,.97) 0%,rgba(24,22,20,.9) 42%,rgba(24,22,20,.55) 100%)}
-.hero .wrap{position:relative;z-index:2;display:grid;grid-template-columns:1.15fr .85fr;gap:48px;align-items:center;padding-top:72px;padding-bottom:72px}
-.hero .kicker{color:#fff}
-.hero h1{font-size:clamp(30px,4.8vw,50px);font-weight:700;line-height:1.12;letter-spacing:.01em;margin-top:16px}
-.hero h1 em{font-style:normal;color:var(--cw-red)}
-.hero p.lede{margin-top:18px;font-size:clamp(15px,1.8vw,17.5px);color:#e6e4e1;max-width:560px}
-.hero .cta-row{margin-top:30px;display:flex;gap:12px;flex-wrap:wrap}
-.hero .btn-ghost{background:transparent;color:#fff;border-color:rgba(255,255,255,.55)}
-.hero .btn-ghost:hover{border-color:#fff;color:#fff}
-.hero .quick{margin-top:30px;display:flex;gap:22px;flex-wrap:wrap;font-size:12.5px;color:#cfcdca}
-.hero .quick a{color:#fff;text-decoration:none;border-bottom:1px solid rgba(255,255,255,.35);font-weight:700}
-.hero .quick a:hover{border-color:#fff}
-.hero-art{position:relative;min-height:420px}
-.hero-art .photo{position:absolute;right:0;top:0;width:86%;aspect-ratio:4/3;border-radius:16px;overflow:hidden;box-shadow:0 30px 70px rgba(0,0,0,.5);border:1px solid rgba(255,255,255,.12)}
-.hero-art .photo img{width:100%;height:100%;object-fit:cover}
-.hero-art .photo2{position:absolute;left:0;bottom:0;width:46%;aspect-ratio:1/1;border-radius:14px;overflow:hidden;box-shadow:0 24px 50px rgba(0,0,0,.5);border:4px solid var(--cw-black)}
-.hero-art .photo2 img{width:100%;height:100%;object-fit:cover;object-position:55% 35%}
-.hero-art .stamp{position:absolute;right:-6px;bottom:34px;background:var(--cw-red);color:#fff;font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;padding:10px 14px;border-radius:8px;box-shadow:0 10px 24px rgba(0,0,0,.4)}
-@media(max-width:900px){
-  .hero .wrap{grid-template-columns:1fr;padding-top:52px;padding-bottom:56px}
-  .hero-art{min-height:0;margin-top:8px}
-  .hero-art .photo{position:relative;width:100%}
-  .hero-art .photo2,.hero-art .stamp{display:none}
+.job,.sec,.win{scroll-margin-top:16px}
+.strip .sh{font-size:15px;line-height:1.3;display:flex;align-items:center;gap:4px 8px;flex-wrap:wrap}
+.win .why{font-size:13px;color:var(--grey);margin-top:4px;max-width:60ch}
+.hbody{padding-bottom:32px}
+.sitefoot{border-top:1px solid var(--border);background:var(--white)}
+.hfoot{border-top:0;background:none}
+.hfoot a{font-weight:700}
+@media(hover:hover){
+  .btn:hover{border-color:var(--black)}
+  .btn.primary:hover{background:var(--red-dark);border-color:var(--red-dark)}
+  .results a:hover,.task:hover,.guides a:hover{background:var(--soft)}
+  .reg a:hover{text-decoration:underline}
+  .years button:hover{border-color:var(--black)}
 }
-
-/* opportunities band */
-.opps-band{background:#fff;border-bottom:1px solid var(--cw-border);border-top:4px solid var(--cw-red)}
-.opps-band .inner{display:flex;align-items:center;gap:18px;flex-wrap:wrap;padding:18px 22px}
-.opps-band .dot{width:10px;height:10px;border-radius:50%;background:var(--cw-red);flex:none;animation:oppPulse 2s infinite}
-.opps-band .txt{flex:1;min-width:240px}
-.opps-band .txt b{display:block;font-size:15px}
-.opps-band .txt span{font-size:13px;color:var(--cw-grey)}
-.opps-band .links{display:flex;gap:8px;flex-wrap:wrap}
-.opps-band .links a.btn{padding:10px 16px;font-size:13px}
-
-/* recognition wall */
-.recog{background:var(--cw-black);color:#fff;padding:60px 0}
-.recog .wrap{display:block}
-.recog .kicker{color:#fff}
-.recog h2{font-size:clamp(24px,3.2vw,34px);line-height:1.2;margin-top:12px}
-.recog .lead p{color:#cfcdca;font-size:15px;margin-top:14px;max-width:620px}
-.recog .now{padding:22px 24px;background:#fff;color:var(--cw-black);border-radius:var(--radius);border-left:5px solid var(--cw-red)}
-.recog .now .when{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--cw-red)}
-.recog .now .who{font-size:clamp(20px,2.4vw,26px);font-weight:700;line-height:1.2;margin-top:6px}
-.recog .now .why{font-size:13.5px;color:var(--cw-grey);margin-top:8px}
-.recog .cta-row{margin-top:22px;display:flex;gap:10px;flex-wrap:wrap}
-.recog .cta-row .btn-ghost{background:transparent;color:#fff;border-color:rgba(255,255,255,.5)}
-.recog .cta-row .btn-ghost:hover{border-color:#fff;color:#fff}
-.recog .roll{background:transparent}
-.recog .switch{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin:26px 0 18px}
-.recog .mkts{display:grid;grid-template-columns:1fr 1fr;gap:44px;align-items:start}
-.recog .mkt{min-width:0;scroll-margin-top:90px}
-.recog .switch button{font-family:inherit;font-size:12px;font-weight:700;border:1px solid rgba(255,255,255,.28);background:transparent;color:#cfcdca;border-radius:20px;padding:7px 14px;cursor:pointer}
-.recog .switch button.on{background:#fff;border-color:#fff;color:var(--cw-black)}
-.recog .switch button:hover:not(.on){border-color:#fff;color:#fff}
-.recog .switch .sep{width:1px;height:18px;background:rgba(255,255,255,.25);margin:0 6px}
-.recog .mkt h3{font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#8f8b85;margin:28px 0 6px}
-.recog ol{list-style:none;margin:0;padding:0;border-top:1px solid rgba(255,255,255,.14)}
-.recog ol li{display:grid;grid-template-columns:96px 1fr;gap:14px;align-items:baseline;padding:11px 0;border-bottom:1px solid rgba(255,255,255,.14);font-size:15px}
-.recog ol li .m{font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#8f8b85}
-.recog ol li b{font-weight:700;color:#fff}
-.recog ol li small{display:block;font-weight:400;color:#cfcdca;font-size:13px;margin-top:2px}
-.recog ol li.cur b{color:var(--cw-red)}
-.recog ol li.open{color:#5f5b56}
-.recog ol li.open .m{color:#5f5b56}
-.recog .empty{font-size:13.5px;color:#cfcdca;padding:14px 0}
-@media(max-width:900px){.recog .mkts{grid-template-columns:1fr;gap:40px}}
-@media(max-width:480px){.recog ol li{grid-template-columns:70px 1fr;font-size:14px}}
-
-/* sections */
-.section{padding:56px 0}
-.section.alt{background:var(--cw-light)}
-.section-head{max-width:720px;margin-bottom:26px}
-.section-head h2{font-size:clamp(22px,3vw,30px);font-weight:700;line-height:1.25;margin-top:10px}
-.section-head p{color:var(--cw-grey);font-size:15px;margin-top:10px}
-
-/* steps */
-.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
-.step{position:relative;background:#fff;border:1px solid var(--cw-border);border-radius:var(--radius);padding:26px 24px 24px;box-shadow:var(--shadow);display:flex;flex-direction:column}
-.step .num{width:40px;height:40px;border-radius:50%;background:var(--cw-red);color:#fff;font-weight:700;font-size:16px;display:flex;align-items:center;justify-content:center;margin-bottom:16px}
-.step h3{font-size:17px;margin-bottom:8px}
-.step p{font-size:13.5px;color:var(--cw-grey);flex:1}
-.step .act{margin-top:16px;display:flex;gap:8px;flex-wrap:wrap}
-.step .act a{font-size:13px;text-decoration:none}
-.step .act a.btn{padding:10px 14px;font-size:13px}
-@media(max-width:860px){.steps{grid-template-columns:1fr}}
-
-/* feature tiles */
-.tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
-.tile{position:relative;display:flex;flex-direction:column;min-height:300px;border-radius:var(--radius);overflow:hidden;text-decoration:none;color:#fff;background:var(--cw-black);box-shadow:var(--shadow);transition:transform .15s,box-shadow .15s}
-.tile img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform .4s}
-.tile.mono img{filter:grayscale(100%)}
-.tile .sc{position:absolute;inset:0;background:linear-gradient(180deg,rgba(20,18,16,.05) 0%,rgba(20,18,16,.55) 50%,rgba(20,18,16,.94) 100%)}
-.tile .tx{position:relative;margin-top:auto;padding:22px}
-.tile .tx .kicker{color:#fff;font-size:10px}
-.tile h3{font-size:19px;margin-top:8px;line-height:1.25}
-.tile p{font-size:13px;color:#e6e4e1;margin-top:6px;font-weight:400}
-.tile .go{margin-top:12px;font-size:13px;font-weight:700;color:#fff}
-.tile .go::after{content:" \2192"}
-.tile:hover{transform:translateY(-3px);box-shadow:var(--shadow-lift);color:#fff}
-.tile:hover img{transform:scale(1.04)}
-.tile.solid{background:var(--cw-red)}
-.tile.solid .sc{display:none}
-.tile.solid .tx{margin-top:0;padding:26px;display:flex;flex-direction:column;flex:1}
-.tile.solid .big{font-size:44px;font-weight:700;line-height:1;margin-top:8px}
-.tile.solid .big small{display:block;font-size:13px;font-weight:400;margin-top:6px;opacity:.9}
-.tile.solid .go{margin-top:auto;padding-top:20px}
-@media(max-width:960px){.tiles{grid-template-columns:repeat(2,1fr)}}
-@media(max-width:600px){.tiles{grid-template-columns:1fr}.tile{min-height:240px}}
-
-/* card grid */
-.card-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:18px}
-.card{position:relative;display:flex;flex-direction:column;background:#fff;border:1px solid var(--cw-border);border-radius:var(--radius);padding:22px;text-decoration:none;color:var(--cw-black);transition:all .15s;box-shadow:var(--shadow)}
-.card:hover{box-shadow:var(--shadow-lift);transform:translateY(-2px);border-color:#d8d8d8;color:var(--cw-black)}
-.card .icon{width:44px;height:44px;border-radius:10px;background:var(--cw-light);display:flex;align-items:center;justify-content:center;margin-bottom:14px;color:var(--cw-red)}
-.card.flag .icon{background:var(--cw-red);color:#fff}
-.card h3{font-size:15px;font-weight:700;margin-bottom:6px}
-.card p{font-size:13px;color:var(--cw-grey);font-weight:400;flex:1}
-.card .go{margin-top:14px;font-size:13px;font-weight:700;color:var(--cw-red)}
-.card .go::after{content:" \2192"}
-
-/* guides split */
-.split{display:grid;grid-template-columns:1fr 1.4fr;gap:40px;align-items:start}
-.split .photo{border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow-lift);position:sticky;top:88px}
-.split .photo img{aspect-ratio:4/5;object-fit:cover;width:100%}
-.split .photo figcaption{background:var(--cw-black);color:#cfcdca;font-size:12px;padding:12px 16px}
-.split .photo figcaption b{color:#fff;display:block;font-size:13px}
-.guide-list{display:grid;gap:12px}
-.guide{display:flex;gap:16px;align-items:flex-start;background:#fff;border:1px solid var(--cw-border);border-radius:10px;padding:16px 18px;text-decoration:none;color:var(--cw-black);box-shadow:var(--shadow);transition:all .15s}
-.guide:hover{border-color:var(--cw-black);color:var(--cw-black);transform:translateX(3px)}
-.guide .ic{flex:none;width:40px;height:40px;border-radius:8px;background:var(--cw-light);display:flex;align-items:center;justify-content:center;color:var(--cw-red)}
-.guide h3{font-size:14.5px}
-.guide p{font-size:13px;color:var(--cw-grey);font-weight:400;margin-top:3px}
-.guide .pdf{margin-left:auto;flex:none;font-size:10px;font-weight:700;letter-spacing:.08em;color:#8a6a0e;border:1px solid var(--cw-gold);background:#FFFDF4;border-radius:4px;padding:2px 7px;text-transform:uppercase}
-@media(max-width:860px){.split{grid-template-columns:1fr}.split .photo{position:static}}
-
-/* contact band */
-.contact{background:var(--cw-black);color:#fff}
-.contact .wrap{display:grid;grid-template-columns:1.1fr 1fr 1fr;gap:36px;padding:52px 22px}
-.contact h2{font-size:24px;line-height:1.25}
-.contact p{color:#cfcdca;font-size:14px;margin-top:10px}
-.contact .region{border-left:3px solid var(--cw-red);padding-left:18px}
-.contact .region b{display:block;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--cw-red);margin-bottom:8px}
-.contact .region a{color:#fff;text-decoration:none;font-weight:700;display:block;font-size:16px;margin-top:4px}
-.contact .region a:hover{text-decoration:underline}
-.contact .region span{display:block;color:#cfcdca;font-size:13px}
-@media(max-width:860px){.contact .wrap{grid-template-columns:1fr;gap:26px}}
-
-/* footer */
-.site-foot{background:#1f1d1a;color:#cfcdca;padding:28px 0;font-size:13px}
-.site-foot .cols{display:flex;flex-wrap:wrap;gap:18px;justify-content:space-between;align-items:center}
-.site-foot a{color:#fff;text-decoration:none}
-.site-foot a:hover{text-decoration:underline}
-.site-foot .fine{margin-top:14px;font-size:11.5px;color:#8b8985}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
 <link rel="icon" href="favicon.ico" sizes="any">
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
@@ -227,189 +182,224 @@ a:hover{color:var(--cw-red-dark)}
 <link rel="stylesheet" href="https://citywidelv.github.io/cw-base.css">
 </head><body>
 
-<header class="site-head"><div class="wrap bar">
-<a href="index.html"><img class="logo" src="https://emailer.emfluence.com/clients/citywide/uploadedfiles/signature_logo.png" alt="City Wide Facility Solutions"></a>
-<button class="menu-toggle" aria-label="Menu">&#9776;</button>
-<nav>
-<a href="index.html" class="active">Home</a>
-<a href="opportunities.html" class="nav-opps">Open Opportunities</a>
-<div class="dd"><a class="dd-label" href="new-vendors.html">New Vendors</a><div class="dd-menu"><a href="new-vendors.html?region=lv">Las Vegas</a><a href="new-vendors.html?region=nnv">Northern Nevada</a></div></div>
-<div class="dd"><a class="dd-label" href="#guides" onclick="return false;">Guides</a><div class="dd-menu"><div class="dd-head">Crew Guides</div><a href="planner.html">New Building Planner</a><a href="workloading.html">Workloading &amp; Crew Sizing</a><a href="equipment.html">Choosing Your Equipment</a><a href="color-coding.html">Color Coding System</a><a href="medical.html">Medical Facility Cleaning</a><a href="cleanroom.html">Clean Room Cleaning</a><a href="gmp.html">GMP &amp; Food Facility Cleaning</a></div></div>
-<div class="dd"><a class="dd-label" href="invoice.html">Invoices &amp; Paperwork</a><div class="dd-menu"><div class="dd-head">Get Paid</div><a href="invoice.html">Submit Your Monthly Invoice</a><div class="dd-head">Orders</div><a href="building-supplies.html">Report Supplies Needed</a><a href="shop/">Shop Supplies &amp; Uniforms</a><a href="card-authorization.html">Pay by Credit Card</a><a href="kit-builder.html">Build a New Building Kit</a><div class="dd-head">Paperwork</div><a href="cleaner-roster.html">Add or Remove a Cleaner</a><a href="upload.html">Upload Insurance &amp; Compliance Docs</a><a href="my-profile.html">View &amp; Update My Vendor Profile</a><a href="profile-update.html">Update Your Company Profile</a><a href="work-order.html">Maintenance Work Ticket</a><a href="snow-report.html">Snow Service Report</a><a href="background-check.html">Background Check &amp; Name Badge</a><a href="https://www.onlinecprcertification.net/bloodborne-pathogens-training-certification.php" target="_blank" rel="noopener">Bloodborne Pathogens Certification</a></div></div>
-<div class="dd"><a class="dd-label" href="#recognition">Recognition</a><div class="dd-menu"><a href="#recognition">Vendor of the Month Wall</a><div class="dd-head">Nominate</div><a href="nominate.html">Nominate a Vendor of the Month</a><a href="nominate.html?type=goat">Nominate a City Wide G.O.A.T.</a></div></div>
-<a class="btn-order" href="shop/">Order Supplies</a>
-</nav></div></header>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+<symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></symbol>
+<symbol id="i-right" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></symbol>
+<symbol id="i-out" viewBox="0 0 24 24"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></symbol>
+<symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></symbol>
+<symbol id="i-invoice" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M12 11v6M10 12.5h3a1.25 1.25 0 0 1 0 2.5h-2a1.25 1.25 0 0 0 0 2.5h3"/></symbol>
+<symbol id="i-calc" viewBox="0 0 24 24"><rect x="4" y="2" width="16" height="20" rx="2"/><path d="M8 6h8M8 12h.01M12 12h.01M16 12h.01M8 16h.01M12 16h.01M16 16h.01"/></symbol>
+<symbol id="i-wrench" viewBox="0 0 24 24"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></symbol>
+<symbol id="i-snow" viewBox="0 0 24 24"><path d="M12 2v20M4 6l16 12M20 6L4 18M8 4l4 3 4-3M8 20l4-3 4 3M3 10l3 2-3 2M21 10l-3 2 3 2"/></symbol>
+<symbol id="i-cart" viewBox="0 0 24 24"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></symbol>
+<symbol id="i-box" viewBox="0 0 24 24"><path d="M21 8l-9-5-9 5v8l9 5 9-5z"/><path d="M3 8l9 5 9-5M12 13v9"/></symbol>
+<symbol id="i-list" viewBox="0 0 24 24"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1"/><path d="M9 12h6M9 16h4"/></symbol>
+<symbol id="i-card" viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20M6 15h4"/></symbol>
+<symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21v-1a6 6 0 0 1 6-6h4a6 6 0 0 1 6 6v1"/></symbol>
+<symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M12 15V9M9.5 11.5L12 9l2.5 2.5"/></symbol>
+<symbol id="i-useradd" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M19 8v6M22 11h-6"/></symbol>
+<symbol id="i-badge" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="10" r="2"/><path d="M6 16c.6-1.7 1.6-2.5 3-2.5s2.4.8 3 2.5M15 9h4M15 13h4"/></symbol>
+<symbol id="i-drop" viewBox="0 0 24 24"><path d="M12 2.7l5 6.2a6.5 6.5 0 1 1-10 0z"/></symbol>
+<symbol id="i-work" viewBox="0 0 24 24"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M9 7V5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2M3 13h18"/></symbol>
+<symbol id="i-book" viewBox="0 0 24 24"><path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2z"/><path d="M4 21a2 2 0 0 0 2 2h13M9 8h6"/></symbol>
+<symbol id="i-phone" viewBox="0 0 24 24"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z"/></symbol>
+<symbol id="i-mail" viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M2 7l10 7 10-7"/></symbol>
+</defs></svg>
+
+<header class="site"><div class="wrap hhead">
+  <a href="index.html" aria-label="Vendor Hub home"><img src="https://emailer.emfluence.com/clients/citywide/uploadedfiles/signature_logo.png" alt="City Wide Facility Solutions" width="300" height="42"></a>
+  <span class="hname">Vendor Hub</span>
+  <button type="button" class="btn mtoggle" data-hubnav-toggle><svg class="i" aria-hidden="true"><use href="#i-menu"/></svg>Menu</button>
+  <div class="search" id="search">
+    <label class="sr" for="q">Find a form or a guide</label>
+    <svg class="i" aria-hidden="true"><use href="#i-search"/></svg>
+    <input id="q" type="search" placeholder="Find a form or a guide" autocomplete="off" role="combobox" aria-expanded="false" aria-controls="results" aria-autocomplete="list">
+    <kbd>/</kbd>
+    <div class="results" id="results" role="listbox" aria-label="Search results"></div>
+  </div>
+  <a class="btn primary" id="orderbtn" href="shop/"><svg class="i" aria-hidden="true"><use href="#i-cart"/></svg><span class="long">Order Supplies</span><span class="short" aria-hidden="true">Order</span></a>
+</div></header>
+<nav id="hubnav" data-base="" aria-label="Vendor Hub menu"></nav>
+
+<main class="wrap hbody">
+  <div class="phead">
+    <h1 class="ptitle">Vendor Hub</h1>
+    <span class="psub">Las Vegas &amp; Northern Nevada</span>
+    <a class="btn blk" href="new-vendors.html">New Vendor? Start Here</a>
+  </div>
+
+  <div class="strips">
+    <div class="strip">
+      <span class="ico"><svg class="i" aria-hidden="true"><use href="#i-invoice"/></svg></span>
+      <div class="st"><h2 class="sh"><span id="dueHead">Monthly invoices are due by the 28th</span> <span class="tag" id="dueTag"></span></h2><p id="dueSub">One invoice a month, every account on one page.</p></div>
+      <div class="sb"><a class="btn" href="invoice.html">Submit Your Invoice</a></div>
+    </div>
+    <div class="strip">
+      <span class="ico"><svg class="i" aria-hidden="true"><use href="#i-work"/></svg></span>
+      <div class="st"><h2 class="sh" id="oppHead">Open Opportunities</h2><p id="oppSub">New contracts and one-time projects post here the moment they open.</p></div>
+      <div class="sb"><a class="btn" href="opportunities.html?region=lv">Las Vegas Board</a><a class="btn" href="opportunities.html?region=nnv">Northern Nevada Board</a></div>
+    </div>
+  </div>
+
+  <div class="jobs">
+<section class="job"><h2>Get Paid</h2><ul><li><a class="task" href="invoice.html"><span class="ico"><svg class="i" aria-hidden="true"><use href="#i-invoice"/></svg></span><span class="tx"><b>Submit Your Monthly Invoice</b><span>One invoice a month, every account on one page</span></span><svg class="i" aria-hidden="true"><use href="#i-right"/></svg></a></li><li><a class="task" href="prorate.html"><span class="ico"><svg class="i" aria-hidden="true"><use href="#i-calc"/></svg></span><span class="tx"><b>Prorate a Partial Month</b><span>Math helper for a partial month</span></span><svg class="i" aria-hidden="true"><use href="#i-right"/></svg></a></li><li><a class="task" href="work-order.html"><span class="ico"><svg class="i" aria-hidden="true"><use href="#i-wrench"/></svg></span><span class="tx"><b>Maintenance Work Ticket</b><span>Time, materials, and photos of a finished job</span></span><svg class="i" aria-hidden="true"><use href="#i-right"/></svg></a></li><li><a class="task" href="snow-report.html"><span class="ico"><svg class="i" aria-hidden="true"><use href="#i-snow"/></svg></span><span class="tx"><b>Snow Service Report</b><span>File at every address before you leave</span></span><svg class="i" aria-hidden="true"><use href="#i-right"/></svg></a></li></ul></section>
+<section class="job"><h2>Supplies</h2><ul><li><a class="task" href="shop/"><span class="ico"><svg class="i" aria-hidden="true"><use href="#i-cart"/></svg></span><span class="tx"><b>Order Supplies</b><span>Equipment, chemicals, and uniforms</span></span><svg class="i" aria-hidden="true"><use href="#i-right"/></svg></a></li><li><a class="task" href="kit-builder.html"><span class="ico"><svg class="i" aria-hidden="true"><use href="#i-box"/></svg></span><span class="tx"><b>Build a New Building Kit</b><span>Starting kit list for a new building</span></span><svg class="i" aria-hidden="true"><use href="#i-right"/></svg></a></li><li><a class="task" href="building-supplies.html"><span class="ico"><svg class="i" aria-hidden="true"><use href="#i-list"/></svg></span><span class="tx"><b>Report Supplies Needed</b><span>Tell City Wide what a building is low on</span></span><svg class="i" aria-hidden="true"><use href="#i-right"/></svg></a></li><li><a class="task" href="card-authorization.html"><span class="ico"><svg class="i" aria-hidden="true"><use href="#i-card"/></svg></span><span class="tx"><b>Pay for Supplies by Card</b><span>Put a card on file for your orders</span></span><svg class="i" aria-hidden="true"><use href="#i-right"/></svg></a></li></ul></section>
+<section class="job"><h2>Company &amp; Crew</h2><ul><li><a class="task" href="my-profile.html"><span class="ico"><svg class="i" aria-hidden="true"><use href="#i-user"/></svg></span><span class="tx"><b>My Vendor Profile</b><span>Contacts, services, and what is on file</span></span><svg class="i" aria-hidden="true"><use href="#i-right"/></svg></a></li><li><a class="task" href="upload.html"><span class="ico"><svg class="i" aria-hidden="true"><use href="#i-shield"/></svg></span><span class="tx"><b>Upload Insurance Docs</b><span>Insurance certificate, waiver, or voided check</span></span><svg class="i" aria-hidden="true"><use href="#i-right"/></svg></a></li><li><a class="task" href="cleaner-roster.html"><span class="ico"><svg class="i" aria-hidden="true"><use href="#i-useradd"/></svg></span><span class="tx"><b>Add or Remove a Cleaner</b><span>Who is going into a building or coming off</span></span><svg class="i" aria-hidden="true"><use href="#i-right"/></svg></a></li><li><a class="task" href="background-check.html"><span class="ico"><svg class="i" aria-hidden="true"><use href="#i-badge"/></svg></span><span class="tx"><b>Background Check &amp; Name Badge</b><span>Needed before a first shift</span></span><svg class="i" aria-hidden="true"><use href="#i-right"/></svg></a></li><li><a class="task" href="https://www.onlinecprcertification.net/bloodborne-pathogens-training-certification.php" target="_blank" rel="noopener"><span class="ico"><svg class="i" aria-hidden="true"><use href="#i-drop"/></svg></span><span class="tx"><b>Bloodborne Pathogens Course</b><span>Online certification</span></span><svg class="i" aria-hidden="true"><use href="#i-out"/></svg></a></li></ul></section>
+  </div>
+
+  <section class="sec" id="recognition">
+    <div class="sechead"><h2>Vendor of the Month</h2><p>One crew in each market earns the plate every month.</p></div>
+    <div class="winners" id="winners"></div>
+    <details class="past"><summary><svg class="i" aria-hidden="true"><use href="#i-right"/></svg>Past winners</summary>
+      <div class="years" id="years" role="group" aria-label="Year"></div>
+      <div class="plist" id="plist"></div>
+    </details>
+  </section>
+
+  <section class="sec">
+    <div class="sechead"><h2>New to City Wide? Three Steps to Your First Building</h2><p>No cost to join.</p></div>
+    <div class="newv">
+      <ol class="steps">
+        <li><span class="n">1</span><b>Tell Us What Your Crew Does</b><p>Fill out the vendor evaluation once and pick your services. The services checklist drives your notifications.</p><div class="sb"><a class="btn blk" href="vendor-evaluation.html">Complete the Evaluation</a></div></li>
+        <li><span class="n">2</span><b>Meet the Team &amp; Sign Your Packet</b><p>A visit with our team, the signed vendor packet, banking for direct deposit, your insurance certificate, and the notarized waiver.</p><div class="sb"><a class="btn" href="new-vendors.html?region=lv">Las Vegas Checklist</a><a class="btn" href="new-vendors.html?region=nnv">Northern Nevada Checklist</a></div></li>
+        <li><span class="n">3</span><b>Get to Work</b><p>Watch the board, answer the postings that fit your crew, and use the guides before the first clean.</p><div class="sb"><a class="btn" href="opportunities.html">View the Board</a></div></li>
+      </ol>
+      <img src="images/crew-office-cart-right.jpg" alt="City Wide crew member pushing a cleaning cart through an office" width="1292" height="859" loading="lazy" decoding="async">
+    </div>
+  </section>
+
+  <section class="sec" id="guides">
+    <div class="sechead"><h2>Crew Guides</h2><p>Your account scope of work always comes first. Every guide also prints as a PDF.</p></div>
+    <ul class="guides"><li><a href="planner.html"><svg class="i" aria-hidden="true"><use href="#i-book"/></svg><span class="tx"><b>New Building Planner</b><span>A complete starting kit list by building size</span></span><span class="tag">PDF</span></a></li><li><a href="workloading.html"><svg class="i" aria-hidden="true"><use href="#i-book"/></svg><span class="tx"><b>Workloading &amp; Crew Sizing</b><span>Turn square footage into hours and crew count</span></span><span class="tag">PDF</span></a></li><li><a href="equipment.html"><svg class="i" aria-hidden="true"><use href="#i-book"/></svg><span class="tx"><b>Choosing Your Equipment</b><span>Buckets, flat mops, and microfiber</span></span><span class="tag">PDF</span></a></li><li><a href="color-coding.html"><svg class="i" aria-hidden="true"><use href="#i-book"/></svg><span class="tx"><b>Color Coding System</b><span>Which cloth and mop goes where</span></span><span class="tag">PDF</span></a></li><li><a href="medical.html"><svg class="i" aria-hidden="true"><use href="#i-book"/></svg><span class="tx"><b>Medical Facility Cleaning</b><span>Dialysis clinics and medical offices</span></span><span class="tag">PDF</span></a></li><li><a href="cleanroom.html"><svg class="i" aria-hidden="true"><use href="#i-book"/></svg><span class="tx"><b>Clean Room Cleaning</b><span>Classes, gowning, conduct, and tasks</span></span><span class="tag">PDF</span></a></li><li><a href="gmp.html"><svg class="i" aria-hidden="true"><use href="#i-book"/></svg><span class="tx"><b>GMP &amp; Food Facility Cleaning</b><span>Zones, allergen control, drains, and sanitizer</span></span><span class="tag">PDF</span></a></li></ul>
+  </section>
+
+  <section class="sec" id="contact">
+    <div class="contact">
+      <div><h2>Questions on a building, a route, or an order?</h2><p>Call or email the operations line for your region.</p></div>
+      <div class="reg"><h3>Las Vegas</h3>
+        <a href="tel:7024831874"><svg class="i" aria-hidden="true"><use href="#i-phone"/></svg>(702) 483-1874</a>
+        <a href="mailto:lvservicecall@gocitywide.com"><svg class="i" aria-hidden="true"><use href="#i-mail"/></svg>lvservicecall@gocitywide.com</a>
+        <span>Compliance documents go to lvcompliance@gocitywide.com</span></div>
+      <div class="reg"><h3>Northern Nevada</h3>
+        <a href="tel:7754534718"><svg class="i" aria-hidden="true"><use href="#i-phone"/></svg>(775) 453-4718</a>
+        <a href="mailto:rnservicecall@gocitywide.com"><svg class="i" aria-hidden="true"><use href="#i-mail"/></svg>rnservicecall@gocitywide.com</a>
+        <span>Compliance documents go to rncompliance@gocitywide.com</span></div>
+    </div>
+  </section>
+</main>
+
+<footer class="sitefoot"><div class="wrap hfoot"><b>City Wide Facility Solutions</b> · Las Vegas &amp; Northern Nevada · <a href="https://www.gocitywide.com" target="_blank" rel="noopener">GoCityWide.com</a><br>For crew and vendor reference. Quantities and methods are guidance. Your account scope of work always comes first.</div></footer>
+
 <script src="nav.js"></script>
-<script src="https://citywidelv.github.io/cw-ops-desk/cw-nav.js"></script>
-<script>if(window.CWNav) CWNav.vendor();</script>
-
-<section class="hero"><div class="bg"></div><div class="scrim"></div><div class="wrap">
-<div>
-<span class="kicker">City Wide Facility Solutions</span>
-<h1>The Vendor <em>Resource Hub</em> for Las Vegas &amp; Northern Nevada</h1>
-<p class="lede">Everything your crew needs to work with City Wide in one place: open work, onboarding, invoices, supply orders, paperwork, and the guides that keep every building on standard.</p>
-<div class="cta-row">
-<a class="btn btn-red" href="opportunities.html">View Open Opportunities</a>
-<a class="btn btn-ghost" href="new-vendors.html">New Vendor? Start Here</a>
-</div>
-<div class="quick"><span>Most used:</span><a href="invoice.html">Submit an Invoice</a><a href="shop/">Order Supplies</a><a href="kit-builder.html">New Building Kit</a><a href="upload.html">Upload Insurance Docs</a><a href="cleaner-roster.html">Add a Cleaner</a><a href="my-profile.html">My Vendor Profile</a></div>
-</div>
-<div class="hero-art">
-<div class="photo"><img src="images/crew-office-cart-right.jpg" alt="City Wide crew member pushing a cleaning cart through an office"></div>
-<div class="photo2"><img src="images/trade-painting.jpg" alt="City Wide crew member painting an interior wall"></div>
-<div class="stamp">Crews Wanted</div>
-</div>
-</div></section>
-
-<section class="opps-band"><div class="wrap inner">
-<span class="dot"></span>
-<span class="txt"><b>Open Opportunities</b><span id="hubOppCount">New contracts and one-time projects post here the moment they open.</span></span>
-<span class="links"><a class="btn btn-red" href="opportunities.html?region=lv">Las Vegas Board</a><a class="btn btn-ghost" href="opportunities.html?region=nnv">Northern Nevada Board</a></span>
-</div></section>
-
-<section class="recog" id="recognition"><div class="wrap">
-<div class="lead">
-<span class="kicker">Vendor of the Month</span>
-<h2>Who is setting the standard</h2>
-<p>Every month one crew in Las Vegas and one in Northern Nevada earns the plate for the work they do in our buildings. The names are kept here so the whole network can see them.</p>
-</div>
-<div class="switch" id="recSwitch"></div>
-<div class="mkts" id="recMkts"></div>
-</div></section>
-
-<section class="section"><div class="wrap">
-<div class="section-head"><span class="kicker">New to City Wide?</span><h2>Three Steps to Your First Building</h2><p>No cost to join. Tell us what your crew does, meet the team, and get your paperwork in. When a posting matches your services, you hear from us first.</p></div>
-<div class="steps">
-<div class="step"><span class="num">1</span><h3>Tell Us What Your Crew Does</h3><p>Fill out the vendor evaluation once and pick your services: janitorial, floor care, landscaping, the trades, restoration, and more. The services checklist drives your notifications.</p><div class="act"><a class="btn btn-red" href="vendor-evaluation.html">Complete the Evaluation</a></div></div>
-<div class="step"><span class="num">2</span><h3>Meet the Team &amp; Sign Your Packet</h3><p>A visit with our team, the signed vendor packet, banking for direct deposit, your insurance certificate, and the notarized waiver. Every document is spelled out by region.</p><div class="act"><a class="btn btn-ghost" href="new-vendors.html?region=lv">Las Vegas Checklist</a><a class="btn btn-ghost" href="new-vendors.html?region=nnv">Northern Nevada Checklist</a></div></div>
-<div class="step"><span class="num">3</span><h3>Get to Work</h3><p>Watch the board, answer the postings that fit your crew, and use the guides before the first clean so nobody shows up with one towel and one mop head.</p><div class="act"><a class="btn btn-red" href="opportunities.html">View the Board</a><a class="btn btn-ghost" href="#guides">Crew Guides</a></div></div>
-</div>
-</div></section>
-
-<section class="section alt"><div class="wrap">
-<div class="section-head"><span class="kicker">Everything Branches From Here</span><h2>What Do You Need Today?</h2></div>
-<div class="tiles">
-<a class="tile solid" href="opportunities.html"><div class="tx"><span class="kicker">Live Board</span><div class="big" id="tileCount">Open<small>contracts and projects posting now</small></div><span class="go">See what is open</span></div></a>
-<a class="tile" href="invoice.html"><img src="images/trade-floorcare.jpg" alt=""><div class="sc"></div><div class="tx"><span class="kicker">Get Paid</span><h3>Submit Your Monthly Invoice</h3><p>One invoice a month, every account on one page. Prox 10 terms. Invoices due by the 28th.</p><span class="go">Submit an invoice</span></div></a>
-<a class="tile" href="shop/"><img src="images/crew-cart-detail.jpg" alt=""><div class="sc"></div><div class="tx"><span class="kicker">Orders</span><h3>Shop Supplies &amp; Uniforms</h3><p>Equipment, chemicals, and uniforms. Warehouse items are in stock at City Wide.</p><span class="go">Open the shop</span></div></a>
-<a class="tile" href="new-vendors.html"><img src="images/trade-landscape.jpg" alt=""><div class="sc"></div><div class="tx"><span class="kicker">Onboarding</span><h3>New Vendor Checklist</h3><p>The packet, banking, insurance, and waiver, step by step, for Las Vegas or Northern Nevada.</p><span class="go">Start onboarding</span></div></a>
-<a class="tile" href="upload.html"><img src="images/trade-window.jpg" alt=""><div class="sc"></div><div class="tx"><span class="kicker">Compliance</span><h3>Upload Insurance &amp; Compliance Docs</h3><p>Certificates of insurance, renewals, notarized waivers, and voided checks. Insurance agents welcome.</p><span class="go">Upload a document</span></div></a>
-<a class="tile mono" href="#guides"><img src="images/interior-ornate.jpg" alt=""><div class="sc"></div><div class="tx"><span class="kicker">Know the Standard</span><h3>Crew Guides &amp; Print PDFs</h3><p>Planning, workloading, equipment, color coding, and specialty facilities.</p><span class="go">Browse the guides</span></div></a>
-</div>
-</div></section>
-
-<section class="section"><div class="wrap">
-<div class="section-head"><span class="kicker">Invoices, Orders &amp; Paperwork</span><h2>Get Paid, Get Stocked, Stay Compliant</h2><p>Submit your monthly invoice, order supplies for the buildings you service, and knock out the paperwork that keeps you working.</p></div>
-<div class="card-grid">
-<a class="card flag" href="invoice.html"><span class="icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M12 11v6M10 12.5h3a1.25 1.25 0 0 1 0 2.5h-2a1.25 1.25 0 0 0 0 2.5h3"/></svg></span><h3>Submit Your Monthly Invoice</h3><p>One invoice a month, every account on one page. Accounts Payable gets a clean PDF instantly and you get a confirmation copy. Prox 10 terms. Invoices due by the 28th.</p><span class="go">Submit an invoice</span></a>
-<a class="card flag" href="upload.html"><span class="icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M12 15V9M9.5 11.5L12 9l2.5 2.5"/></svg></span><h3>Upload Insurance &amp; Compliance Docs</h3><p>Send us your certificate of insurance, including annual renewals, your notarized waiver, or a voided check for direct deposit. Pick your region and it lands with the right compliance team instantly.</p><span class="go">Upload a document</span></a>
-<a class="card flag" href="cleaner-roster.html"><span class="icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M19 8v6M22 11h-6"/></svg></span><h3>Add or Remove a Cleaner</h3><p>Tell City Wide who your crew is sending into a building, or who is coming off. One person can be added to several buildings at once, and you never see anyone else's people.</p><span class="go">Report a cleaner</span></a>
-<a class="card" href="shop/"><span class="icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg></span><h3>Shop Supplies &amp; Uniforms</h3><p>Browse the full City Wide Vendor Shop: equipment, chemicals, and uniforms. Warehouse items are in stock at City Wide; everything else is special order.</p><span class="go">Open the shop</span></a>
-<a class="card" href="building-supplies.html"><span class="icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 8l-9-5-9 5v8l9 5 9-5z"/><path d="M3 8l9 5 9-5M12 13v9"/></svg></span><h3>Report Supplies Needed</h3><p>In a building that is low on paper, soap, liners, air care, or restroom stock? Tell City Wide what it needs. It is a report, not an order.</p><span class="go">Report what is needed</span></a>
-<a class="card" href="work-order.html"><span class="icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg></span><h3>Maintenance Work Ticket</h3><p>Finished a job? File your work ticket with your time, materials, receipt photos, and pictures of the finished work before you leave the site.</p><span class="go">File the work ticket</span></a>
-<a class="card" href="snow-report.html"><span class="icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M4 6l16 12M20 6L4 18M8 4l4 3 4-3M8 20l4-3 4 3M3 10l3 2-3 2M21 10l-3 2 3 2"/></svg></span><h3>Snow Service Report</h3><p>Snow crews: file this at every address, before you leave the site. Arrival and departure, crew count, truck hours, shovel hours, and ice melt bags. City Wide pays snow work from this report.</p><span class="go">File the snow report</span></a>
-<a class="card" href="background-check.html" target="_blank" rel="noopener"><span class="icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="10" r="2"/><path d="M6 16c.6-1.7 1.6-2.5 3-2.5s2.4.8 3 2.5"/><path d="M15 9h4M15 13h4"/></svg></span><h3>Background Check &amp; Name Badge</h3><p>Required before your crew works in secured buildings. Start the background check and get your City Wide name badge.</p><span class="go">Start the process</span></a>
-<a class="card" href="https://www.onlinecprcertification.net/bloodborne-pathogens-training-certification.php" target="_blank" rel="noopener"><span class="icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.7l5 6.2a6.5 6.5 0 1 1-10 0z"/></svg></span><h3>Bloodborne Pathogens Certification</h3><p>Online certification for crews that handle restrooms, medical sites, or anything with exposure risk. Keep the certificate on file.</p><span class="go">Get certified</span></a>
-</div>
-</div></section>
-
-<section class="section alt" id="guides"><div class="wrap">
-<div class="section-head"><span class="kicker">Crew Guides</span><h2>Know the Standard Before the First Shift</h2><p>Quantities and methods are guidance; your account scope of work always comes first. Every guide also prints as a PDF for the supply closet.</p></div>
-<div class="split">
-<figure class="photo"><img src="images/crew-portrait-mid.jpg" alt="City Wide crew member holding a mop handle"><figcaption><b>Built for crews, not binders.</b>Short, practical, and written for the person doing the work tonight.</figcaption></figure>
-<div class="guide-list">
-<a class="guide" href="planner.html"><span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1"/><path d="M9 12h6M9 16h4"/></svg></span><div><h3>New Building Inventory Planner</h3><p>Pick your building size and cleaning type and get a complete starting kit list with rotation quantities built in.</p></div><span class="pdf">PDF</span></a>
-<a class="guide" href="workloading.html"><span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="2" width="16" height="20" rx="2"/><path d="M8 6h8"/><path d="M8 12h.01M12 12h.01M16 12h.01M8 16h.01M12 16h.01M16 16h.01"/></svg></span><div><h3>Workloading &amp; Crew Sizing</h3><p>Turn square footage into hours and crew count, and know what to expect the first three cleans.</p></div><span class="pdf">PDF</span></a>
-<a class="guide" href="equipment.html"><span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg></span><div><h3>Choosing Your Equipment</h3><p>Dual chamber buckets, flat mops vs. string mops, and why microfiber beats cotton on nearly every surface.</p></div><span class="pdf">PDF</span></a>
-<a class="guide" href="color-coding.html"><span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="8" cy="10" r="1.2"/><circle cx="12" cy="7.5" r="1.2"/><circle cx="16" cy="10" r="1.2"/><path d="M12 22a4 4 0 0 0 0-8H9a2 2 0 0 1 0-4"/></svg></span><div><h3>The Color Coding System</h3><p>Which cloth and mop goes where, and the simple rules that stop cross contamination.</p></div><span class="pdf">PDF</span></a>
-<a class="guide" href="medical.html"><span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg></span><div><h3>Medical Facility Cleaning</h3><p>Dialysis clinics and medical offices: PPE, floor care, isolation rooms, and the hot spots that decide whether you keep the account.</p></div><span class="pdf">PDF</span></a>
-<a class="guide" href="cleanroom.html"><span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="1.6"/><ellipse cx="12" cy="12" rx="10" ry="4.5"/><ellipse cx="12" cy="12" rx="10" ry="4.5" transform="rotate(60 12 12)"/><ellipse cx="12" cy="12" rx="10" ry="4.5" transform="rotate(120 12 12)"/></svg></span><div><h3>Clean Room Cleaning</h3><p>Controlled environments: classes, gowning, conduct, and cleaning tasks.</p></div><span class="pdf">PDF</span></a>
-<a class="guide" href="gmp.html"><span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 20h20"/><path d="M4 20V9l6 4V9l6 4V4h4v16"/></svg></span><div><h3>GMP &amp; Food Facility Cleaning</h3><p>Zones, allergen control, drains, and sanitizer verification inside food manufacturing plants.</p></div><span class="pdf">PDF</span></a>
-</div>
-</div>
-</div></section>
-
-<section class="contact" id="contact"><div class="wrap">
-<div><span class="kicker">Reach City Wide Operations</span><h2>Questions on a building, a route, or an order?</h2><p>Call or email the operations line for your region. For first-time vendors, the New Vendors page has the visit booking links for each office.</p></div>
-<div class="region"><b>Las Vegas</b><a href="tel:7024831874">(702) 483-1874</a><a href="mailto:lvservicecall@gocitywide.com">lvservicecall@gocitywide.com</a><span>Compliance documents: lvcompliance@gocitywide.com</span></div>
-<div class="region"><b>Northern Nevada</b><a href="tel:7754534718">(775) 453-4718</a><a href="mailto:rnservicecall@gocitywide.com">rnservicecall@gocitywide.com</a><span>Compliance documents: rncompliance@gocitywide.com</span></div>
-</div></section>
-
-<footer class="site-foot"><div class="wrap"><div class="cols"><div><b style="color:#fff">City Wide Facility Solutions</b> &middot; Las Vegas &amp; Northern Nevada<br>Vendor Resource Hub</div><div><a href="shop/">Order Supplies</a> &nbsp;&nbsp; <a href="opportunities.html">Open Opportunities</a> &nbsp;&nbsp; <a href="new-vendors.html">New Vendors</a> &nbsp;&nbsp; <a href="#recognition">Vendor of the Month</a> &nbsp;&nbsp; <a href="https://www.gocitywide.com" target="_blank" rel="noopener">GoCityWide.com</a></div></div><div class="fine">For crew and vendor reference. Quantities and methods are guidance; your account scope of work always comes first. Questions? Contact your City Wide Facility Solutions representative.</div></div></footer>
-
+<script src="hub-nav.js"></script>
 <script>
 (function(){
-  var t=document.querySelector('.menu-toggle'),n=document.querySelector('.site-head nav');
-  if(t&&n){t.addEventListener('click',function(){n.classList.toggle('open');});}
-  try{
-    fetch('https://script.google.com/macros/s/AKfycbzfNnrpidCbWB1DeUNgXvRhDFMQgApfpn-3C9GU45wMEHcJpWFl8ZQVo6PUBSRfEVfRdg/exec').then(function(r){return r.json();}).then(function(r){
-      if(!(r&&r.ok))return;
-      var n=r.count,el=document.getElementById('hubOppCount'),tc=document.getElementById('tileCount');
-      if(el)el.textContent=n===0?'Nothing open right now. New work posts here the moment it opens.':(n+(n===1?' opening':' openings')+' available right now. First qualified answers get the walkthrough.');
-      if(tc)tc.innerHTML=(n===0?'0':n)+'<small>'+(n===1?'opening posted right now':'openings posted right now')+'</small>';
-    }).catch(function(){});
-  }catch(e){}
+"use strict";
+var EXEC='https://script.google.com/macros/s/AKfycbzfNnrpidCbWB1DeUNgXvRhDFMQgApfpn-3C9GU45wMEHcJpWFl8ZQVo6PUBSRfEVfRdg/exec';
+function $(id){return document.getElementById(id);}
+function esc(s){return String(s==null?"":s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");}
+function ext(h){return /^https?:/.test(h);}
+
+/* ---------- search over every menu link. Extra words a vendor might type, keyed by page ---------- */
+var WORDS={"opportunities.html":"jobs bids contracts postings board projects work","opportunities.html?region=lv":"jobs vegas henderson","opportunities.html?region=nnv":"jobs reno sparks carson",
+ "vendor-evaluation.html":"sign up join apply application new","new-vendors.html?region=lv":"onboarding packet documents","new-vendors.html?region=nnv":"onboarding packet documents reno",
+ "invoice.html":"bill billing payment pay","prorate.html":"math calculator partial start mid month","work-order.html":"work order job handyman repair receipt","snow-report.html":"plow shovel ice melt storm",
+ "shop/":"shop store buy uniforms chemicals equipment envirox","kit-builder.html":"starting kit new account inventory","building-supplies.html":"paper soap liners low out of stock restroom","card-authorization.html":"credit card on file payment",
+ "my-profile.html":"contacts phone address services update company bank","upload.html":"coi certificate insurance waiver voided check w-9 compliance renewal","cleaner-roster.html":"roster crew employee staff new hire","background-check.html":"badge id clearance secured",
+ "planner.html":"inventory kit list","workloading.html":"hours square feet how many people","equipment.html":"mop bucket microfiber vacuum","color-coding.html":"cloth colors cross contamination","medical.html":"dialysis clinic ppe","cleanroom.html":"gowning controlled","gmp.html":"food plant allergen sanitizer",
+ "index.html#recognition":"winners award plate","nominate.html":"vote award","nominate.html?type=goat":"goat team member"};
+var INDEX=[];
+window.HubNav.menu().forEach(function(m){
+  if(!m.items||m.hidden)return;
+  window.HubNav.flat(m.items).forEach(function(it){
+    if(!it.href||it.hidden)return;
+    var extra=WORDS[it.href]||(/bloodborne/i.test(it.label)?"bbp training certification medical":"");
+    INDEX.push({label:it.label,href:it.href.indexOf("index.html#")===0?it.href.slice(10):it.href,path:m.label,hay:(it.label+" "+m.label+" "+extra).toLowerCase()});
+  });
+});
+var q=$("q"),res=$("results"),sel=-1,hits=[];
+function closeResults(){res.classList.remove("open");q.setAttribute("aria-expanded","false");sel=-1;}
+function paint(){
+  [].forEach.call(res.querySelectorAll("a"),function(a,i){a.classList.toggle("on",i===sel);a.setAttribute("aria-selected",i===sel?"true":"false");if(i===sel)a.scrollIntoView({block:"nearest"});});
+}
+q.addEventListener("focus",function(){window.HubNav.close();});
+q.addEventListener("input",function(){
+  var words=q.value.toLowerCase().trim().split(/\s+/).filter(Boolean);
+  if(!words.length){closeResults();return;}
+  hits=INDEX.filter(function(x){return words.every(function(w){return x.hay.indexOf(w)>=0;});}).slice(0,8);
+  res.innerHTML=hits.length?hits.map(function(x){return '<a role="option" href="'+esc(x.href)+'"'+(ext(x.href)?' target="_blank" rel="noopener"':'')+'>'+esc(x.label)+'<span>'+esc(x.path)+'</span></a>';}).join("")
+    :'<p><b>Nothing matches that.</b>Try a shorter word, like invoice, insurance or supplies. Or call the operations line at the bottom of the page.</p>';
+  sel=hits.length?0:-1;res.classList.add("open");q.setAttribute("aria-expanded","true");paint();
+});
+q.addEventListener("keydown",function(e){
+  if(e.key==="ArrowDown"&&hits.length){e.preventDefault();sel=(sel+1)%hits.length;paint();}
+  else if(e.key==="ArrowUp"&&hits.length){e.preventDefault();sel=(sel-1+hits.length)%hits.length;paint();}
+  else if(e.key==="Enter"&&sel>=0){e.preventDefault();var a=res.querySelectorAll("a")[sel];if(a)a.click();}
+  else if(e.key==="Escape"){if(res.classList.contains("open")){e.stopPropagation();closeResults();}else q.blur();}
+});
+res.addEventListener("click",function(e){if(e.target.closest("a"))closeResults();});
+document.addEventListener("click",function(e){if(!e.target.closest("#search"))closeResults();});
+document.addEventListener("keydown",function(e){
+  if(e.key==="/"&&!e.ctrlKey&&!e.metaKey&&!/input|textarea|select/i.test(document.activeElement.tagName)){e.preventDefault();q.focus();}
+});
+
+/* ---------- invoice due date, from today's date ---------- */
+(function(){
+  var MN=["January","February","March","April","May","June","July","August","September","October","November","December"];
+  var DN=["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+  var d=new Date(), due=new Date(d.getFullYear(),d.getMonth(),28), left=28-d.getDate(), tag=$("dueTag");
+  if(left>=0){
+    $("dueHead").textContent=MN[d.getMonth()]+" invoices are due "+DN[due.getDay()]+", "+MN[d.getMonth()]+" 28";
+    tag.textContent=left===0?"Due today":left===1?"1 day left":left+" days left";
+    if(left<=3)tag.classList.add("urgent");
+  } else {
+    $("dueHead").textContent=MN[d.getMonth()]+" invoices were due on the 28th";
+    tag.textContent="Send it today";tag.classList.add("urgent");
+  }
 })();
 
-/* ---------- recognition wall. Seed copy of the plaques as a fallback; live from rec_wall. ---------- */
-(function(){
-  var SEED=[[2026,7,"Virignack Facility Solutions"],[2026,6,"Sparkling Cleaning Solutions"],[2026,5,"Lobo Cleaning LV"],[2026,4,"Glass Cactus Cleaning"],[2026,3,"Sparkling Cleaning Solutions"],[2026,2,"TRP Landscaping LLC"],[2026,1,"Sanitation Engineer"],[2025,12,"L and T Janitorial Services LLC"],[2025,11,"TRP Landscaping and Lawn Care LLC"],[2025,10,"Top Tier Services LLC"],[2025,9,"White Glove Cleaning Services LLC"],[2025,8,"Go-Bright Cleaning Solutions LLC"],[2025,7,"Venturaevans Cleaning"],[2025,6,"Granda's Cleaning, LLC"],[2025,5,"Martha's Coverall LLC"],[2025,4,"Janitorial Specialists Inc."],[2025,3,"UCS USA, LLC"],[2025,2,"JGS Janitorial LLC"],[2025,1,"JGS Janitorial LLC"]]
-    .map(function(x){return {type:"vendor",region:"Las Vegas",year:x[0],month:x[1],name:x[2],blurb:""};});
-  var MONTHS=["January","February","March","April","May","June","July","August","September","October","November","December"];
-  var ITEMS=SEED, V={type:"vendor",year:null};
-  var REGIONS=[["Las Vegas","lv"],["Northern Nevada","nnv"]];
-  function esc(s){return String(s==null?"":s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");}
-  function $(id){return document.getElementById(id);}
-  function byNewest(a,b){return (b.year-a.year)||(b.month-a.month);}
-  /* one column per market: this month's card, a nominate button for that market, then the year's list */
-  function column(region,slug,thisYear,thisMonth){
-    var goat=V.type==="goat", label=goat?"G.O.A.T.":"Vendor";
-    var rows=ITEMS.filter(function(w){return w.type===V.type&&w.region===region;}).sort(byNewest);
-    var latest=rows[0], first=rows[rows.length-1];
-    var h='<div class="mkt" id="recognition-'+slug+'"><div class="now">';
-    if(latest){
-      h+='<div class="when">'+esc(region)+' &middot; '+(latest.year===thisYear&&latest.month===thisMonth?'This month':MONTHS[latest.month-1]+' '+latest.year)+'</div><div class="who">'+esc(latest.name)+'</div><div class="why">'+(latest.blurb?esc(latest.blurb):'City Wide '+esc(region)+' '+label+' of the Month.')+'</div>';
-    } else {
-      h+='<div class="when">'+esc(region)+'</div><div class="who">'+(goat?'The first G.O.A.T. plate goes up soon.':'The first plate goes up soon.')+'</div><div class="why">Know a '+(goat?'City Wide team member':'crew')+' who has earned it? Nominate them.</div>';
-    }
-    h+='</div><div class="cta-row"><a class="btn btn-red" href="nominate.html?region='+slug+(goat?'&amp;type=goat':'')+'">Nominate in '+esc(region)+'</a></div>';
-    if(!first)return h+'</div>';
-    h+='<h3>'+label+' of the Month, '+esc(region)+' '+V.year+'</h3>';
-    if(first.year>V.year)return h+'<div class="empty">No plates for '+esc(region)+' in '+V.year+'.</div></div>';
-    var byM={}; rows.forEach(function(w){if(w.year===V.year)byM[w.month]=w;});
-    var lastFilled=0; for(var i=12;i>=1;i--){if(byM[i]){lastFilled=i;break;}}
-    var upto=V.year===thisYear?Math.max(thisMonth,lastFilled):12;
-    var from=first.year===V.year?first.month:1;   /* no empty rows before a market's first plate */
-    h+='<ol>';
-    for(var m=upto;m>=from;m--){var w=byM[m];
-      h+=w?'<li'+(w===latest?' class="cur"':'')+'><span class="m">'+MONTHS[m-1]+'</span><b>'+esc(w.name)+(w.blurb?'<small>'+esc(w.blurb)+'</small>':'')+'</b></li>'
-          :'<li class="open"><span class="m">'+MONTHS[m-1]+'</span><span>Not yet awarded</span></li>';}
-    return h+'</ol></div>';
-  }
-  function render(){
-    var d=new Date(), thisYear=d.getFullYear(), thisMonth=d.getMonth()+1, years=[];
-    ITEMS.forEach(function(w){if(w.type===V.type&&years.indexOf(w.year)<0)years.push(w.year);});
-    years.sort(function(a,b){return b-a;});
-    if(!years.length)years=[thisYear];
-    if(V.year===null||years.indexOf(V.year)<0)V.year=years[0];
-    /* G.O.A.T. results moved to the Team Portal (Nov 20 2026). This wall shows Vendor of the Month only; G.O.A.T. nominations still come in through nominate.html?type=goat. */
-    var sw='<button type="button" data-t="vendor" class="on">Vendor of the Month</button>';
-    if(years.length>1){sw+='<span class="sep"></span>'+years.map(function(y){return '<button type="button" data-y="'+y+'"'+(y===V.year?' class="on"':'')+'>'+y+'</button>';}).join("");}
-    $("recSwitch").innerHTML=sw;
-    $("recMkts").innerHTML=REGIONS.map(function(r){return column(r[0],r[1],thisYear,thisMonth);}).join("");
-  }
-  $("recSwitch").addEventListener("click",function(e){var b=e.target.closest("button");if(!b)return;
-    if(b.hasAttribute("data-t")){V.type=b.getAttribute("data-t");V.year=null;}
-    if(b.hasAttribute("data-y"))V.year=Number(b.getAttribute("data-y"));
-    render();});
-  render();
-  /* a link to #recognition-nnv or #recognition-lv lands on that market (matters on a phone, where the columns stack) */
-  var jump=/^#recognition-(lv|nnv)$/.test(location.hash)&&$(location.hash.slice(1)); if(jump)jump.scrollIntoView();
-  try{
-    fetch('https://script.google.com/macros/s/AKfycbzfNnrpidCbWB1DeUNgXvRhDFMQgApfpn-3C9GU45wMEHcJpWFl8ZQVo6PUBSRfEVfRdg/exec',{method:'POST',headers:{'Content-Type':'text/plain'},body:JSON.stringify({kind:'rec_wall'})}).then(function(r){return r.json();}).then(function(r){
-      if(r&&r.ok&&r.items&&r.items.length){ITEMS=r.items.filter(function(w){return w.type!=="goat";});V.year=null;render();}
-    }).catch(function(){});
-  }catch(e){}
+/* ---------- open opportunities count. The page reads fine without it ---------- */
+try{
+  fetch(EXEC).then(function(r){return r.json();}).then(function(r){
+    if(!(r&&r.ok))return;
+    var n=Number(r.count)||0;
+    $("oppHead").innerHTML=n===0?"Nothing open right now":'<span class="num">'+n+'</span> '+(n===1?"opening":"openings")+" right now";
+    $("oppSub").textContent=n===0?"New work posts here the moment it opens.":"First qualified answers get the walkthrough.";
+  }).catch(function(){});
+}catch(e){}
+
+/* ---------- Vendor of the Month. Seed copy of the plaques as a fallback; live from rec_wall ---------- */
+var MONTHS=["January","February","March","April","May","June","July","August","September","October","November","December"];
+var WALL=[["Las Vegas",2026,10,"ELA Janitorial & Maintenance Service LLC",""],["Las Vegas",2026,9,"BLPL Cleaning Services","David, Yamille and their team do a great job of taking care of the properties, managing their staff and responding immediately when a client sends a request. We appreciate their response time and attention to detail in all they do."],["Las Vegas",2026,8,"Go-Bright Cleaning Solutions LLC",""],["Las Vegas",2026,7,"Virignack Facility Solutions",""],["Las Vegas",2026,6,"Sparkling Cleaning Solutions",""],["Las Vegas",2026,5,"Lobo Cleaning LV",""],["Las Vegas",2026,4,"Glass Cactus Cleaning",""],["Las Vegas",2026,3,"Sparkling Cleaning Solutions",""],["Las Vegas",2026,2,"TRP Landscaping LLC",""],["Las Vegas",2026,1,"Sanitation Engineer",""],["Northern Nevada",2026,10,"NM Cleaning & Concierge Services LLC",""],["Las Vegas",2025,12,"L and T Janitorial Services LLC",""],["Las Vegas",2025,11,"TRP Landscaping and Lawn Care LLC",""],["Las Vegas",2025,10,"Top Tier Services LLC",""],["Las Vegas",2025,9,"White Glove Cleaning Services LLC",""],["Las Vegas",2025,8,"Go-Bright Cleaning Solutions LLC",""],["Las Vegas",2025,7,"Venturaevans Cleaning",""],["Las Vegas",2025,6,"Granda's Cleaning, LLC",""],["Las Vegas",2025,5,"Martha's Coverall LLC",""],["Las Vegas",2025,4,"Janitorial Specialists Inc.",""],["Las Vegas",2025,3,"UCS USA, LLC",""],["Las Vegas",2025,2,"JGS Janitorial LLC",""],["Las Vegas",2025,1,"JGS Janitorial LLC",""]].map(function(x){return {type:"vendor",region:x[0],year:x[1],month:x[2],name:x[3],blurb:x[4]};});
+var REG=[["Las Vegas","lv"],["Northern Nevada","nnv"]], year=null;
+function rowsFor(region){return WALL.filter(function(w){return w.region===region;}).sort(function(a,b){return (b.year-a.year)||(b.month-a.month);});}
+function wall(){
+  var d=new Date(), ty=d.getFullYear(), tm=d.getMonth()+1;
+  $("winners").innerHTML=REG.map(function(r){
+    var w=rowsFor(r[0])[0];
+    return '<div class="win" id="recognition-'+r[1]+'"><div class="wt"><div class="when">'+esc(r[0])+(w?' · '+(w.year===ty&&w.month===tm?'This month':MONTHS[w.month-1]+' '+w.year):'')+'</div><div class="who">'+esc(w?w.name:"The first plate goes up soon.")+'</div>'+(w&&w.blurb?'<p class="why">'+esc(w.blurb)+'</p>':'')+'</div><a class="btn" href="nominate.html?region='+r[1]+'">Nominate in '+esc(r[0])+'</a></div>';
+  }).join("");
+  var years=[];WALL.forEach(function(w){if(years.indexOf(w.year)<0)years.push(w.year);});years.sort(function(a,b){return b-a;});
+  if(!years.length)years=[ty];
+  if(year===null||years.indexOf(year)<0)year=years[0];
+  $("years").innerHTML=years.length>1?years.map(function(y){return '<button type="button" aria-pressed="'+(y===year)+'" data-y="'+y+'">'+y+'</button>';}).join(""):"";
+  $("plist").innerHTML=REG.map(function(r){
+    var rows=rowsFor(r[0]).filter(function(w){return w.year===year;});
+    var h='<div><h3>'+esc(r[0])+' '+year+'</h3>';
+    if(!rows.length)return h+'<ol><li class="none"><span></span><b>No plates for '+esc(r[0])+' in '+year+'.</b></li></ol></div>';
+    return h+'<ol>'+rows.map(function(w){return '<li><span>'+MONTHS[w.month-1]+'</span><b>'+esc(w.name)+(w.blurb?'<small>'+esc(w.blurb)+'</small>':'')+'</b></li>';}).join("")+'</ol></div>';
+  }).join("");
+}
+$("years").addEventListener("click",function(e){var b=e.target.closest("button");if(!b)return;year=Number(b.getAttribute("data-y"));wall();});
+wall();
+/* a link to #recognition-lv or #recognition-nnv lands on that market */
+function jump(){var m=/^#recognition-(lv|nnv)$/.exec(location.hash);if(m){var el=$(m[0].slice(1));if(el)el.scrollIntoView();}}
+jump();
+try{
+  fetch(EXEC,{method:'POST',headers:{'Content-Type':'text/plain'},body:JSON.stringify({kind:'rec_wall'})}).then(function(r){return r.json();}).then(function(r){
+    if(r&&r.ok&&r.items&&r.items.length){WALL=r.items.filter(function(w){return w.type!=="goat";});year=null;wall();jump();}
+  }).catch(function(){});
+}catch(e){}
 })();
 </script>
 </body></html>
