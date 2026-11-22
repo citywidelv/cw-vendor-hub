@@ -1,4 +1,4 @@
-/* Product photos copied into this repo, keyed by the catalog's image address. Built 2026-11-21.
+/* Product photos copied into this repo, keyed by the catalog's image address. Built 2026-11-21, starter kit items added 2026-11-22.
    A catalog address that is not listed here loads from the supplier as before. To add or refresh a copy,
    save the photo as a JPEG (360px on the long side) in this folder and add its line here. */
 window.CW_IMG = {
@@ -144,5 +144,23 @@ window.CW_IMG = {
 "https://images.staplesadvantage.com/is/image/Staples/sp44852228_sc7?wid=600&hei=600": "0d8bc5c02705.jpg",
 "https://images.staplesadvantage.com/is/image/Staples/7CBB0C3E-98D6-4E3A-B11D965E353B1D5F_sc7?wid=600&hei=600": "9baab9250fba.jpg",
 "https://images.staplesadvantage.com/is/image/Staples/C3D3F23C-9BD4-42CA-9EFC1FC1346D2D55_sc7?wid=600&hei=600": "9222faef0e87.jpg",
-"https://images.staplesadvantage.com/is/image/Staples/sp44344141_sc7?wid=600&hei=600": "19e619de69fe.jpg"
+"https://images.staplesadvantage.com/is/image/Staples/sp44344141_sc7?wid=600&hei=600": "19e619de69fe.jpg",
+"https://d3gygecnvdjq5h.cloudfront.net/userfiles/products/images/websites/b2bseller/customer/braind/images/items/9268200.jpg": "171dea741a8e.jpg",
+"https://d3gygecnvdjq5h.cloudfront.net/userfiles/products/images/websites/b2bseller/customer/braind/images/items/ck9314.jpg": "63900189234c.jpg",
+"https://d3gygecnvdjq5h.cloudfront.net/userfiles/products/images/websites/b2bseller/customer/braind/images/items/ck9317.jpg": "b4e321456c5a.jpg",
+"https://d3gygecnvdjq5h.cloudfront.net/userfiles/products/images/websites/b2bseller/customer/braind/images/items/ck9311.jpg": "14274a0e740e.jpg",
+"https://d3gygecnvdjq5h.cloudfront.net/userfiles/products/images/websites/b2bseller/customer/braind/images/items/33647-00.jpg": "65760dcbe7ea.jpg",
+"https://d3gygecnvdjq5h.cloudfront.net/userfiles/products/images/websites/b2bseller/customer/braind/images/items/ck9310.jpg": "411e95e830a4.jpg",
+"https://d3gygecnvdjq5h.cloudfront.net/userfiles/products/images/websites/b2bseller/customer/braind/images/items/md2619.jpg": "a600a4e3c697.jpg",
+"https://d3gygecnvdjq5h.cloudfront.net/userfiles/products/images/websites/b2bseller/customer/braind/images/items/md2621.jpg": "c8ff45f0b28b.jpg",
+"https://assets-e518d5c0cd.cdn.insitecloud.net/497b03ddc1449ff_md.jpg": "e2c799bd5782.jpg",
+"https://d3gygecnvdjq5h.cloudfront.net/userfiles/products/images/websites/b2bseller/customer/braind/images/items/aq0032.jpg": "86962f0369dc.jpg",
+"https://assets-e518d5c0cd.cdn.insitecloud.net/28a1b7bbded49b6_md.jpg": "e7a73003a737.jpg",
+"https://d3gygecnvdjq5h.cloudfront.net/userfiles/products/images/websites/b2bseller/customer/braind/images/items/co1800.jpg": "eb553053d983.jpg",
+"https://assets-e518d5c0cd.cdn.insitecloud.net/c329c8006fe96f8_md.jpg": "6bc2909f8c7c.jpg",
+"https://d3gygecnvdjq5h.cloudfront.net/userfiles/products/images/websites/b2bseller/customer/braind/images/items/ck9003.jpg": "9af3f92d00a3.jpg",
+"https://d3gygecnvdjq5h.cloudfront.net/userfiles/products/images/websites/b2bseller/customer/braind/images/items/ck9008.jpg": "fcd99a76cad4.jpg",
+"https://d3gygecnvdjq5h.cloudfront.net/userfiles/products/images/websites/b2bseller/customer/braind/images/items/ck9007.jpg": "c7da46928716.jpg",
+"https://d3gygecnvdjq5h.cloudfront.net/userfiles/products/images/websites/b2bseller/customer/braind/images/items/ck9004.jpg": "595d7c5a58b2.jpg",
+"https://d3gygecnvdjq5h.cloudfront.net/userfiles/products/images/websites/b2bseller/customer/braind/images/items/ck9011.jpg": "be601198b675.jpg"
 };
