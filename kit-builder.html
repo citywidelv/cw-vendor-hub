@@ -9,6 +9,7 @@
      feed in shop/config.js. Photos use the local copies in shop/img/map.js. Orders post the same shop_order shape. -->
 <script src="shop/config.js?v=20261121b"></script>
 <script src="shop/img/map.js?v=20261122"></script>
+<script src="kit-rules.js?v=20261122"></script>
 <style>
 /* Layout idea: one working column. Three questions at the top size the kit, then the kit reads
    in the order a cleaner works. Totals stay in a bar at the bottom, as on the live page. */
@@ -333,18 +334,8 @@ const CFG = window.CW_CONFIG || {};
 let CAT = {}, READY = false;
 
 /* ---------- rules ---------- */
-const SIZES=[
-  {k:'s', n:'Small',      s:'Up to 5,000'},
-  {k:'m', n:'Medium',     s:'5,001 to 15,000'},
-  {k:'l', n:'Large',      s:'15,001 to 40,000'},
-  {k:'xl',n:'Very large', s:'Over 40,000'}];
-const RATE={
-  cloth:{red:{s:2,m:3,l:6,xl:10}, yellow:{s:2,m:3,l:6,xl:10}, blue:{s:2,m:2,l:4,xl:6}, green:{s:3,m:5,l:10,xl:16}},
-  loop:{rr:{s:1,m:1,l:2,xl:3}, gen:{s:1,m:1,l:2,xl:3}},
-  pad:{rr:{s:1,m:2,l:4,xl:6}, gen:{s:2,m:4,l:8,xl:12}}
-};
-const MULT={ office:{cloth:1,pad:1}, medical:{cloth:1.5,pad:1.5}, school:{cloth:1.5,pad:1.5},
-             industrial:{cloth:1,pad:1}, gmp:{cloth:1.5,pad:2}, cleanroom:{cloth:1,pad:1} };
+/* The counting rules live in kit-rules.js, shared with planner.html. */
+const {SIZES,RATE,MULT,FIX}=window.CW_KIT;
 const TIERS=[{min:500,pct:5},{min:1200,pct:8},{min:2500,pct:10}];
 const APT_KEEP=0.65/0.75, APT_LABEL='13.3%';
 const COLORS={
@@ -353,15 +344,7 @@ const COLORS={
   blue:{n:'Blue', pid:'P020', use:'Glass and mirrors.'},
   green:{n:'Green', pid:'P019', use:'General cleaning and dusting.'}};
 
-const TYPES=[
-  {k:'office', n:'Office', s:'Suites, banks, professional buildings', mop:['flat','loop'], mopRec:'flat', vac:true, cart:'cart'},
-  {k:'medical', n:'Medical or clinic', s:'Clinics, urgent care, dental, labs', mop:['flat','loop'], mopRec:'flat', vac:true, cart:'cart'},
-  {k:'school', n:'School', s:'K-12, charter, daycare, training', mop:['loop','flat'], mopRec:'loop', vac:true, cart:'cart'},
-  {k:'industrial', n:'Industrial or warehouse', s:'Warehouse, distribution, shops', mop:['loop','flat'], mopRec:'loop', vac:true, cart:'brute'},
-  {k:'gmp', n:'GMP or food', s:'Food production and packaging', mop:['flat','loop'], mopRec:'flat', vac:true, cart:'cart'},
-  {k:'cleanroom', n:'Cleanroom', s:'Compounding and controlled rooms', mop:['flat'], mopRec:'flat', vac:false, cart:null},
-  {k:'apt', n:'Apartment community', s:'One day porter, 5 or 7 days', apt:true}
-];
+const TYPES=window.CW_KIT.TYPES.concat([{k:'apt', n:'Apartment community', s:'One day porter, 5 or 7 days', apt:true}]);
 const PROGS=[
   {k:'fastdraw', n:'FastDraw building', s:'Betco wall cabinet. City Wide covers the cabinet.'},
   {k:'envirox', n:'EnvirOx building', s:'The building runs on EnvirOx H2Orange2.'},
@@ -376,7 +359,7 @@ const q=(v,sz)=> typeof v==='number'? v : v[sz];
 
 /* ---------- state ---------- */
 const S={type:'office', size:'m', days:5, mop:null, vac:'corded', cart:null, prog:'fastdraw', ov:{}, added:{}, sizes:{}, shirt:{pick:'',rows:{}}};
-function sets(){ return Math.max(2,S.days); }
+function sets(){ return window.CW_KIT.sets(S.days); }
 function T(){ return TYPES.find(t=>t.k===S.type); }
 
 /* ---------- kit engine: returns sections of lines for the current answers ---------- */
@@ -401,11 +384,11 @@ function buildKit(){
   } else {
     out.push({id:'cloths',title:'Wipes and cloths',
       guide:'The four color code does not apply inside the classified area. Use low lint wipes there and follow the facility’s own procedure. The blue cloths are for the gowning room and glass.',
-      lines:[L('P106',q({s:1,m:2,l:3,xl:4},sz)), L('P020',1)]});
+      lines:[L('P106',q(FIX.wipes,sz)), L('P020',1)]});
   }
 
   /* mops */
-  const loop=()=>{ const rr=RATE.loop.rr[sz]*n, g=RATE.loop.gen[sz]*n, b=(sz==='l'||sz==='xl')?2:1;
+  const loop=()=>{ const rr=RATE.loop.rr[sz]*n, g=RATE.loop.gen[sz]*n, b=FIX.buckets[sz];
     return [
       L('P190',rr,{sw:'red',math:`${RATE.loop.rr[sz]} a cleaning × ${setWord}. Restroom floors only.`}),
       L(t.k==='industrial'?'P007':'P008',g,{sw:t.k==='industrial'?'green':'blue',math:`${RATE.loop.gen[sz]} a cleaning × ${setWord}. Every floor outside the restroom.`}),
@@ -444,7 +427,7 @@ function buildKit(){
 
   /* restroom */
   if(t.k!=='cleanroom'){
-    const ls=[L('P012',q({s:1,m:2,l:3,xl:4},sz),{sub:'For inside the bowl only. One for each group of restrooms.'})];
+    const ls=[L('P012',q(FIX.bowlmop,sz),{sub:'For inside the bowl only. One for each group of restrooms.'})];
     if(t.k==='medical') ls.push(L('P125',1,{sub:'Sporicidal. For rooms the clinic tells you need it.'}), L('P126',1));
     ls.push(L('P032',1,{sub:'Opens the paper, soap and towel dispensers.'}));
     out.push({id:'rest',title:'Restroom',guide:'The tools that stay in the restroom. You fill the dispensers from the building’s own stock, so there is no paper or soap here. The restroom cleaner and the bowl cleaner are in the two chemical sections below.',lines:ls});
@@ -455,7 +438,7 @@ function buildKit(){
     const light=(t.k==='office'||t.k==='medical'), ls=[];
     if(t.k==='office'||t.k==='medical'||t.k==='school') ls.push(L('P022',1,{sub:'Screens and monitors get dusted with this. Never wipe them.'}));
     ls.push(L('P166',1,{extra:light,sub:'For wet debris, broken glass and the front door mat.'}), L('P014',1,{extra:light}));
-    if(t.k==='industrial'||t.k==='school'||t.k==='gmp') ls.push(L('P115',q({s:1,m:1,l:2,xl:2},sz),{sub:'For big open floors and docks.'}));
+    if(t.k==='industrial'||t.k==='school'||t.k==='gmp') ls.push(L('P115',q(FIX.broom,sz),{sub:'For big open floors and docks.'}));
     if(t.k==='industrial') ls.push(L('P057',1), L('P039',1));
     out.push({id:'sweep',title:light?'Dusting and spot sweeping':'Sweeping and dusting',
       guide:light?'Your backpack vacuum does the daily floors, so the broom and dustpan are not checked. Add them only if you want them for things a vacuum should not pick up.'
@@ -509,7 +492,7 @@ function buildKit(){
 
     /* specialty cleaners, always by the single bottle */
     const from={fastdraw:'the FastDraw cabinet',m3:'the 3M cabinet',none:'the TruShot glass cartridge'}[S.prog];
-    const sp=[L('P192',q({s:1,m:1,l:2,xl:3},sz),{sub:'Thick acid cleaner that clings under the rim. Inside toilets and urinals only. Wear the safety glasses.'})];
+    const sp=[L('P192',q(FIX.bowlcleaner,sz),{sub:'Thick acid cleaner that clings under the rim. Inside toilets and urinals only. Wear the safety glasses.'})];
     if(S.prog!=='envirox') sp.push(L('P193',1,{sub:'Hard water spots and scale on faucets, sinks and drinking fountains.'}));
     sp.push(L('P194',1,{extra:t.k==='industrial' && S.prog!=='envirox',sub:'Elevator doors, drinking fountains and break room appliances. Spray the cloth, then wipe with the grain.'}));
     sp.push(L('P195',1,{extra:S.prog!=='envirox',sub:S.prog==='envirox'?'Streak free glass and mirrors. Use with the blue cloths.':`Your glass cleaner already comes from ${from}. Add this if you also want a ready to use bottle.`}));
@@ -535,8 +518,8 @@ function buildKit(){
 
   /* safety and laundry */
   { const ls=[];
-    if(t.k!=='cleanroom') ls.push(L('P170',q({s:2,m:2,l:4,xl:4},sz),{sub:'One at each end of a wet floor.'}));
-    ls.push(L('P025',2,{sub:'Pick the size on this line.'}), L('P026',q({s:1,m:2,l:2,xl:4},sz)));
+    if(t.k!=='cleanroom') ls.push(L('P170',q(FIX.signs,sz),{sub:'One at each end of a wet floor.'}));
+    ls.push(L('P025',2,{sub:'Pick the size on this line.'}), L('P026',q(FIX.glasses,sz)));
     if(t.k!=='cleanroom') ls.push(L('P150',1,{sub:'Dirty cloths and mop heads go here during the shift.'}), L('P151',1,{sub:'One bag per color so red never washes with blue.'}));
     else ls.push(L('P111',1));
     out.push({id:'safe',title:t.k==='cleanroom'?'Safety and liners':'Safety and laundry',guide:t.k==='cleanroom'?'Gloves and eye protection for everyone in the room.':'Signs, gloves and glasses protect you and the people in the building. The hamper and wash bags keep the colors apart on laundry day.',lines:ls});
@@ -840,6 +823,10 @@ function restore(){
     if(qt==='apt5') S.days=5; if(qt==='apt7') S.days=7;
     if(qb && SIZES.some(x=>x.k===qb)) S.size=qb;
   }
+  /* The planner also hands over the days a week and the mop style. */
+  const qd=parseInt(qp.get('days')), qm=qp.get('mop');
+  if(qt && MAP[qt] && qd>=1 && qd<=7) S.days=qd;
+  if(qt && MAP[qt] && (qm==='flat'||qm==='loop')) S.mop=qm;
   if(T().apt && S.days!==7) S.days=5;
 }
 

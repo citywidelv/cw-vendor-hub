@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>New Building Inventory Planner | City Wide Vendor Hub</title><meta name="description" content="Starting inventory kits by building size and cleaning type, with the 3x rotation built in."><style>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>New Building Inventory Planner | City Wide Vendor Hub</title><meta name="description" content="What to bring to a new building, how many of each, and why. One clean set for every cleaning day.">
+<!-- build 2026-11-22: rewritten to the starter kit rule. One clean set per cleaning day, wash once a week. Counts come from kit-rules.js, the same file the kit builder reads. --><style>
 :root{
   --cw-red:#D22730; --cw-red-dark:#B01F27; --cw-black:#2D2A26; --cw-grey:#636466;
   --cw-white:#FFFFFF; --cw-light:#F5F5F5; --cw-border:#E5E5E5; --cw-teal:#636466;
@@ -291,6 +292,38 @@ input:not([type=checkbox]):not([type=radio]):not([type=file]):not([type=range]),
 .hero .btn-ghost,.hero2 .btn-ghost,.sup-hero .btn-ghost,.ca-hero .btn-ghost,.guide-hero .btn-ghost,.inv-hero .btn-ghost,.ev-hero .btn-ghost,.nom-hero .btn-ghost,.opps-hero .btn-ghost,.r-hero .btn-ghost,.hero .btn-pdf,.hero2 .btn-pdf,.sup-hero .btn-pdf,.ca-hero .btn-pdf,.guide-hero .btn-pdf,.inv-hero .btn-pdf,.ev-hero .btn-pdf,.nom-hero .btn-pdf,.opps-hero .btn-pdf,.r-hero .btn-pdf{background:#fff!important;color:#2D2A26!important;border:1px solid #BDBBB8!important}
 .hero .live,.hero2 .live,.sup-hero .live,.ca-hero .live,.guide-hero .live,.inv-hero .live,.ev-hero .live,.nom-hero .live,.opps-hero .live,.r-hero .live{color:#2D2A26!important;background:#F5F5F5!important;border:1px solid #BDBBB8!important}
 @media(max-width:700px){.hero,.hero2,.sup-hero,.ca-hero,.guide-hero,.inv-hero,.ev-hero,.nom-hero,.opps-hero,.r-hero{padding-top:16px!important;padding-bottom:16px!important}.hero h1,.hero2 h1,.sup-hero h1,.ca-hero h1,.guide-hero h1,.inv-hero h1,.ev-hero h1,.nom-hero h1,.opps-hero h1,.r-hero h1{font-size:21px!important}}
+
+/* planner 2026-11-22: one set per cleaning day */
+.steps{margin:0 0 16px 24px;max-width:70ch}
+.steps li{margin-bottom:8px}
+.example{background:var(--cw-light);border-radius:6px;padding:12px 16px;max-width:70ch}
+.seg-days button{min-width:44px;justify-content:center;text-align:center}
+tr.grp td{background:var(--cw-light);font-size:12px;font-weight:700;padding:8px 16px}
+td.item .sw,.codegrid .sw{display:inline-block;width:12px;height:12px;border-radius:50%;border:1px solid #2D2A26;margin-right:8px;vertical-align:-1px;flex:none}
+.sw.red{background:#D22730}.sw.yellow{background:#F2C230}.sw.blue{background:#2F6FB7}.sw.green{background:#2E8B57}
+.codegrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:8px 24px;margin:16px 0;padding:16px 20px;border:1px solid var(--cw-border);border-radius:11px}
+.codegrid div{display:flex;gap:4px;align-items:flex-start;font-size:13px}
+.codegrid .sw{width:16px;height:16px;margin-top:2px}
+.two{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px;margin:16px 0}
+.two>div{border:1px solid var(--cw-border);border-radius:11px;padding:16px 20px}
+.two h3{margin-top:0}
+.two ul{margin-left:20px}
+.two p:last-child,.two ul:last-child{margin-bottom:0}
+.fineprint{font-size:13px;color:var(--cw-grey)}
+.guide-hero button.btn-pdf{font-family:inherit}
+@media print{
+  header,.site-head,#hubnav,.hubnav,.cta-row,.picker,.kit-cta,.next-link,.site-foot,.ph-bg,.ph-scrim,.crumbs,[data-hubnav-toggle]{display:none!important}
+  .guide-hero{background:#fff!important;color:#2D2A26!important;padding:0 0 8px!important}
+  .guide-hero h1{color:#2D2A26!important}
+  .guide-hero p.lede{color:#636466!important}
+  .guide-body{padding-top:8px}
+  .planner-panel,.tbl-wrap{box-shadow:none}
+  thead th{background:#fff!important;color:#2D2A26!important;border-bottom:2px solid #2D2A26}
+  h2{break-after:avoid}
+  tr,.callout,.two>div,.codegrid{break-inside:avoid}
+  a{color:#2D2A26;text-decoration:none}
+  body{font-size:12px}
+}
 </style>  <link rel="icon" href="favicon.ico" sizes="any">
   <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
@@ -300,7 +333,95 @@ input:not([type=checkbox]):not([type=radio]):not([type=file]):not([type=range]),
 </head><body><header class="site-head"><div class="wrap bar"><a href="index.html"><img class="logo" src="https://emailer.emfluence.com/clients/citywide/uploadedfiles/signature_logo.png" alt="City Wide Facility Solutions"></a><button class="menu-toggle" aria-label="Menu">&#9776;</button><nav><a href="index.html">Home</a><a href="opportunities.html" class="nav-opps">Open Opportunities</a><div class="dd"><a class="dd-label" href="new-vendors.html">New Vendors</a><div class="dd-menu"><a href="new-vendors.html?region=lv">Las Vegas</a><a href="new-vendors.html?region=nnv">Northern Nevada</a></div></div><div class="dd"><a class="dd-label" href="#" onclick="return false;">Guides</a><div class="dd-menu"><div class="dd-head">Crew Guides</div><a href="planner.html" class="active">New Building Planner</a><a href="workloading.html">Workloading & Crew Sizing</a><a href="equipment.html">Choosing Your Equipment</a><a href="color-coding.html">Color Coding System</a><a href="medical.html">Medical Facility Cleaning</a><a href="cleanroom.html">Clean Room Cleaning</a><a href="gmp.html">GMP & Food Facility Cleaning</a></div></div><div class="dd"><a class="dd-label" href="invoice.html">Invoices &amp; Paperwork</a><div class="dd-menu"><div class="dd-head">Get Paid</div><a href="invoice.html">Submit Your Monthly Invoice</a><div class="dd-head">Orders</div><a href="building-supplies.html">Report Supplies Needed</a><a href="shop/">Shop Supplies &amp; Uniforms</a><a href="card-authorization.html">Pay by Credit Card</a><div class="dd-head">Paperwork</div><a href="cleaner-roster.html">Add or Remove a Cleaner</a><a href="upload.html">Upload Insurance &amp; Compliance Docs</a><a href="profile-update.html">Update Your Company Profile</a><a href="work-order.html">Maintenance Work Ticket</a><a href="background-check.html">Background Check &amp; Name Badge</a><a href="https://www.onlinecprcertification.net/bloodborne-pathogens-training-certification.php" target="_blank" rel="noopener">Bloodborne Pathogens Certification</a></div></div><div class="dd"><a class="dd-label" href="index.html#recognition">Recognition</a><div class="dd-menu"><a href="index.html#recognition">Vendor of the Month Wall</a><div class="dd-head">Nominate</div><a href="nominate.html">Nominate a Vendor of the Month</a><a href="nominate.html?type=goat">Nominate a City Wide G.O.A.T.</a></div></div>
 <a class="btn-order" href="shop/">Order Supplies</a></nav></div></header>
 <script src="nav.js"></script>
-<script src="hub-nav.js?v=20261122"></script><section class="guide-hero has-photo"><div class="ph-bg" style="background-image:url('images/crew-interior.jpg')"></div><div class="ph-scrim"></div><div class="content-wrap"><div class="crumbs"><a href="index.html">Resource Center</a><span>/</span>New Building Inventory Planner</div><h1>New Building Inventory Planner</h1><p class="lede">Pick the building size and the cleaning type. The planner builds your starting kit with laundry rotation already baked in, so the crew never runs out mid shift.</p><div class="cta-row"><a class="btn btn-pdf" href="pdfs/new-building-inventory-planner.pdf" download><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>Download Printable PDF</a></div></div></section><section class="guide-body"><div class="content-wrap"><h2>Why a Starting Kit Matters</h2><p>The fastest way to lose a new account is to show up under equipped. One towel and one mop head cannot clean a building, and it shows on night one. This planner sets the minimum inventory to load on the van before the first shift.</p><div class="callout"><b class="title">The 3x Rotation Rule</b><p>Every pad and cloth quantity below is tripled on purpose: one set in use tonight, one set in the laundry, and one clean spare on the shelf. If you only buy one set, you are choosing between skipping the laundry and skipping the cleaning.</p></div><h2>Build Your Kit</h2><div class="picker"><span class="lbl">1. Building Size (cleanable square feet)</span><div class="seg" id="seg-band"></div></div><div class="picker"><span class="lbl">2. Cleaning Type</span><div class="seg" id="seg-type"></div></div><div class="planner-panel"><h3 id="panel-title"></h3><div class="meta" id="panel-meta"></div><div class="tbl-wrap"><table><thead><tr><th>Item</th><th class="qty">Quantity</th></tr></thead><tbody id="kit-body"></tbody></table></div><ul class="type-notes" id="type-notes"></ul><div class="kit-cta"><div class="kc-tx"><b>Ready to buy this kit?</b><span>Build it priced, with the new building kit discount applied automatically.</span></div><a class="btn btn-red js-build-kit" href="kit-builder.html">Build &amp; Price This Kit</a></div></div><h2>The Core Tools</h2><div class="prod-row"><figure class="prod"><span class="ph"><img src="https://cdnimg.webstaurantstore.com/images/products/large/475599/1773086.jpg" alt="Dual chamber mop bucket" loading="lazy"></span><figcaption>Dual Chamber Bucket<small>Clean and dirty water separated</small></figcaption></figure><figure class="prod"><span class="ph"><img src="https://m.media-amazon.com/images/I/51U0cI+AxpL._SL1500_.jpg" alt="Flat mop kit" loading="lazy"></span><figcaption>Flat Mop System<small>Frame, handle, and pads</small></figcaption></figure><figure class="prod"><span class="ph"><img src="https://assets-e518d5c0cd.cdn.insitecloud.net/a327fe7b1aa5d6b_md.jpg" alt="Red microfiber cloths" loading="lazy"></span><figcaption>Color Coded Microfiber<small>Sold by the dozen</small></figcaption></figure><figure class="prod"><span class="ph"><img src="https://cdnimg.webstaurantstore.com/images/products/large/394720/2568961.jpg" alt="HEPA backpack vacuum" loading="lazy"></span><figcaption>HEPA Backpack Vacuum<small>Fast and filtered</small></figcaption></figure></div><h2>Where the Numbers Come From</h2><p>These quantities are grounded in ISSA production standards and City Wide field experience, not guesswork:</p><ul><li><b>Flat mop pads:</b> change the pad about every 500 to 750 sq ft of hard floor. Mopping past that point pushes dirty water around instead of picking it up.</li><li><b>Microfiber cloths:</b> retire a cloth when you finish a zone, roughly one cloth per 250 to 300 sq ft of surface work. Restrooms burn cloths faster.</li><li><b>Team model:</b> quantities assume the City Wide 4 specialist team approach (light duty, vacuum, restroom, and utility) on larger buildings.</li></ul><h2>Before You Load the Van</h2><ul class="checklist"><li>Kit matches the table above for this building size and type</li><li>Every cloth and pad color is stocked: red, yellow, blue, and green</li><li>Chemicals are labeled, diluted correctly, and spray bottles are marked</li><li>Vacuum runs, filter is clean, and a spare belt and bags are packed</li><li>Wet floor signs, gloves, and PPE are in the vehicle</li><li>Laundry plan is confirmed: who washes, where, and by when</li><li>Building keys, alarm codes, and the scope of work are in hand</li></ul><div class="next-link"><a class="btn btn-ghost" href="equipment.html">Next: Choosing Your Equipment</a><a class="btn btn-red js-build-kit" href="kit-builder.html">Build &amp; Price This Kit</a></div></div></section><footer class="site-foot"><div class="wrap"><div class="cols"><div><b style="color:#FFFFFF">City Wide Facility Solutions</b> &middot; Las Vegas &amp; Northern Nevada<br>Vendor Resource Hub</div><div><a href="shop/">Order Supplies</a> &nbsp;&nbsp; <a href="index.html">Resource Center</a> &nbsp;&nbsp; <a href="https://www.gocitywide.com" target="_blank" rel="noopener">GoCityWide.com</a></div></div><div class="fine">For crew and vendor reference. Quantities and methods are guidance; your account scope of work always comes first. Questions? Contact your City Wide Facility Solutions representative.</div></div></footer>
+<script src="hub-nav.js?v=20261122"></script><section class="guide-hero has-photo"><div class="ph-bg" style="background-image:url('images/crew-interior.jpg')"></div><div class="ph-scrim"></div><div class="content-wrap"><div class="crumbs"><a href="index.html">Resource Center</a><span>/</span>New Building Inventory Planner</div><h1>New Building Inventory Planner</h1><p class="lede">Answer a few questions. See what to bring on the first night, how many of each, and why. Then build the kit with prices and the kit discount.</p><div class="cta-row"><a class="btn btn-red js-build-kit" href="kit-builder.html">Build a Starter Kit</a><button type="button" class="btn btn-pdf" id="printBtn"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9V3h12v6M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2M6 14h12v7H6z"/></svg>Print This Page</button></div></div></section>
+<section class="guide-body"><div class="content-wrap">
+
+<h2>Why a Starting Kit Matters</h2>
+<p>The fastest way to lose a new account is to show up short. One cloth and one mop head cannot clean a building, and the customer sees it on the first night. This page tells you what to have on the van before the first shift.</p>
+
+<div class="callout"><b class="title">The one rule to remember</b>
+<p><b>Keep one clean set for every day you clean. Wash once a week.</b></p>
+<p>A set is the cloths and mop heads one cleaning uses. If you clean a building five nights a week, you need five sets. You use one each night, and on laundry day you wash all five.</p>
+<p>If you clean only one day a week, keep two sets. One to use and one spare.</p></div>
+
+<h2>How to Count It</h2>
+<ol class="steps">
+<li><b>Count what one cleaning uses.</b> The table below does this for you, by building size.</li>
+<li><b>Multiply by the days you clean each week.</b> Five nights means five times as many.</li>
+<li><b>Round cloths up to full packs.</b> Cloths are sold in packs of 12.</li>
+</ol>
+<p class="example"><b>Example.</b> A medium office uses 5 green cloths a night. Cleaned 5 nights a week, that is 25 cloths. Buy 3 packs of 12.</p>
+
+<h2>Build Your List</h2>
+<div class="picker"><span class="lbl">1. What kind of building is it?</span><div class="seg" id="seg-type"></div></div>
+<div class="picker"><span class="lbl">2. How big is it? Cleanable square feet.</span><div class="seg" id="seg-band"></div></div>
+<div class="picker"><span class="lbl">3. How many days a week is it cleaned?</span><div class="seg seg-days" id="seg-days"></div></div>
+<div class="picker" id="pick-mop"><span class="lbl">4. How will you mop? Pick one. You do not need both.</span><div class="seg" id="seg-mop"></div></div>
+
+<div class="planner-panel"><h3 id="panel-title"></h3><div class="meta" id="panel-meta"></div>
+<div class="tbl-wrap"><table><thead><tr><th>Item</th><th class="qty">One cleaning uses</th><th class="qty">Have on the van</th></tr></thead><tbody id="kit-body"></tbody></table></div>
+<ul class="type-notes" id="type-notes"></ul>
+<div class="kit-cta"><div class="kc-tx"><b>Ready to buy this kit?</b><span>The kit builder prices this same list and takes the kit discount off for you.</span></div><a class="btn btn-red js-build-kit" href="kit-builder.html">Build &amp; Price This Kit</a></div></div>
+
+<h2>The Color Code</h2>
+<p>Each color has one job. A cloth that touched a toilet never touches a desk.</p>
+<div class="codegrid">
+<div><span class="sw red"></span><span><b>Red or pink cloths.</b> Toilets, urinals and the red zones in the restroom.</span></div>
+<div><span class="sw yellow"></span><span><b>Yellow cloths.</b> Every other restroom surface. Sinks, counters, partitions, dispensers.</span></div>
+<div><span class="sw blue"></span><span><b>Blue cloths.</b> Glass and mirrors.</span></div>
+<div><span class="sw green"></span><span><b>Green cloths.</b> General cleaning and dusting.</span></div>
+<div><span class="sw red"></span><span><b>Red or pink mop.</b> Restroom floors. It never leaves the restroom.</span></div>
+<div><span class="sw blue"></span><span><b>Blue or green mop.</b> The floors in every other room.</span></div>
+</div>
+<p>Fold each cloth in quarters. That gives you eight clean faces. Take a fresh cloth for every restroom and every new area. The full guide is on the <a href="color-coding.html">Color Coding System</a> page.</p>
+
+<h2>Pick One Way to Mop</h2>
+<div class="two">
+<div><h3>Flat mop and charging bucket</h3><p>You soak clean pads in the bucket and use a fresh pad for each area. No wringing. Best for offices, clinics and any floor that has to look the same every night.</p><p>A pad is used up after one restroom or a few rooms, so you carry more pads. They cost much less than a mop head.</p></div>
+<div><h3>Loop mop and wringer bucket</h3><p>Also called a string or rag mop. Best for heavy soil, spills and big open floors like school halls and warehouses.</p><p>Use a bucket with two sides, so the dirty water stays away from the clean water.</p></div>
+</div>
+<p>Either way you need two colors. Red for restrooms and blue or green for everything else. You do not need both kinds of mop.</p>
+
+<h2>What You Bring and What the Building Supplies</h2>
+<div class="two">
+<div><h3>You bring</h3><ul><li>Cloths and mops</li><li>Vacuum, buckets and tools</li><li>Chemicals</li><li>Gloves, safety glasses and wet floor signs</li><li>Liners for your own cart</li></ul></div>
+<div><h3>The building supplies</h3><ul><li>Toilet paper and paper towels</li><li>Hand soap</li><li>Liners for the building's trash cans</li></ul><p>You fill the dispensers from the building's own stock. If the stock runs low, tell City Wide on the <a href="building-supplies.html">Report Supplies Needed</a> page.</p></div>
+</div>
+
+<h2>Chemicals</h2>
+<p>The building decides the chemical program. Some buildings have a FastDraw or 3M cabinet on the closet wall. Some use EnvirOx. Some have no cabinet, and those use TruShot cartridges. Ask your FSM which one your building uses.</p>
+<p>The <a class="js-build-kit" href="kit-builder.html">kit builder</a> asks the same question and loads the right chemicals. Every kit also gets a toilet bowl cleaner, a scale remover and a stainless steel polish, sold one bottle at a time.</p>
+<p><b>Label every spray bottle.</b> Never leave a bottle on site that does not say what is in it.</p>
+
+<h2>Laundry Day</h2>
+<ul>
+<li>Dirty cloths and mop heads go in the hamper during the shift. Never back in the bucket or on the cart shelf.</li>
+<li>Use one mesh wash bag for each color, so red never washes with blue.</li>
+<li>Wash microfiber by itself. No bleach and no fabric softener. They ruin the fibers.</li>
+<li>Dry on low heat.</li>
+<li>Pick the day and the person. If nobody owns laundry day, you run out of clean cloths.</li>
+</ul>
+<p>Want to wash twice a week instead? Then you need about half as many sets.</p>
+
+<h2>Where the Numbers Come From</h2>
+<p>ISSA, the cleaning industry association, publishes how long cleaning tasks take. It does not publish a shopping list. So these counts come from trade practice and City Wide field experience. Treat them as a starting point. You know your building.</p>
+<div class="tbl-wrap"><table id="rateTbl"></table></div>
+<p class="fineprint">Clinics, schools and food plants use half again as many cloths. Flat pads go up by half in clinics and schools and double in food plants.</p>
+
+<h2>Before You Load the Van</h2>
+<ul class="checklist">
+<li>The count matches the list above for this building, its size and its cleaning days</li>
+<li>Every cloth color is stocked. Red, yellow, blue and green</li>
+<li>One red mop and one blue or green mop for each cleaning day</li>
+<li>Chemicals match the building's program and every spray bottle is labeled</li>
+<li>Vacuum runs, the filter is clean, and spare bags are packed</li>
+<li>Wet floor signs, gloves and safety glasses are in the vehicle</li>
+<li>Laundry day is set. You know who washes and which day</li>
+<li>Building keys, alarm codes and the scope of work are in hand</li>
+</ul>
+<div class="next-link"><a class="btn btn-ghost" href="equipment.html">Next: Choosing Your Equipment</a><a class="btn btn-red js-build-kit" href="kit-builder.html">Build &amp; Price This Kit</a></div>
+</div></section>
+<footer class="site-foot"><div class="wrap"><div class="cols"><div><b style="color:#FFFFFF">City Wide Facility Solutions</b> &middot; Las Vegas &amp; Northern Nevada<br>Vendor Resource Hub</div><div><a href="shop/">Order Supplies</a> &nbsp;&nbsp; <a href="index.html">Resource Center</a> &nbsp;&nbsp; <a href="https://www.gocitywide.com" target="_blank" rel="noopener">GoCityWide.com</a></div></div><div class="fine">For crew and vendor reference. Quantities and methods are guidance; your account scope of work always comes first. Questions? Contact your City Wide Facility Solutions representative.</div></div></footer>
 <script>
 (function(){
   var t=document.querySelector('.menu-toggle'),n=document.querySelector('.site-head nav');
@@ -308,52 +429,112 @@ input:not([type=checkbox]):not([type=radio]):not([type=file]):not([type=range]),
 })();
 </script>
 
+<script src="kit-rules.js?v=20261122"></script>
 <script>
-var DATA = {"items": [{"n": "Dual chamber mop bucket (WaveBrake or equal)", "cat": "hard", "q": [1, 1, 2, 2], "note": "Clean water and dirty water stay separated"}, {"n": "Flat mop frame &amp; handle, 18 inch", "cat": "hard", "q": [1, 2, 3, 4], "note": ""}, {"n": "Flat mop pads, general floors (blue or green)", "cat": "pads", "q": [6, 12, 24, 36], "note": "Swap pads about every 500 to 750 sq ft of hard floor"}, {"n": "Flat mop pads, restrooms (red)", "cat": "pads", "q": [3, 6, 9, 12], "note": "Restroom pads never leave the restroom rotation"}, {"n": "Microfiber cloths, green (general cleaning &amp; dusting)", "cat": "cloths", "q": [12, 24, 36, 48], "note": "Retire one cloth per zone, about every 250 to 300 sq ft"}, {"n": "Microfiber cloths, blue (glass &amp; mirrors)", "cat": "cloths", "q": [12, 12, 24, 24], "note": ""}, {"n": "Microfiber cloths, yellow (restroom surfaces)", "cat": "cloths", "q": [12, 24, 36, 48], "note": "Cloths turn over faster in restrooms; plan extra"}, {"n": "Microfiber cloths, red (toilets &amp; urinals only)", "cat": "cloths", "q": [12, 24, 36, 48], "note": ""}, {"n": "HEPA backpack vacuum", "cat": "equip", "q": [1, 1, 2, 3], "note": ""}, {"n": "Utility looped string mop &amp; standard bucket", "cat": "equip", "q": [1, 1, 1, 2], "note": "For spills and heavy soil only, not nightly mopping"}, {"n": "Toilet bowl mop", "cat": "other", "q": [1, 2, 3, 4], "note": ""}, {"n": "Spray bottles with trigger, labeled", "cat": "other", "q": [4, 6, 8, 12], "note": "Label every bottle; never leave a mystery bottle on site"}, {"n": "Wet floor signs, English &amp; Spanish", "cat": "other", "q": [2, 2, 4, 6], "note": ""}, {"n": "Nitrile gloves (box of 100)", "cat": "other", "q": [1, 2, 3, 4], "note": ""}, {"n": "High duster with extension handle", "cat": "equip", "q": [1, 1, 2, 2], "note": ""}], "types": {"gen": {"label": "General Janitorial", "mult": {}, "extra": [], "notes": ["The base kit above is built for standard nightly service, up to 5 nights per week.", "Launder microfiber after every shift. The 3x rotation only works if the laundry loop never stalls."]}, "porter": {"label": "Frequent / Day Porter", "mult": {"cloths": 1.5, "pads": 1.5}, "extra": [{"n": "Cleaning caddy or cart for day rounds", "q": [1, 1, 2, 2]}, {"n": "Extra spray bottles for the caddy", "q": [2, 2, 4, 4]}], "notes": ["Day porters burn through cloths faster because there is no overnight laundry buffer. Quantities above are already increased by half.", "Build a restroom check kit that lives on the caddy: gloves, red and yellow cloths, bowl mop, and restock supplies."]}, "medical": {"label": "Medical", "mult": {"pads": 1.5, "cloths": 1.5}, "extra": [{"n": "Dedicated isolation room kit (bucket, frame &amp; yellow tools)", "q": [1, 1, 1, 2]}, {"n": "PPE set: masks, safety glasses &amp; disposable booties", "q": [1, 2, 2, 3]}], "notes": ["Treatment areas get a fresh mop pad on a set interval, not when the pad looks dirty. Plan roughly one pad per 4 to 6 patient stations.", "Isolation rooms use dedicated, color coded tools that never clean anywhere else.", "Read the Medical Facility Cleaning guide before the first shift."]}, "cleanroom": {"label": "Clean Room", "mult": {}, "extra": [{"n": "Tacky mats (case)", "q": [1, 1, 2, 2]}, {"n": "Cleanroom approved wipers &amp; mops (client approved list)", "q": [1, 1, 2, 2]}], "notes": ["The standard kit covers offices, hallways, and support areas OUTSIDE the classified space only.", "Nothing enters the clean room unless it is on the client's approved supply list. No cotton, no brooms, no standard microfiber.", "Read the Clean Room Cleaning guide; gowning and conduct rules are strict and non negotiable."]}, "gmp": {"label": "GMP / Food", "mult": {"pads": 2, "cloths": 1.5}, "extra": [{"n": "Dedicated zone kit, orange (production floor)", "q": [1, 1, 2, 2]}, {"n": "Dedicated zone kit, yellow (allergen &amp; segregated zones)", "q": [1, 1, 1, 2]}, {"n": "Drain brushes, one per zone, stored off the floor", "q": [2, 3, 4, 6]}, {"n": "Sanitizer test strips", "q": [1, 1, 2, 2]}, {"n": "PPE set: hair nets, beard covers, booties &amp; smocks", "q": [1, 2, 3, 4]}], "notes": ["Production zones need roughly one mop pad per 150 to 200 sq ft, so pad counts above are doubled.", "Tools never cross zones. Yellow allergen tools launder separately from everything else.", "Read the GMP &amp; Food Facility Cleaning guide; drains and zone transitions are where accounts are won or lost."]}}};
-var BANDS=[["s","Small","Up to 5,000 sq ft"],["m","Medium","5,001 to 15,000 sq ft"],
-           ["l","Large","15,001 to 40,000 sq ft"],["xl","Very Large","Over 40,000 sq ft"]];
-var BI={s:0,m:1,l:2,xl:3};
-var state={band:"m",type:"gen"};
-function seg(id,opts,cur,fn){
-  var el=document.getElementById(id);el.innerHTML="";
-  opts.forEach(function(o){
-    var b=document.createElement("button");
-    b.innerHTML=o[1]+(o[2]?"<small>"+o[2]+"</small>":"");
-    if(o[0]===cur)b.className="on";
-    b.onclick=function(){fn(o[0]);};
-    el.appendChild(b);
+(function(){
+  var K=window.CW_KIT, state={type:"office",size:"m",days:5,mop:null};
+  var COLORS=[["red","Red or pink cloths","Toilets, urinals and red zones"],["yellow","Yellow cloths","Other restroom surfaces"],
+              ["blue","Blue cloths","Glass and mirrors"],["green","Green cloths","General cleaning and dusting"]];
+  var NOTES={
+    office:["Dust screens and monitors with the duster. Never wipe them.","A backpack vacuum cleans carpet and hard floors, so most offices do not need a broom."],
+    medical:["Clinics use half again as many cloths and pads. The counts above already include that.","If the clinic has its own color code, match theirs.","Read the <a href=\"medical.html\">Medical Facility Cleaning</a> guide before the first shift."],
+    school:["Schools use half again as many cloths and pads. The counts above already include that.","A loop mop fits long halls and gym floors.","Bring a push broom for the big open areas."],
+    industrial:["A vacuum will not keep up with a warehouse floor. Bring push brooms for the open areas and docks.","If the building has oil or grease, add a degreaser."],
+    gmp:["Food plants double the flat pads on production floors. The counts above already include that.","The plant's posted color map always wins over ours.","Tools never cross zones. Read the <a href=\"gmp.html\">GMP and Food Facility Cleaning</a> guide."],
+    cleanroom:["The four color code does not apply inside the room. Use low lint wipes there.","Nothing goes into the room unless it is on the facility's approved list.","Flat mop only. No string mops and no wood handles.","Read the <a href=\"cleanroom.html\">Clean Room Cleaning</a> guide. The gowning rules are strict."]};
+  function T(){ return K.TYPES.filter(function(t){return t.k===state.type;})[0]; }
+  function seg(id,opts,cur,fn){
+    var el=document.getElementById(id); el.innerHTML="";
+    opts.forEach(function(o){
+      var b=document.createElement("button"); b.type="button";
+      b.innerHTML=o[1]+(o[2]?"<small>"+o[2]+"</small>":"");
+      b.setAttribute("aria-pressed",o[0]===cur?"true":"false");
+      if(o[0]===cur) b.className="on";
+      b.onclick=function(){fn(o[0]);};
+      el.appendChild(b);
+    });
+  }
+  function head(t){ return '<tr class="grp"><td colspan="3">'+t+'</td></tr>'; }
+  function row(name,note,per,have,sw){
+    return '<tr><td class="item">'+(sw?'<span class="sw '+sw+'"></span>':'')+name+(note?'<span class="note">'+note+'</span>':'')+
+      '</td><td class="qty">'+(per===null?'':per)+'</td><td class="qty">'+have+'</td></tr>';
+  }
+  function plural(n,one,many){ return n+" "+(n===1?one:many); }
+  function render(){
+    var t=T(), sz=state.size, n=K.sets(state.days), m=K.MULT[t.k], S=K.SIZES.filter(function(x){return x.k===sz;})[0];
+    if(!state.mop || t.mop.indexOf(state.mop)<0) state.mop=t.mopRec;
+    seg("seg-type",K.TYPES.map(function(x){return [x.k,x.n,x.s];}),state.type,function(v){state.type=v;state.mop=null;render();});
+    seg("seg-band",K.SIZES.map(function(x){return [x.k,x.n,x.s+" sq ft"];}),sz,function(v){state.size=v;render();});
+    seg("seg-days",[1,2,3,4,5,6,7].map(function(d){return [d,String(d),""];}),state.days,function(v){state.days=v;render();});
+    var mops={flat:["flat","Flat mop","Fresh pad for each area"+(t.mopRec==="flat"?". Our pick here":"")],loop:["loop","Loop mop","String or rag mop"+(t.mopRec==="loop"?". Our pick here":"")]};
+    document.getElementById("pick-mop").style.display=t.mop.length>1?"":"none";
+    if(t.mop.length>1) seg("seg-mop",t.mop.map(function(k){return mops[k];}),state.mop,function(v){state.mop=v;render();});
+    var rows="", setWord=state.days>=2?state.days+" cleaning days":"2 sets";
+    if(t.k!=="cleanroom"){
+      rows+=head("Microfiber cloths, sold in packs of 12");
+      COLORS.forEach(function(c){
+        var per=Math.ceil(K.RATE.cloth[c[0]][sz]*m.cloth), need=per*n, packs=Math.ceil(need/12);
+        rows+=row(c[1],c[2],per,plural(packs,"pack","packs")+'<span class="note">'+need+" cloths</span>",c[0]);
+      });
+    } else {
+      rows+=head("Wipes and cloths");
+      rows+=row("Low lint wipes","For inside the room. Follow the facility's procedure.",null,plural(K.FIX.wipes[sz],"case","cases"));
+      rows+=row("Blue cloths","For the gowning room and glass",null,"1 pack","blue");
+    }
+    rows+=head("Mops");
+    if(state.mop==="flat"){
+      var rrPer=Math.ceil(K.RATE.pad.rr[sz]*m.pad), gPer=Math.ceil(K.RATE.pad.gen[sz]*m.pad);
+      if(t.k!=="cleanroom") rows+=row("Red flat mop pads","Restroom floors only",rrPer,rrPer*n,"red");
+      rows+=row("Green flat mop pads",t.k==="cleanroom"?"Pads stay inside the room":"Every floor outside the restroom",gPer,gPer*n,"green");
+      rows+=row("Flat mop frames",t.k==="cleanroom"?"They never leave the room":"One stays with the restroom. One does everything else.",null,2);
+      rows+=row("Flat mop handles","",null,2);
+      rows+=row("Charging bucket","Soak the clean pads here. A used pad never goes back in.",null,1);
+    } else {
+      var lr=K.RATE.loop.rr[sz], lg=K.RATE.loop.gen[sz], b=K.FIX.buckets[sz];
+      rows+=row("Red loop mop heads","Restroom floors only",lr,lr*n,"red");
+      rows+=row("Blue or green loop mop heads","Every floor outside the restroom",lg,lg*n,t.k==="industrial"?"green":"blue");
+      rows+=row("Mop handles","One stays with the restroom mop. One does everything else.",null,2);
+      rows+=row("Wringer bucket with two sides","Keeps the clean water clean",null,b);
+      rows+=row("Dirty water bucket","Drops inside the wringer bucket",null,b);
+    }
+    if(t.vac){
+      rows+=head("Floors and dusting");
+      rows+=row("Backpack vacuum","Cleans carpet and hard floors",null,1);
+      if(t.k==="office"||t.k==="medical"||t.k==="school") rows+=row("Lambswool duster","Screens and monitors get dusted, never wiped",null,1);
+      if(t.k==="industrial"||t.k==="school"||t.k==="gmp") rows+=row("Push broom","For big open floors and docks",null,K.FIX.broom[sz]);
+    }
+    if(t.k!=="cleanroom"){
+      rows+=head("Restroom");
+      rows+=row("Toilet bowl mop","For inside the bowl only",null,K.FIX.bowlmop[sz]);
+      rows+=row("Toilet bowl cleaner","One bottle at a time",null,plural(K.FIX.bowlcleaner[sz],"bottle","bottles"));
+      rows+=row("Dispenser key set","Opens the paper, soap and towel dispensers",null,1);
+    }
+    rows+=head(t.k==="cleanroom"?"Safety":"Safety and laundry");
+    if(t.k!=="cleanroom") rows+=row("Wet floor signs","One at each end of a wet floor",null,K.FIX.signs[sz]);
+    rows+=row("Nitrile gloves","Box of 100",null,"2 boxes");
+    rows+=row("Safety glasses","",null,K.FIX.glasses[sz]);
+    if(t.k!=="cleanroom"){
+      rows+=row("Laundry hamper","Dirty cloths and mop heads go here during the shift",null,1);
+      rows+=row("Mesh wash bags","One bag for each color",null,"1 pack of 5");
+    }
+    document.getElementById("kit-body").innerHTML=rows;
+    document.getElementById("panel-title").textContent=S.n+" "+t.n.toLowerCase()+", cleaned "+plural(state.days,"day","days")+" a week";
+    document.getElementById("panel-meta").textContent="You keep "+n+" clean sets"+(state.days===1?", one to use and one spare":", one for each cleaning day")+". Wash once a week. Chemicals are picked in the kit builder.";
+    document.getElementById("type-notes").innerHTML=NOTES[t.k].map(function(x){return "<li>"+x+"</li>";}).join("");
+    var qs="kit-builder.html?type="+t.k+"&band="+sz+"&days="+state.days+"&mop="+state.mop;
+    Array.prototype.forEach.call(document.querySelectorAll(".js-build-kit"),function(a){a.href=qs;});
+  }
+  function rateTable(){
+    var R=K.RATE, hd='<thead><tr><th>Used in one cleaning</th>'+K.SIZES.map(function(s){return '<th class="qty">'+s.n+'</th>';}).join("")+'</tr></thead>';
+    var r=function(lab,o){ return '<tr><td class="item">'+lab+'</td>'+K.SIZES.map(function(s){return '<td class="qty">'+o[s.k]+'</td>';}).join("")+'</tr>'; };
+    document.getElementById("rateTbl").innerHTML=hd+'<tbody>'+r("Red cloths",R.cloth.red)+r("Yellow cloths",R.cloth.yellow)+r("Blue cloths",R.cloth.blue)+r("Green cloths",R.cloth.green)+
+      r("Red loop mop heads",R.loop.rr)+r("Blue or green loop mop heads",R.loop.gen)+r("Red flat pads",R.pad.rr)+r("Green flat pads",R.pad.gen)+'</tbody>';
+  }
+  document.addEventListener("DOMContentLoaded",function(){
+    if(!K){ document.getElementById("kit-body").innerHTML='<tr><td colspan="3">The list did not load. Refresh the page.</td></tr>'; return; }
+    render(); rateTable();
+    document.getElementById("printBtn").addEventListener("click",function(){ window.print(); });
   });
-}
-function roundQty(cat,v){
-  if(cat==="cloths")return Math.ceil(v/12)*12;
-  return Math.ceil(v);
-}
-function render(){
-  var bi=BI[state.band],t=DATA.types[state.type];
-  seg("seg-band",BANDS,state.band,function(v){state.band=v;render();});
-  seg("seg-type",Object.keys(DATA.types).map(function(k){
-    return [k,DATA.types[k].label,""];}),state.type,function(v){state.type=v;render();});
-  var rows="";
-  DATA.items.forEach(function(it){
-    var m=t.mult[it.cat]||1;
-    var q=roundQty(it.cat,it.q[bi]*m);
-    rows+='<tr><td class="item">'+it.n+(it.note?'<span class="note">'+it.note+"</span>":"")+
-          '</td><td class="qty">'+q+"</td></tr>";
-  });
-  t.extra.forEach(function(it){
-    rows+='<tr><td class="item">'+it.n+'<span class="note">Added for '+t.label+
-          '</span></td><td class="qty">'+it.q[bi]+"</td></tr>";
-  });
-  var bandLabel=BANDS[bi][1]+" ("+BANDS[bi][2]+")";
-  document.getElementById("panel-title").innerHTML="Starting Kit: "+bandLabel;
-  document.getElementById("panel-meta").innerHTML=t.label+
-    " &middot; quantities include the 3x rotation (in use, in the laundry, spare)";
-  document.getElementById("kit-body").innerHTML=rows;
-  var notes="";t.notes.forEach(function(n){notes+="<li>"+n+"</li>";});
-  document.getElementById("type-notes").innerHTML=notes;
-  var qs="kit-builder.html?type="+encodeURIComponent(state.type)+"&band="+encodeURIComponent(state.band);
-  Array.prototype.forEach.call(document.querySelectorAll(".js-build-kit"),function(a){a.href=qs;});
-}
-document.addEventListener("DOMContentLoaded",render);
+})();
 </script>
 </body></html>
