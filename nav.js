@@ -1,7 +1,7 @@
 /* nav.js for the Vendor Hub. Seeded from the page menu on 2026-09-13 by Claude.
-   The Site Admin hub (cw-admin-hub/site-admin.html) republishes this file; do not edit by hand.
+   Site Admin was turned off 2026-11-22 at TJ's request. Nothing republishes this file any more. It is edited by hand, through Claude.
    Edited by hand 2026-11-21 (Vendor Hub overhaul: menus named for the job. Find Work, New Vendors, Get Paid,
-   Supplies, Company & Crew, Guides, Recognition). Before the next Site Admin publish, click Import live menu.
+   Supplies, Company & Crew, Guides, Recognition). 
    Two renderers read this file: cw-nav.js (the older page headers) and hub-nav.js (the home page and shop).
    hub-nav.js carries a copy as its fallback; keep the two in step. */
 window.CW_NAV = {

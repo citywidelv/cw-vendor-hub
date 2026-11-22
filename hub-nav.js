@@ -9,7 +9,7 @@
    data-base is the path from the page back to the hub root ("" on the hub root, "../" in shop/).
 
    Menu data comes from window.CW_NAV (nav.js, the same manifest cw-nav.js reads for the older pages).
-   If nav.js is missing or malformed the FALLBACK below is used, so a bad publish shows
+   If nav.js is missing or malformed the FALLBACK below is used, so a bad edit shows
    yesterday's menu, never no menu. Keep FALLBACK in step with nav.js when the menu changes.
    window.HubNav.menu() returns the menu in use, for a page that wants to build a search over it.
 
