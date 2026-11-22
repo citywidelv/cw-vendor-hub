@@ -1,6 +1,6 @@
 /* nav.js for the Vendor Hub. Seeded from the page menu on 2026-09-13 by Claude.
    Site Admin was turned off 2026-11-22 at TJ's request. Nothing republishes this file any more. It is edited by hand, through Claude.
-   Edited by hand 2026-11-21 (Vendor Hub overhaul: menus named for the job. Find Work, New Vendors, Get Paid,
+   Edited by hand 2026-11-22 (Supplies: Build a Starter Kit is first and renamed). Edited by hand 2026-11-21 (Vendor Hub overhaul: menus named for the job. Find Work, New Vendors, Get Paid,
    Supplies, Company & Crew, Guides, Recognition). 
    Two renderers read this file: cw-nav.js (the older page headers) and hub-nav.js (the home page and shop).
    hub-nav.js carries a copy as its fallback; keep the two in step. */
@@ -79,12 +79,13 @@ window.CW_NAV = {
    "href": "shop/",
    "items": [
     {
-     "label": "Order Supplies",
-     "href": "shop/"
+     "label": "Build a Starter Kit",
+     "href": "kit-builder.html",
+     "tag": "New building"
     },
     {
-     "label": "Build a New Building Kit",
-     "href": "kit-builder.html"
+     "label": "Order Supplies",
+     "href": "shop/"
     },
     {
      "label": "Report Supplies Needed",

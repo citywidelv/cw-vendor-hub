@@ -36,8 +36,8 @@
     {label:"Maintenance Work Ticket",href:"work-order.html"},
     {label:"Snow Service Report",href:"snow-report.html"}]},
    {label:"Supplies",href:"shop/",items:[
+    {label:"Build a Starter Kit",href:"kit-builder.html",tag:"New building"},
     {label:"Order Supplies",href:"shop/"},
-    {label:"Build a New Building Kit",href:"kit-builder.html"},
     {label:"Report Supplies Needed",href:"building-supplies.html"},
     {label:"Pay for Supplies by Card",href:"card-authorization.html"}]},
    {label:"Company & Crew",href:"my-profile.html",items:[

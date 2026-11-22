@@ -370,8 +370,8 @@ const PROGS=[
 const FREE={fd:false};
 /* FastDraw is live in the shop as P182 to P187. The cabinet is free while a FastDraw chemical is in the kit. */
 const CABINET={}, FDCHEM=['P183','P184','P185','P186','P187'];
-/* Supplied by City Wide at no charge: the FastDraw cabinet, the 3M cabinet and the bottle labels. The last two are switched off in the shop, so the kit reads them by id. */
-const GIFT={P182:1,P196:1,P201:1}, KITONLY=['P196','P201'];
+/* Supplied by City Wide at no charge: the FastDraw cabinet, the 3M cabinet and the bottle labels. All three are switched off in the shop, so the kit reads them by id. */
+const GIFT={P182:1,P196:1,P201:1}, KITONLY=['P182','P196','P201'];
 const q=(v,sz)=> typeof v==='number'? v : v[sz];
 
 /* ---------- state ---------- */

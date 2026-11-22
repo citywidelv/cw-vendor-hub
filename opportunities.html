@@ -467,7 +467,7 @@ function card(o){
   var more='<div class="two">'+kv("Clean window",o.clean_window)+kv("Walkthrough",o.walkthrough)+'</div>'
     +kv("Scope",o.scope_summary)+'<div class="two">'+kv("Required chemicals",o.chemicals)+kv("Bring your own",o.equipment_required)+kv("Provided on site",o.equipment_provided)+kv("Certifications & experience",o.certifications)+'</div>'
     +kv("Expectations",o.special_requirements)+kv("Pay notes",o.pay_notes)
-    +(showKit(o)?'<div class="kit-flag"><span class="ic">!</span><div><b class="kf-head">Be First-Night Ready</b>Before your first visit, open the <a href="planner.html">New Building Starter Kit</a> and dial in the list for a <b>'+esc(o.facility_type||"building")+'</b>. Show up on night one with every chemical and piece of equipment this building needs.</div></div>':"")
+    +(showKit(o)?'<div class="kit-flag"><span class="ic">!</span><div><b class="kf-head">Be First-Night Ready</b>Before your first visit, <a href="kit-builder.html">build your starter kit</a> for a <b>'+esc(o.facility_type||"building")+'</b>. Show up on night one with every chemical and piece of equipment this building needs.</div></div>':"")
     +'<div class="two">'+kv("Posted",o.posted)+kv("Posting ID",o.id)+'</div>'+fsmStrip(o);
   var by=(o.fsm_info&&o.fsm_info.name)||o.contact_name||"";
   return '<article class="opp'+(OPEN[o.id]?" open":"")+'" id="c-'+esc(o.id)+'">'

@@ -387,7 +387,7 @@ function kitBuilderHref(o){
 }
 function kitFlag(o){
   return '<div class="kit-flag"><span class="ic">!</span><div><b class="kf-head">Be First-Night Ready</b>'
-    + 'Before your first visit, open the <a href="planner.html">New Building Starter Kit</a> and dial in the list for a '
+    + 'Before your first visit, <a href="' + kitBuilderHref(o) + '">build your starter kit</a> for a '
     + '<b>' + esc(o.facility_type || 'building') + '</b>. Show up on night one with every chemical and piece of equipment this building needs.'
     + '<span class="kf-cta"><a class="kf-btn" href="' + kitBuilderHref(o) + '">Build &amp; price the kit</a>'
     + '<a class="kf-alt" href="planner.html">See the full checklist</a></span></div></div>';
