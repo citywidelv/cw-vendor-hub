@@ -219,7 +219,10 @@ input:not([type=checkbox]):not([type=radio]):not([type=file]):not([type=range]),
 .hero .btn-ghost,.hero2 .btn-ghost,.sup-hero .btn-ghost,.ca-hero .btn-ghost,.guide-hero .btn-ghost,.inv-hero .btn-ghost,.ev-hero .btn-ghost,.nom-hero .btn-ghost,.opps-hero .btn-ghost,.r-hero .btn-ghost,.hero .btn-pdf,.hero2 .btn-pdf,.sup-hero .btn-pdf,.ca-hero .btn-pdf,.guide-hero .btn-pdf,.inv-hero .btn-pdf,.ev-hero .btn-pdf,.nom-hero .btn-pdf,.opps-hero .btn-pdf,.r-hero .btn-pdf{background:#fff!important;color:#2D2A26!important;border:1px solid #BDBBB8!important}
 .hero .live,.hero2 .live,.sup-hero .live,.ca-hero .live,.guide-hero .live,.inv-hero .live,.ev-hero .live,.nom-hero .live,.opps-hero .live,.r-hero .live{color:#2D2A26!important;background:#F5F5F5!important;border:1px solid #BDBBB8!important}
 @media(max-width:700px){.hero,.hero2,.sup-hero,.ca-hero,.guide-hero,.inv-hero,.ev-hero,.nom-hero,.opps-hero,.r-hero{padding-top:16px!important;padding-bottom:16px!important}.hero h1,.hero2 h1,.sup-hero h1,.ca-hero h1,.guide-hero h1,.inv-hero h1,.ev-hero h1,.nom-hero h1,.opps-hero h1,.r-hero h1{font-size:21px!important}}
-</style><link rel="stylesheet" href="https://citywidelv.github.io/cw-base.css">
+</style><style>
+.ev-stepline{margin-top:12px!important;padding:12px 16px;border:1px solid #BDBBB8;border-radius:11px;background:#F5F5F5;color:#2D2A26!important;font-size:15px!important;max-width:720px}
+</style>
+<link rel="stylesheet" href="https://citywidelv.github.io/cw-base.css">
 </head>
 <body>
 <header class="site-head"><div class="wrap bar"><a href="index.html"><img class="logo" src="https://emailer.emfluence.com/clients/citywide/uploadedfiles/signature_logo.png" alt="City Wide Facility Solutions"></a><button class="menu-toggle" aria-label="Menu">&#9776;</button><nav><a href="index.html">Home</a><a href="opportunities.html" class="nav-opps">Open Opportunities</a><div class="dd"><a class="dd-label" href="new-vendors.html">New Vendors</a><div class="dd-menu"><a href="new-vendors.html?region=lv">Las Vegas</a><a href="new-vendors.html?region=nnv">Northern Nevada</a></div></div><div class="dd"><a class="dd-label" href="#" onclick="return false;">Guides</a><div class="dd-menu"><div class="dd-head">Crew Guides</div><a href="planner.html">New Building Planner</a><a href="workloading.html">Workloading & Crew Sizing</a><a href="equipment.html">Choosing Your Equipment</a><a href="color-coding.html">Color Coding System</a><a href="medical.html">Medical Facility Cleaning</a><a href="cleanroom.html">Clean Room Cleaning</a><a href="gmp.html">GMP & Food Facility Cleaning</a></div></div><div class="dd"><a class="dd-label" href="invoice.html">Invoices &amp; Paperwork</a><div class="dd-menu"><div class="dd-head">Get Paid</div><a href="invoice.html">Submit Your Monthly Invoice</a><div class="dd-head">Orders</div><a href="building-supplies.html">Report Supplies Needed</a><a href="shop/">Shop Supplies &amp; Uniforms</a><a href="card-authorization.html">Pay by Credit Card</a><div class="dd-head">Paperwork</div><a href="cleaner-roster.html">Add or Remove a Cleaner</a><a href="upload.html">Upload Insurance &amp; Compliance Docs</a><a href="profile-update.html">Update Your Company Profile</a><a href="work-order.html">Maintenance Work Ticket</a><a href="background-check.html">Background Check &amp; Name Badge</a><a href="https://www.onlinecprcertification.net/bloodborne-pathogens-training-certification.php" target="_blank" rel="noopener">Bloodborne Pathogens Certification</a></div></div><div class="dd"><a class="dd-label" href="index.html#recognition">Recognition</a><div class="dd-menu"><a href="index.html#recognition">Vendor of the Month Wall</a><div class="dd-head">Nominate</div><a href="nominate.html">Nominate a Vendor of the Month</a><a href="nominate.html?type=goat">Nominate a City Wide G.O.A.T.</a></div></div>
@@ -231,6 +234,7 @@ input:not([type=checkbox]):not([type=radio]):not([type=file]):not([type=range]),
 <div class="kick">Vendor Evaluation</div>
 <h1>Tell Us What Your Crew Does</h1>
 <p>One form, about five minutes. The services you pick are what we use to reach out when work opens that matches your crew. Fill it out once; you can send it again any time your services change.</p>
+<p class="ev-stepline"><b>This is step 1 of 5 to get on file.</b> When you send it, we take you straight to step 2.</p>
 </div></section>
 
 <form id="ev" class="ev-wrap" novalidate autocomplete="on">
@@ -238,7 +242,7 @@ input:not([type=checkbox]):not([type=radio]):not([type=file]):not([type=range]),
 
 <!-- 1 region -->
 <div class="card" id="cRegion">
-<div class="step">Step 1 of 5</div>
+<div class="step">Part 1 of 5</div>
 <h2>Where does your crew work?</h2>
 <p class="lead">City Wide runs two separate offices in Nevada. Pick the one your crew can actually show up for.</p>
 <div class="regions">
@@ -252,7 +256,7 @@ input:not([type=checkbox]):not([type=radio]):not([type=file]):not([type=range]),
 
 <!-- 2 contact + business -->
 <div class="card">
-<div class="step">Step 2 of 5</div>
+<div class="step">Part 2 of 5</div>
 <h2>Your business</h2>
 <div class="row">
 <label class="f"><span class="req">Business name (DBA)</span><input type="text" name="dba_name" required autocomplete="organization"></label>
@@ -271,7 +275,7 @@ input:not([type=checkbox]):not([type=radio]):not([type=file]):not([type=range]),
 
 <!-- 3 services -->
 <div class="card" id="cServices">
-<div class="step">Step 3 of 5</div>
+<div class="step">Part 3 of 5</div>
 <h2>What can your crew do without subcontracting?</h2>
 <p class="lead">Check everything that applies. Only pick work your own people perform. 178 services in five groups; open a group to see them.</p>
 <details class="grp" open><summary><span class="gt">Janitorial and Cleaning Services</span><span class="gs">Nightly janitorial, day porter, deep cleans, specialty cleaning.</span><span class="gc" data-count></span></summary><div class="opts">
@@ -468,7 +472,7 @@ input:not([type=checkbox]):not([type=radio]):not([type=file]):not([type=range]),
 
 <!-- 4 operations -->
 <div class="card">
-<div class="step">Step 4 of 5</div>
+<div class="step">Part 4 of 5</div>
 <h2>How you operate</h2>
 <div id="yn">
 <div class="yn"><span class="q">Do you run background checks on crew members?</span><span class="pills" data-key="background_checks"><button type="button" data-v="Yes">Yes</button><button type="button" data-v="No">No</button></span></div>
@@ -492,7 +496,7 @@ input:not([type=checkbox]):not([type=radio]):not([type=file]):not([type=range]),
 
 <!-- 5 references + notes -->
 <div class="card">
-<div class="step">Step 5 of 5</div>
+<div class="step">Part 5 of 5</div>
 <h2>Two business references</h2>
 <p class="lead">Clients you have worked for. We may call them.</p>
 <div class="row">
@@ -510,15 +514,16 @@ input:not([type=checkbox]):not([type=radio]):not([type=file]):not([type=range]),
 </div>
 
 <div class="card">
-<div class="submitbar"><button type="submit" class="btn btn-red" id="go">Send My Evaluation</button><span class="saved" id="saved"></span></div>
+<div class="submitbar"><button type="submit" class="btn btn-red" id="go">Send and Go to Step 2</button><span class="saved" id="saved"></span></div>
 <div class="err" id="err"></div>
 </div>
 </form>
 
-<div class="ev-wrap"><div class="card done" id="done"><div class="tick"><i class=ic-check></i></div><h2>You are on file</h2><p id="doneMsg"></p><p>A copy went to your email. When work opens that matches what your crew does, you hear from us.</p><div class="acts"><a class="btn btn-red" id="doneNext" href="new-vendors.html">Finish Your Vendor Packet</a><a class="btn btn-ghost" href="opportunities.html">See Open Opportunities</a></div></div></div>
+<div class="ev-wrap"><div class="card done" id="done"><div class="tick"><i class=ic-check></i></div><h2>Step 1 Is Done</h2><p id="doneMsg"></p><p>Next is step 2, Meet the Team. Taking you there now.</p><div class="acts"><a class="btn btn-red" id="doneNext" href="new-vendors.html?done=1">Go to Step 2</a><a class="btn btn-ghost" href="opportunities.html">See Open Opportunities</a></div></div></div>
 
 <footer class="site-foot"><div class="wrap"><div class="cols"><div><b style="color:#FFFFFF">City Wide Facility Solutions</b> &middot; Las Vegas &amp; Northern Nevada<br>Vendor Resource Hub</div><div><a href="shop/">Order Supplies</a> &nbsp;&nbsp; <a href="index.html">Resource Center</a> &nbsp;&nbsp; <a href="https://www.gocitywide.com" target="_blank" rel="noopener">GoCityWide.com</a></div></div><div class="fine">Questions about this form? Las Vegas: lvcompliance@gocitywide.com &middot; Northern Nevada: rncompliance@gocitywide.com</div></div></footer>
 
+<script src="journey.js?v=20261122c"></script>
 <script>
 (function(){
 var EXEC="https://script.google.com/macros/s/AKfycbzfNnrpidCbWB1DeUNgXvRhDFMQgApfpn-3C9GU45wMEHcJpWFl8ZQVo6PUBSRfEVfRdg/exec";
@@ -591,14 +596,14 @@ function fail(msg,el){ var e=$('#err'); e.textContent=msg; e.className='err show
 form.addEventListener('submit',function(ev){
   ev.preventDefault(); $('#err').className='err';
   var f=fields(); var p=picked();
-  if(!state.region) return fail('Pick where your crew works (Step 1).', $('#cRegion'));
+  if(!state.region) return fail('Pick where your crew works (Part 1).', $('#cRegion'));
   if(!f.dba_name.trim()) return fail('Business name is required.', $('[name=dba_name]'));
   if(!f.contact_name.trim()) return fail('Your name is required.', $('[name=contact_name]'));
   if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(f.email.trim())) return fail('Enter a valid email address.', $('[name=email]'));
   if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(f.ledger_email.trim())) return fail('Enter the email for your monthly payments. Your main email is fine.', $('[name=ledger_email]'));
   if(!f.phone.trim()) return fail('Mobile phone is required.', $('[name=phone]'));
   if(!f.business_address.trim()) return fail('Business address is required.', $('[name=business_address]'));
-  if(!p.labels.length) return fail('Pick at least one service your crew provides (Step 3).', $('#cServices'));
+  if(!p.labels.length) return fail('Pick at least one service your crew provides (Part 3).', $('#cServices'));
   var vendor={}; Object.keys(f).forEach(function(k){ vendor[k]=f[k].trim(); });
   Object.keys(state.yn).forEach(function(k){ vendor[k]=state.yn[k]; });
   vendor.trade_raw=p.labels.join('; ');
@@ -609,11 +614,17 @@ form.addEventListener('submit',function(ev){
     try{ localStorage.removeItem(KEY); }catch(e){}
     form.style.display='none';
     var d=$('#done'); d.className='card done show';
-    $('#doneMsg').textContent='Thanks, '+(vendor.contact_name.split(' ')[0]||'')+'. '+vendor.dba_name+' is on file with City Wide '+(state.region==='Both'?'in both markets':'of '+state.region)+' for: '+p.slugs.map(function(s){return NAMES[s]||s}).join(', ')+'.';
-    $('#doneNext').href='new-vendors.html'+(state.region==='Northern Nevada'?'?region=nnv':state.region==='Las Vegas'?'?region=lv':'');
-    d.scrollIntoView({behavior:'smooth',block:'start'});
+    var first=(vendor.contact_name.split(' ')[0]||'');
+    $('#doneMsg').textContent='Thanks, '+first+'. We received the evaluation for '+vendor.dba_name+' with City Wide '+(state.region==='Both'?'in both markets':'of '+state.region)+' for: '+p.slugs.map(function(s){return NAMES[s]||s}).join(', ')+'.';
+    var rg=state.region==='Northern Nevada'?'nnv':state.region==='Las Vegas'?'lv':state.region==='Both'?'both':'';
+    var dest='new-vendors.html?'+(rg?'region='+rg+'&':'')+'done=1';
+    $('#doneNext').href=dest;
+    try{ if(window.CWJourney){ CWJourney.set(1,true); if(rg) CWJourney.setRegion(rg); CWJourney.flash({first:first}); } }catch(e){}
+    d.scrollIntoView({block:'start'});
+    /* straight back to the five steps, step 1 checked and step 2 open */
+    location.replace(dest);
   }).catch(function(e){
-    go.disabled=false; go.textContent='Send My Evaluation';
+    go.disabled=false; go.textContent='Send and Go to Step 2';
     fail((e&&e.message?e.message:'Could not send.')+' Your answers are still here. Try again, or email them to lvcompliance@gocitywide.com.', $('#go'));
   });
 });

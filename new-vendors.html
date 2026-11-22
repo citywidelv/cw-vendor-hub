@@ -470,18 +470,143 @@ input:not([type=checkbox]):not([type=radio]):not([type=file]):not([type=range]),
   <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
   <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
   <link rel="manifest" href="site.webmanifest">
+<style id="nv-flow">
+/* 2026-11-22 Steps first. The five steps open the page. Who we are sits under them. */
+.nv-head{padding:24px 0 0;background:#FFFFFF}
+.nv-head h1{font-size:28px;font-weight:700;line-height:1.2;text-wrap:balance}
+.nv-head .nv-sub{margin-top:8px;color:#636466;font-size:15px;max-width:70ch}
+.nv-prog{margin-top:16px;max-width:640px}
+.nv-prog .prog-note{font-size:13px;color:#636466;margin-bottom:8px}
+.nv-prog .prog-note b{color:#2D2A26}
+.nv-prog .prog-note a{color:#2D2A26;font-weight:700;text-decoration:underline;text-underline-offset:3px}
+.nv-prog .pbar{height:8px;background:#E5E5E5;border-radius:6px;overflow:hidden}
+.nv-prog .pbar i{display:block;height:100%;width:0;background:#2D2A26;transition:width .4s cubic-bezier(.16,1,.3,1)}
+.nv-flash{margin-top:16px;padding:12px 16px;border:1px solid #2D2A26;border-radius:11px;background:#F5F5F5;display:flex;gap:12px;align-items:flex-start;max-width:640px;font-size:15px;color:#2D2A26}
+.nv-flash[hidden]{display:none}
+.nv-flash .fi{flex:none;width:28px;height:28px;border-radius:50%;background:#2D2A26;color:#FFFFFF;display:flex;align-items:center;justify-content:center;font-size:15px}
+.nv-aboutlink{display:inline-flex;align-items:center;min-height:44px;margin-top:4px;font-size:13px;font-weight:700;color:#2D2A26;text-decoration:underline;text-underline-offset:3px}
+.steps-wrap{padding:12px 0 8px!important}
+.steps-wrap [hidden]{display:none!important}
+details.step{margin-bottom:12px;box-shadow:none;scroll-margin-top:12px}
+details.step[open]{box-shadow:none}
+details.step.next{border-color:#2D2A26}
+details.step summary{min-height:44px}
+.s-state{display:none;margin-top:8px;font-size:12px;font-weight:700;line-height:1.3;padding:4px 12px;border-radius:18px;width:max-content}
+details.step.next .s-state{display:block;background:#2D2A26;color:#FFFFFF}
+details.step.done .s-state{display:block;background:#F5F5F5;color:#2D2A26;border:1px solid #BDBBB8}
+details.step.done .btn-done{background:#F5F5F5;border-color:#BDBBB8;color:#2D2A26}
+.btn-done i{margin-right:4px}
+.reg-both{margin:8px 0 0}
+.linkbtn{background:none;border:0;padding:0;min-height:44px;font-family:inherit;font-size:13px;font-weight:700;color:#2D2A26;text-decoration:underline;text-underline-offset:3px;cursor:pointer}
+.cameback{margin-top:20px;padding:16px;border:1px solid #2D2A26;border-radius:11px;background:#F5F5F5;display:flex;gap:12px 16px;flex-wrap:wrap;align-items:center;font-size:15px}
+.cameback .cb-acts{display:flex;gap:8px;flex-wrap:wrap}
+.autodone{margin-top:20px;padding:12px 16px;border:1px solid #2D2A26;border-radius:11px;background:#F5F5F5;font-size:15px;font-weight:700}
+.nv-about{padding:40px 0 0;margin-top:24px;border-top:1px solid #E5E5E5}
+.nv-about h2{font-size:21px;font-weight:700;line-height:1.25;text-wrap:balance}
+.nv-about .lede{margin-top:8px;font-size:15px;color:#636466;max-width:70ch}
+@media(max-width:700px){
+  .nv-head{padding-top:16px}
+  .nv-head h1{font-size:21px}
+  details.step summary{padding:12px 16px;gap:12px}
+  details.step summary h2{font-size:17px}
+  details.step summary .stepnum{width:32px;height:32px;font-size:15px}
+  .step-body{padding:4px 16px 20px}
+  .step-split{padding-top:12px}
+  .step-split .media{display:none}
+  .step-foot{margin-top:20px}
+  .cameback .cb-acts,.cameback .btn{width:100%}
+  .cameback .btn{justify-content:center}
+}
+@media(prefers-reduced-motion:reduce){.nv-prog .pbar i{transition:none}}
+</style>
 <link rel="stylesheet" href="https://citywidelv.github.io/cw-base.css">
 </head><body><header class="site-head"><div class="wrap bar"><a href="index.html"><img class="logo" src="https://emailer.emfluence.com/clients/citywide/uploadedfiles/signature_logo.png" alt="City Wide Facility Solutions"></a><button class="menu-toggle" aria-label="Menu">&#9776;</button><nav><a href="index.html">Home</a><a href="opportunities.html" class="nav-opps">Open Opportunities</a><div class="dd"><a class="dd-label active" href="new-vendors.html">New Vendors</a><div class="dd-menu"><a href="new-vendors.html?region=lv">Las Vegas</a><a href="new-vendors.html?region=nnv">Northern Nevada</a></div></div><div class="dd"><a class="dd-label" href="#" onclick="return false;">Guides</a><div class="dd-menu"><div class="dd-head">Crew Guides</div><a href="planner.html">New Building Planner</a><a href="workloading.html">Workloading &amp; Crew Sizing</a><a href="equipment.html">Choosing Your Equipment</a><a href="color-coding.html">Color Coding System</a><a href="medical.html">Medical Facility Cleaning</a><a href="cleanroom.html">Clean Room Cleaning</a><a href="gmp.html">GMP &amp; Food Facility Cleaning</a></div></div><div class="dd"><a class="dd-label" href="invoice.html">Invoices &amp; Paperwork</a><div class="dd-menu"><div class="dd-head">Get Paid</div><a href="invoice.html">Submit Your Monthly Invoice</a><div class="dd-head">Orders</div><a href="building-supplies.html">Report Supplies Needed</a><a href="shop/">Shop Supplies &amp; Uniforms</a><a href="card-authorization.html">Pay by Credit Card</a><div class="dd-head">Paperwork</div><a href="cleaner-roster.html">Add or Remove a Cleaner</a><a href="upload.html">Upload Insurance &amp; Compliance Docs</a><a href="profile-update.html">Update Your Company Profile</a><a href="work-order.html">Maintenance Work Ticket</a><a href="background-check.html">Background Check &amp; Name Badge</a><a href="https://www.onlinecprcertification.net/bloodborne-pathogens-training-certification.php" target="_blank" rel="noopener">Bloodborne Pathogens Certification</a></div></div><div class="dd"><a class="dd-label" href="index.html#recognition">Recognition</a><div class="dd-menu"><a href="index.html#recognition">Vendor of the Month Wall</a><div class="dd-head">Nominate</div><a href="nominate.html">Nominate a Vendor of the Month</a><a href="nominate.html?type=goat">Nominate a City Wide G.O.A.T.</a></div></div>
 <a class="btn-order" href="shop/">Order Supplies</a></nav></div></header>
 <script src="nav.js"></script>
 <script src="hub-nav.js?v=20261122"></script>
-<section class="hero2"><div class="bgimg"></div><div class="scrim"></div><div class="wrap">
-<span class="kicker">City Wide Vendor Hub &middot; Las Vegas &amp; Northern Nevada</span>
-<h1>Commercial properties. <em>On-time payments.</em> Local crews.</h1>
-<p class="lede">City Wide Facility Solutions is a facility management company. We hold the service contracts for commercial buildings across Las Vegas and Northern Nevada and coordinate the work through local, independent vendors. If you run a crew that does janitorial, floor care, landscaping, windows, or the trades, this page is who we are and what working with us looks like.</p>
-<div class="cta-row"><a class="btn btn-red" href="#why">See how it works</a><a class="btn btn-ghost" href="#checklist">Skip to the steps</a></div>
+<section class="nv-head"><div class="wrap">
+  <h1>Get On File in Five Steps</h1>
+  <p class="nv-sub">Four documents put your crew on file, five if you do janitorial. This page remembers your progress on this device.</p>
+  <div class="nv-flash" id="nvFlash" role="status" hidden><span class="fi"><i class=ic-check></i></span><span id="nvFlashMsg"></span></div>
+  <div class="nv-prog"><div class="prog-note" id="progNote"><b>0 of 5 steps done.</b> Start with Step 1.</div><div class="pbar" role="progressbar" aria-label="Steps done" aria-valuemin="0" aria-valuemax="5" aria-valuenow="0" id="progWrap"><i id="progBar"></i></div></div>
+  <a class="nv-aboutlink" href="#about">New to City Wide? See how it works</a>
+</div></section>
+<section class="steps-wrap" id="checklist"><div class="wrap">
+<details class="step" id="step1" data-step="1">
+<summary><span class="stepnum"><span>1</span></span><span class="s-title"><h2>Tell Us What Your Crew Does</h2><span class="tag">Vendor Evaluation &middot; About 5 Minutes</span><span class="s-state"></span></span><span class="chev"><i class=ic-down></i></span></summary>
+<div class="step-body"><div class="step-split"><div><p class="sub">Fill out the vendor evaluation once and pick every service your crew offers: janitorial, floor care, landscaping, the trades, restoration, and more. When work opens that matches what you do, you hear from us first. It takes about five minutes.</p><div class="cta-row" style="display:flex;gap:12px;flex-wrap:wrap;margin-top:20px"><a class="btn btn-red" href="vendor-evaluation.html">Complete the Vendor Evaluation</a></div></div><div class="media"><img src="images/start-online.jpg" alt="Crew member filling out the vendor evaluation on a phone" loading="lazy"></div></div>
+<div class="step-foot"><button class="btn-done" type="button" data-done="1">Mark Step 1 Done</button><span class="nudge">Done when you have submitted the evaluation.</span></div>
+</div></details>
+
+<details class="step" id="step2" data-step="2">
+<summary><span class="stepnum"><span>2</span></span><span class="s-title"><h2>Meet the Team</h2><span class="tag">30 Minutes at Our Office</span><span class="s-state"></span></span><span class="chev"><i class=ic-down></i></span></summary>
+<div class="step-body"><div class="step-split"><div><p class="sub">A relaxed half hour to get to know each other. We explain how City Wide works, the types of properties we manage, and the kinds of opportunities that become available, and we answer any questions you have about working with us.</p><ul class="expect"><li>Booking opens our Microsoft Bookings calendar, which syncs with our Operations team calendars, so every time you see is actually available. Pick one that works for you and come by the office.</li><li>Bring anything you want to show us: examples of your work, business cards, photos of past jobs, anything that tells us about your company.</li><li>Pick the meeting that matches your trade when you book. You leave knowing exactly how work gets assigned and what happens next.</li></ul></div><div class="media"><img src="images/meet-team.jpg" alt="Shaking hands at the City Wide office" loading="lazy"></div></div>
+<div class="card-grid" style="margin-top:8px"><a class="card flag" data-reg="lv" data-act="2" href="https://outlook.office.com/book/CityWideFacilitySolutions@gocitywide.com/?ismsaljsauthenabled" target="_blank" rel="noopener"><span class="region-tag">Las Vegas</span><h3>Meet the Team &middot; Las Vegas</h3><p>Meet the team at 3215 W Charleston Blvd, Las Vegas, NV 89102. Questions? Call operations at (702) 483-1874.</p><span class="go">Pick a time</span></a>
+<a class="card flag" data-reg="nnv" data-act="2" href="https://outlook.office.com/book/CWFSRenoNewVendors@gocitywide.com/?ismsaljsauthenabled" target="_blank" rel="noopener"><span class="region-tag">Northern Nevada</span><h3>Meet the Team &middot; Northern Nevada</h3><p>Meet the team at 1000 Bible Way, Suite 2, Reno, NV 89502. Questions? Call operations at (775) 453-4718.</p><span class="go">Pick a time</span></a></div><p class="reg-both" id="regBoth" hidden><button type="button" class="linkbtn" id="regBothBtn">Show both offices</button></p><div class="cameback" id="cameback2" role="status" hidden><b>Back from booking?</b><span class="cb-acts"><button type="button" class="btn btn-red" data-cb="yes">Yes, I Booked My Time</button><button type="button" class="btn btn-ghost" data-cb="no">Not Yet</button></span></div><div class="step-foot"><button class="btn-done" type="button" data-done="2">Mark Step 2 Done</button><span class="nudge">Done when you have booked your time, or already came by.</span></div>
+</div></details>
+
+<details class="step" id="step3" data-step="3">
+<summary><span class="stepnum"><span>3</span></span><span class="s-title"><h2>Sign Your Vendor Packet</h2><span class="tag">Online &middot; Pick Your Region</span><span class="s-state"></span></span><span class="chev"><i class=ic-down></i></span></summary>
+<div class="step-body"><div style="padding-top:20px"><p class="sub">Pick your region, then open the packet that matches your crew. You sign online right here on this page, and the packet submits itself the moment you finish. Your region panel also holds the two downloads you hand off: the insurance request and the waiver.</p><div class="reg-pick"><button class="reg-btn" id="btn-lv" type="button" onclick="showReg('lv')">Las Vegas</button><button class="reg-btn" id="btn-nnv" type="button" onclick="showReg('nnv')">Northern Nevada</button></div>
+<p class="reg-hint" id="regHint">Pick your region above to see your packet and downloads.</p>
+<div class="reg-panel" id="reg-lv">
+<div class="rule-box"><div>
+<b>Do janitorial? Use the janitorial packet.</b>
+<p>It covers everything, so crews that do janitorial plus other services fill out one packet, not two. The difference: janitorial crews hold keys and often work in buildings alone, so their packet adds agreements on building security, key and access responsibility, and how janitorial work runs. The packet walks you through each one.</p>
+</div></div>
+<div class="card-grid">
+<a class="card flag packet" href="https://form.pandadoc.com/form/QTrR2sJpKKSuYddrWMEFYA" data-packet="QTrR2sJpKKSuYddrWMEFYA" data-title="JS IC Vendor Packet, Las Vegas" data-region="lv"><span class="region-tag">Las Vegas</span><h3>My Crew Does Janitorial</h3><p>Janitorial or commercial cleaning, including crews that also offer other services. Includes the key, access, and building security agreements.</p><span class="go">Sign the janitorial packet here</span></a>
+<a class="card packet" href="https://form.pandadoc.com/form/orcStVWa5uC7hG6Z3DAa7d" data-packet="orcStVWa5uC7hG6Z3DAa7d" data-title="OS IC Vendor Packet, Las Vegas" data-region="lv"><span class="region-tag">Las Vegas</span><h3>My Crew Does Other Services Only</h3><p>Landscaping, handyman, HVAC, plumbing, electrical, windows, power washing, and the other trades, with no janitorial work at all.</p><span class="go">Sign the other services packet here</span></a>
+</div>
+<div class="packet-frame" id="pf-lv" hidden><div class="pf-bar"><b id="pf-title-lv"></b><span><a id="pf-new-lv" href="#step3" target="_blank" rel="noopener">Open in a new tab</a> &nbsp;&middot;&nbsp; <a href="#step3" data-pfclose="lv">Close</a></span></div><iframe id="pf-if-lv" title="Vendor packet" loading="lazy" allow="clipboard-write"></iframe><p class="pf-note">Signing happens on PandaDoc inside this box. Scroll inside the box to move through the packet. When you finish signing, the packet submits itself and you are done with this step.</p></div>
+<h3 class="dl-head">Download &amp; Hand Off</h3>
+<p class="dl-sub">Two documents to download. One goes to your insurance agent, one gets notarized. Both come back to us.</p>
+<div class="card-grid">
+<a class="card" href="pdfs/COI-Request-Las-Vegas.pdf" target="_blank" rel="noopener"><span class="pdf-mini">PDF</span><span class="icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></span><h3>Certificate of Insurance Request</h3><p>Hand this to your insurance agent. Page 1 shows exactly what your certificate must include and where to email it; page 2 shows what the finished certificate looks like. Your agent sends it to us directly. The certificate must name the exact City Wide entity shown on page 1, letter for letter.</p><span class="go">Download the request</span></a>
+<a class="card" href="pdfs/Waiver-of-Agreement.pdf" target="_blank" rel="noopener"><span class="pdf-mini">PDF</span><span class="icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M8 13h8M8 17h5"/></svg></span><h3>Waiver of Agreement</h3><p>Print it, fill in your business name, and sign page 2 in front of a notary. Easiest route: bring it unsigned to our office at 3215 W Charleston Blvd, Suite 130 and our business manager will notarize it for you at no cost. Wherever you sign, do not sign ahead of time: the notary must watch you sign.</p><span class="go">Download the waiver</span></a>
+</div>
+</div>
+<div class="reg-panel" id="reg-nnv">
+<div class="rule-box"><div>
+<b>Do janitorial? Use the janitorial packet.</b>
+<p>It covers everything, so crews that do janitorial plus other services fill out one packet, not two. The difference: janitorial crews hold keys and often work in buildings alone, so their packet adds agreements on building security, key and access responsibility, and how janitorial work runs. The packet walks you through each one.</p>
+</div></div>
+<div class="card-grid">
+<a class="card flag packet" href="https://form.pandadoc.com/form/uyVugBTcDqcGJWCXUPUXpM" data-packet="uyVugBTcDqcGJWCXUPUXpM" data-title="JS IC Vendor Packet, Northern Nevada" data-region="nnv"><span class="region-tag">Northern Nevada</span><h3>My Crew Does Janitorial</h3><p>Janitorial or commercial cleaning, including crews that also offer other services. Includes the key, access, and building security agreements.</p><span class="go">Sign the janitorial packet here</span></a>
+<a class="card packet" href="https://form.pandadoc.com/form/Ta2Ei3aPH294gUX7cwDCMk" data-packet="Ta2Ei3aPH294gUX7cwDCMk" data-title="OS IC Vendor Packet, Northern Nevada" data-region="nnv"><span class="region-tag">Northern Nevada</span><h3>My Crew Does Other Services Only</h3><p>Landscaping, handyman, HVAC, plumbing, electrical, windows, power washing, and the other trades, with no janitorial work at all.</p><span class="go">Sign the other services packet here</span></a>
+</div>
+<div class="packet-frame" id="pf-nnv" hidden><div class="pf-bar"><b id="pf-title-nnv"></b><span><a id="pf-new-nnv" href="#step3" target="_blank" rel="noopener">Open in a new tab</a> &nbsp;&middot;&nbsp; <a href="#step3" data-pfclose="nnv">Close</a></span></div><iframe id="pf-if-nnv" title="Vendor packet" loading="lazy" allow="clipboard-write"></iframe><p class="pf-note">Signing happens on PandaDoc inside this box. Scroll inside the box to move through the packet. When you finish signing, the packet submits itself and you are done with this step.</p></div>
+<h3 class="dl-head">Download &amp; Hand Off</h3>
+<p class="dl-sub">Two documents to download. One goes to your insurance agent, one gets notarized. Both come back to us.</p>
+<div class="card-grid">
+<a class="card" href="pdfs/COI-Request-Northern-Nevada.pdf" target="_blank" rel="noopener"><span class="pdf-mini">PDF</span><span class="icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></span><h3>Certificate of Insurance Request</h3><p>Hand this to your insurance agent. Page 1 shows exactly what your certificate must include and where to email it; page 2 shows what the finished certificate looks like. Your agent sends it to us directly. The certificate must name the exact City Wide entity shown on page 1, letter for letter.</p><span class="go">Download the request</span></a>
+<a class="card" href="pdfs/Waiver-of-Agreement.pdf" target="_blank" rel="noopener"><span class="pdf-mini">PDF</span><span class="icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M8 13h8M8 17h5"/></svg></span><h3>Waiver of Agreement</h3><p>Print it, fill in your business name, and sign page 2 in front of a notary. Do not sign ahead of time: the notary must watch you sign. Your bank or credit union will usually notarize at no cost for account holders; shipping stores and mobile notaries work too. Bring photo ID.</p><span class="go">Download the waiver</span></a>
+</div>
+</div></div>
+<p class="autodone" id="autodone3" role="status" hidden><i class=ic-check></i> Packet submitted. Step 3 is done.</p><div class="step-foot"><button class="btn-done" type="button" data-done="3">Mark Step 3 Done</button><span class="nudge">Done when the packet says it submitted.</span></div>
+</div></details>
+
+<details class="step" id="step4" data-step="4">
+<summary><span class="stepnum"><span>4</span></span><span class="s-title"><h2>Banking: Voided Check or Bank Letter</h2><span class="tag">Direct Deposit Setup</span><span class="s-state"></span></span><span class="chev"><i class=ic-down></i></span></summary>
+<div class="step-body"><div class="step-split"><div><span id="banking"></span><p class="dl-sub">Your packet includes an ACH authorization so we can pay you by direct deposit. We verify the account with one of the two documents below. Upload yours inside the packet, or email it to LVCompliance@gocitywide.com for Las Vegas or rncompliance@gocitywide.com for Northern Nevada if it is not ready when you sign.</p></div><div class="media"><img src="images/paperwork.jpg" alt="Reviewing banking paperwork" loading="lazy"></div></div>
+<div class="card-grid"><div class="card"><h3>Option 1: Voided Business Check</h3><p>A printed check from your business checking account with VOID written across the front. The business name printed on the check must match your ACH authorization letter for letter. Starter checks, counter checks, and deposit slips cannot be accepted.</p></div><div class="card"><h3>Option 2: Bank Letter</h3><p>No printed checks? Ask your bank for an account verification letter. Most banks produce one the same day at a branch or through online support. It must include everything on the checklist below.</p></div></div><p class="dl-sub" style="margin-top:20px"><b>A valid bank letter has all five:</b></p><ul class="checklist"><li>Printed on the bank&#39;s letterhead. Online banking screenshots and generic printouts cannot be accepted.</li><li>Shows your business legal name as the account holder, exactly as it reads on your ACH authorization.</li><li>Shows the full routing number and account number, and states the account type.</li><li>Signed by a bank employee, with their name, title, and contact information.</li><li>Dated within the last 90 days.</li></ul><div class="callout warn"><b class="title">The rule that matters most</b><p>The name on your check or bank letter, your ACH authorization, and your packet must all be the same business name, and it must be a business account. We pay your company, not you personally. A personal account or a name that does not match stops payment setup until it is fixed.</p></div><div class="step-foot"><button class="btn-done" type="button" data-done="4">Mark Step 4 Done</button><span class="nudge">Done when your check or bank letter is uploaded or emailed in.</span></div>
+</div></details>
+
+<details class="step" id="step5" data-step="5">
+<summary><span class="stepnum"><span>5</span></span><span class="s-title"><h2>Doing Janitorial? One More Item</h2><span class="tag">Background Check &middot; Janitorial Crews Only</span><span class="s-state"></span></span><span class="chev"><i class=ic-down></i></span></summary>
+<div class="step-body"><div class="step-split"><div><span id="bgcheck"></span><p class="dl-sub">Janitorial crews hold keys and clean client buildings, often after hours, so a background check must be on file before your crew&#39;s first shift. It is the same process that gets you your City Wide name badge.</p><div class="cta-row" style="display:flex;gap:12px;flex-wrap:wrap"><a class="btn btn-red" href="background-check.html">Start the Background Check &amp; Name Badge</a></div></div><div class="media"><img src="images/crew-clean.jpg" alt="Janitorial crew member with a cleaning cart in a commercial building" loading="lazy"></div></div>
+<div class="step-foot"><button class="btn-done" type="button" data-done="5">Mark Step 5 Done</button><span class="nudge">Not doing janitorial? Mark it done and you are finished.</span></div>
+</div></details>
 </div></section>
 
+<section class="five-band"><div class="wrap"><div class="grid">
+<div><h3 class="dl-head">The Five Things That Slow Vendors Down</h3><p class="dl-sub">Nearly every onboarding delay is one of these five. Dodge them all and you are on file and eligible for work in days.</p><ul class="expect"><li><b>A personal name on the banking.</b> The check, the bank letter, and the ACH authorization all need your company name. We pay businesses, not individuals.</li><li><b>Names that almost match.</b> Desert Cleaning on the check and Desert Cleaning Group LLC on the packet sends us back to you. Letter for letter, everywhere.</li><li><b>Starter checks and stale letters.</b> Temporary checks, screenshots, and bank letters older than 90 days cannot be accepted.</li><li><b>A certificate naming the wrong entity.</b> City Wide alone is not enough. Your agent needs the exact certificate holder shown on the request form.</li><li><b>Signing the waiver early.</b> The notary must watch you sign. A waiver signed at the kitchen table has to be redone.</li></ul></div>
+<div><img src="images/walkthrough.jpg" alt="Walkthrough on a job site" loading="lazy"></div>
+</div></div></section>
+<section class="opps-band"><div class="wrap inner"><span class="dot"></span><span class="txt"><b>Paperwork done?</b><span>New contracts and one-time projects post to the Open Opportunities board the moment they open. First qualified answers get the walkthrough.</span></span><a class="btn btn-red" href="opportunities.html">View the Board</a></div></section><section class="nv-about" id="about"><div class="wrap">
+  <h2>Commercial properties. On-time payments. Local crews.</h2>
+  <p class="lede">City Wide Facility Solutions is a facility management company. We hold the service contracts for commercial buildings across Las Vegas and Northern Nevada and coordinate the work through local, independent vendors. If you run a crew that does janitorial, floor care, landscaping, windows, or the trades, this is who we are and what working with us looks like.</p>
+</div></section>
 <section class="section why" id="why"><div class="wrap">
 <div class="section-head"><h2>Who We Are</h2><span class="tag">Facility Management</span></div>
 <p class="sub">We do something different. Every building we serve has a signed service agreement with City Wide and a City Wide Facility Solutions Manager who owns that relationship for years. We do not run crews. We coordinate the work through vendors like you.</p>
@@ -553,161 +678,165 @@ input:not([type=checkbox]):not([type=radio]):not([type=file]):not([type=range]),
 <section class="how-band" id="how"><div class="wrap">
 <div class="section-head"><h2>How Work Reaches You</h2><span class="tag">Start to First Invoice</span></div>
 <ol class="how-steps">
-<li><span class="stepnum"><span>1</span></span><div><b>Get on file</b><p>Finish the paperwork below. It takes most vendors a few days, mostly waiting on the insurance agent.</p></div></li>
+<li><span class="stepnum"><span>1</span></span><div><b>Get on file</b><p>Finish the five steps at the top of this page. It takes most vendors a few days, mostly waiting on the insurance agent.</p></div></li>
 <li><span class="stepnum"><span>2</span></span><div><b>Hear about work</b><p>Opportunities post to the board and your manager calls when a building fits your crew. You say yes or no. No obligation to take anything.</p></div></li>
 <li><span class="stepnum"><span>3</span></span><div><b>Walk the building</b><p>You and the Facility Solutions Manager walk it together. You see the scope, the schedule, and the monthly pay before you commit.</p></div></li>
 <li><span class="stepnum"><span>4</span></span><div><b>Get awarded and get paid</b><p>An Exhibit A puts the building, the scope, and the pay in writing. You start, you invoice City Wide monthly by the 28th, and you are paid on the 10th.</p></div></li>
 </ol>
-<div class="cta-row" style="margin-top:28px;display:flex;gap:12px;flex-wrap:wrap"><a class="btn btn-red" href="#checklist">Start the steps</a><a class="btn btn-ghost" href="opportunities.html">See what is open right now</a></div>
+<div class="cta-row" style="margin-top:28px;display:flex;gap:12px;flex-wrap:wrap"><a class="btn btn-ghost" href="#checklist">Back to the steps</a><a class="btn btn-ghost" href="opportunities.html">See what is open right now</a></div>
 </div></section>
 
-<section class="steps-wrap" id="checklist"><div class="wrap">
-<div class="section-head"><h2>Get On File in Five Steps</h2><span class="tag">In Order, At Your Pace</span></div>
-<p class="sub">Four documents put your crew on file, five if you do janitorial. Work top to bottom, or jump to where you left off. Mark each step done and this page remembers your progress on this device.</p>
-<div class="rail rail-inline"><div class="wrap"><div class="track">
-<div class="prog-note" id="progNote"><b>Your progress:</b> 0 of 5 steps done</div>
-<div class="bar"><i id="progBar"></i></div>
-<ol id="railList">
-<li data-step="1"><a href="#step1"><span class="dotn"><span>1</span></span><span class="rlbl">Evaluation<small>5 minutes online</small></span></a></li>
-<li data-step="2"><a href="#step2"><span class="dotn"><span>2</span></span><span class="rlbl">Meet the Team<small>30 minutes</small></span></a></li>
-<li data-step="3"><a href="#step3"><span class="dotn"><span>3</span></span><span class="rlbl">Sign Your Packet<small>online</small></span></a></li>
-<li data-step="4"><a href="#step4"><span class="dotn"><span>4</span></span><span class="rlbl">Banking &amp; Documents<small>bank, agent, notary</small></span></a></li>
-<li data-step="5"><a href="#step5"><span class="dotn"><span>5</span></span><span class="rlbl">Background Check<small>janitorial only</small></span></a></li>
-</ol>
-</div></div></div>
-
-<details class="step" id="step1" data-step="1">
-<summary><span class="stepnum"><span>1</span></span><span class="s-title"><h2>Tell Us What Your Crew Does</h2><span class="tag">Vendor Evaluation &middot; About 5 Minutes</span></span><span class="chev"><i class=ic-down></i></span></summary>
-<div class="step-body"><div class="step-split"><div><p class="sub">Fill out the vendor evaluation once and pick every service your crew offers: janitorial, floor care, landscaping, the trades, restoration, and more. When work opens that matches what you do, you hear from us first. It takes about five minutes.</p><div class="cta-row" style="display:flex;gap:12px;flex-wrap:wrap;margin-top:20px"><a class="btn btn-red" href="vendor-evaluation.html">Complete the Vendor Evaluation</a></div></div><div class="media"><img src="images/start-online.jpg" alt="Crew member filling out the vendor evaluation on a phone" loading="lazy"></div></div>
-<div class="step-foot"><button class="btn-done" type="button" data-done="1">Mark Step 1 Done</button><span class="nudge">Done when you have submitted the evaluation.</span></div>
-</div></details>
-
-<details class="step" id="step2" data-step="2">
-<summary><span class="stepnum"><span>2</span></span><span class="s-title"><h2>Meet the Team</h2><span class="tag">30 Minutes at Our Office</span></span><span class="chev"><i class=ic-down></i></span></summary>
-<div class="step-body"><div class="step-split"><div><p class="sub">A relaxed half hour to get to know each other. We explain how City Wide works, the types of properties we manage, and the kinds of opportunities that become available, and we answer any questions you have about working with us.</p><ul class="expect"><li>Booking opens our Microsoft Bookings calendar, which syncs with our Operations team calendars, so every time you see is actually available. Pick one that works for you and come by the office.</li><li>Bring anything you want to show us: examples of your work, business cards, photos of past jobs, anything that tells us about your company.</li><li>Pick the meeting that matches your trade when you book. You leave knowing exactly how work gets assigned and what happens next.</li></ul></div><div class="media"><img src="images/meet-team.jpg" alt="Shaking hands at the City Wide office" loading="lazy"></div></div>
-<div class="card-grid" style="margin-top:8px"><a class="card flag" href="https://outlook.office.com/book/CityWideFacilitySolutions@gocitywide.com/?ismsaljsauthenabled" target="_blank" rel="noopener"><span class="region-tag">Las Vegas</span><h3>Meet the Team &middot; Las Vegas</h3><p>Meet the team at 3215 W Charleston Blvd, Las Vegas, NV 89102. Questions? Call operations at (702) 483-1874.</p><span class="go">Pick a time</span></a>
-<a class="card flag" href="https://outlook.office.com/book/CWFSRenoNewVendors@gocitywide.com/?ismsaljsauthenabled" target="_blank" rel="noopener"><span class="region-tag">Northern Nevada</span><h3>Meet the Team &middot; Northern Nevada</h3><p>Meet the team at 1000 Bible Way, Suite 2, Reno, NV 89502. Questions? Call operations at (775) 453-4718.</p><span class="go">Pick a time</span></a></div><div class="step-foot"><button class="btn-done" type="button" data-done="2">Mark Step 2 Done</button><span class="nudge">Done when you have booked your time, or already came by.</span></div>
-</div></details>
-
-<details class="step" id="step3" data-step="3">
-<summary><span class="stepnum"><span>3</span></span><span class="s-title"><h2>Sign Your Vendor Packet</h2><span class="tag">Online &middot; Pick Your Region</span></span><span class="chev"><i class=ic-down></i></span></summary>
-<div class="step-body"><div style="padding-top:20px"><p class="sub">Pick your region, then open the packet that matches your crew. You sign online right here on this page, and the packet submits itself the moment you finish. Your region panel also holds the two downloads you hand off: the insurance request and the waiver.</p><div class="reg-pick"><button class="reg-btn" id="btn-lv" type="button" onclick="showReg('lv')">Las Vegas</button><button class="reg-btn" id="btn-nnv" type="button" onclick="showReg('nnv')">Northern Nevada</button></div>
-<p class="reg-hint" id="regHint">Pick your region above to see your packet and downloads.</p>
-<div class="reg-panel" id="reg-lv">
-<div class="rule-box"><div>
-<b>Do janitorial? Use the janitorial packet.</b>
-<p>It covers everything, so crews that do janitorial plus other services fill out one packet, not two. The difference: janitorial crews hold keys and often work in buildings alone, so their packet adds agreements on building security, key and access responsibility, and how janitorial work runs. The packet walks you through each one.</p>
-</div></div>
-<div class="card-grid">
-<a class="card flag packet" href="https://form.pandadoc.com/form/QTrR2sJpKKSuYddrWMEFYA" data-packet="QTrR2sJpKKSuYddrWMEFYA" data-title="JS IC Vendor Packet, Las Vegas" data-region="lv"><span class="region-tag">Las Vegas</span><h3>My Crew Does Janitorial</h3><p>Janitorial or commercial cleaning, including crews that also offer other services. Includes the key, access, and building security agreements.</p><span class="go">Sign the janitorial packet here</span></a>
-<a class="card packet" href="https://form.pandadoc.com/form/orcStVWa5uC7hG6Z3DAa7d" data-packet="orcStVWa5uC7hG6Z3DAa7d" data-title="OS IC Vendor Packet, Las Vegas" data-region="lv"><span class="region-tag">Las Vegas</span><h3>My Crew Does Other Services Only</h3><p>Landscaping, handyman, HVAC, plumbing, electrical, windows, power washing, and the other trades, with no janitorial work at all.</p><span class="go">Sign the other services packet here</span></a>
-</div>
-<div class="packet-frame" id="pf-lv" hidden><div class="pf-bar"><b id="pf-title-lv"></b><span><a id="pf-new-lv" href="#step3" target="_blank" rel="noopener">Open in a new tab</a> &nbsp;&middot;&nbsp; <a href="#step3" data-pfclose="lv">Close</a></span></div><iframe id="pf-if-lv" title="Vendor packet" loading="lazy" allow="clipboard-write"></iframe><p class="pf-note">Signing happens on PandaDoc inside this box. Scroll inside the box to move through the packet. When you finish signing, the packet submits itself and you are done with this step.</p></div>
-<h3 class="dl-head">Download &amp; Hand Off</h3>
-<p class="dl-sub">Two documents to download. One goes to your insurance agent, one gets notarized. Both come back to us.</p>
-<div class="card-grid">
-<a class="card" href="pdfs/COI-Request-Las-Vegas.pdf" target="_blank" rel="noopener"><span class="pdf-mini">PDF</span><span class="icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></span><h3>Certificate of Insurance Request</h3><p>Hand this to your insurance agent. Page 1 shows exactly what your certificate must include and where to email it; page 2 shows what the finished certificate looks like. Your agent sends it to us directly. The certificate must name the exact City Wide entity shown on page 1, letter for letter.</p><span class="go">Download the request</span></a>
-<a class="card" href="pdfs/Waiver-of-Agreement.pdf" target="_blank" rel="noopener"><span class="pdf-mini">PDF</span><span class="icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M8 13h8M8 17h5"/></svg></span><h3>Waiver of Agreement</h3><p>Print it, fill in your business name, and sign page 2 in front of a notary. Easiest route: bring it unsigned to our office at 3215 W Charleston Blvd, Suite 130 and our business manager will notarize it for you at no cost. Wherever you sign, do not sign ahead of time: the notary must watch you sign.</p><span class="go">Download the waiver</span></a>
-</div>
-</div>
-<div class="reg-panel" id="reg-nnv">
-<div class="rule-box"><div>
-<b>Do janitorial? Use the janitorial packet.</b>
-<p>It covers everything, so crews that do janitorial plus other services fill out one packet, not two. The difference: janitorial crews hold keys and often work in buildings alone, so their packet adds agreements on building security, key and access responsibility, and how janitorial work runs. The packet walks you through each one.</p>
-</div></div>
-<div class="card-grid">
-<a class="card flag packet" href="https://form.pandadoc.com/form/uyVugBTcDqcGJWCXUPUXpM" data-packet="uyVugBTcDqcGJWCXUPUXpM" data-title="JS IC Vendor Packet, Northern Nevada" data-region="nnv"><span class="region-tag">Northern Nevada</span><h3>My Crew Does Janitorial</h3><p>Janitorial or commercial cleaning, including crews that also offer other services. Includes the key, access, and building security agreements.</p><span class="go">Sign the janitorial packet here</span></a>
-<a class="card packet" href="https://form.pandadoc.com/form/Ta2Ei3aPH294gUX7cwDCMk" data-packet="Ta2Ei3aPH294gUX7cwDCMk" data-title="OS IC Vendor Packet, Northern Nevada" data-region="nnv"><span class="region-tag">Northern Nevada</span><h3>My Crew Does Other Services Only</h3><p>Landscaping, handyman, HVAC, plumbing, electrical, windows, power washing, and the other trades, with no janitorial work at all.</p><span class="go">Sign the other services packet here</span></a>
-</div>
-<div class="packet-frame" id="pf-nnv" hidden><div class="pf-bar"><b id="pf-title-nnv"></b><span><a id="pf-new-nnv" href="#step3" target="_blank" rel="noopener">Open in a new tab</a> &nbsp;&middot;&nbsp; <a href="#step3" data-pfclose="nnv">Close</a></span></div><iframe id="pf-if-nnv" title="Vendor packet" loading="lazy" allow="clipboard-write"></iframe><p class="pf-note">Signing happens on PandaDoc inside this box. Scroll inside the box to move through the packet. When you finish signing, the packet submits itself and you are done with this step.</p></div>
-<h3 class="dl-head">Download &amp; Hand Off</h3>
-<p class="dl-sub">Two documents to download. One goes to your insurance agent, one gets notarized. Both come back to us.</p>
-<div class="card-grid">
-<a class="card" href="pdfs/COI-Request-Northern-Nevada.pdf" target="_blank" rel="noopener"><span class="pdf-mini">PDF</span><span class="icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></span><h3>Certificate of Insurance Request</h3><p>Hand this to your insurance agent. Page 1 shows exactly what your certificate must include and where to email it; page 2 shows what the finished certificate looks like. Your agent sends it to us directly. The certificate must name the exact City Wide entity shown on page 1, letter for letter.</p><span class="go">Download the request</span></a>
-<a class="card" href="pdfs/Waiver-of-Agreement.pdf" target="_blank" rel="noopener"><span class="pdf-mini">PDF</span><span class="icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M8 13h8M8 17h5"/></svg></span><h3>Waiver of Agreement</h3><p>Print it, fill in your business name, and sign page 2 in front of a notary. Do not sign ahead of time: the notary must watch you sign. Your bank or credit union will usually notarize at no cost for account holders; shipping stores and mobile notaries work too. Bring photo ID.</p><span class="go">Download the waiver</span></a>
-</div>
-</div></div>
-<div class="step-foot"><button class="btn-done" type="button" data-done="3">Mark Step 3 Done</button><span class="nudge">Done when the packet says it submitted.</span></div>
-</div></details>
-
-<details class="step" id="step4" data-step="4">
-<summary><span class="stepnum"><span>4</span></span><span class="s-title"><h2>Banking: Voided Check or Bank Letter</h2><span class="tag">Direct Deposit Setup</span></span><span class="chev"><i class=ic-down></i></span></summary>
-<div class="step-body"><div class="step-split"><div><span id="banking"></span><p class="dl-sub">Your packet includes an ACH authorization so we can pay you by direct deposit. We verify the account with one of the two documents below. Upload yours inside the packet, or email it to LVCompliance@gocitywide.com for Las Vegas or rncompliance@gocitywide.com for Northern Nevada if it is not ready when you sign.</p></div><div class="media"><img src="images/paperwork.jpg" alt="Reviewing banking paperwork" loading="lazy"></div></div>
-<div class="card-grid"><div class="card"><h3>Option 1: Voided Business Check</h3><p>A printed check from your business checking account with VOID written across the front. The business name printed on the check must match your ACH authorization letter for letter. Starter checks, counter checks, and deposit slips cannot be accepted.</p></div><div class="card"><h3>Option 2: Bank Letter</h3><p>No printed checks? Ask your bank for an account verification letter. Most banks produce one the same day at a branch or through online support. It must include everything on the checklist below.</p></div></div><p class="dl-sub" style="margin-top:20px"><b>A valid bank letter has all five:</b></p><ul class="checklist"><li>Printed on the bank&#39;s letterhead. Online banking screenshots and generic printouts cannot be accepted.</li><li>Shows your business legal name as the account holder, exactly as it reads on your ACH authorization.</li><li>Shows the full routing number and account number, and states the account type.</li><li>Signed by a bank employee, with their name, title, and contact information.</li><li>Dated within the last 90 days.</li></ul><div class="callout warn"><b class="title">The rule that matters most</b><p>The name on your check or bank letter, your ACH authorization, and your packet must all be the same business name, and it must be a business account. We pay your company, not you personally. A personal account or a name that does not match stops payment setup until it is fixed.</p></div><div class="step-foot"><button class="btn-done" type="button" data-done="4">Mark Step 4 Done</button><span class="nudge">Done when your check or bank letter is uploaded or emailed in.</span></div>
-</div></details>
-
-<details class="step" id="step5" data-step="5">
-<summary><span class="stepnum"><span>5</span></span><span class="s-title"><h2>Doing Janitorial? One More Item</h2><span class="tag">Background Check &middot; Janitorial Crews Only</span></span><span class="chev"><i class=ic-down></i></span></summary>
-<div class="step-body"><div class="step-split"><div><span id="bgcheck"></span><p class="dl-sub">Janitorial crews hold keys and clean client buildings, often after hours, so a background check must be on file before your crew&#39;s first shift. It is the same process that gets you your City Wide name badge.</p><div class="cta-row" style="display:flex;gap:12px;flex-wrap:wrap"><a class="btn btn-red" href="background-check.html" target="_blank" rel="noopener">Start the Background Check &amp; Name Badge</a></div></div><div class="media"><img src="images/crew-clean.jpg" alt="Janitorial crew member with a cleaning cart in a commercial building" loading="lazy"></div></div>
-<div class="step-foot"><button class="btn-done" type="button" data-done="5">Mark Step 5 Done</button><span class="nudge">Not doing janitorial? Mark it done and you are finished.</span></div>
-</div></details>
-</div></section>
-
-<section class="five-band"><div class="wrap"><div class="grid">
-<div><h3 class="dl-head">The Five Things That Slow Vendors Down</h3><p class="dl-sub">Nearly every onboarding delay is one of these five. Dodge them all and you are on file and eligible for work in days.</p><ul class="expect"><li><b>A personal name on the banking.</b> The check, the bank letter, and the ACH authorization all need your company name. We pay businesses, not individuals.</li><li><b>Names that almost match.</b> Desert Cleaning on the check and Desert Cleaning Group LLC on the packet sends us back to you. Letter for letter, everywhere.</li><li><b>Starter checks and stale letters.</b> Temporary checks, screenshots, and bank letters older than 90 days cannot be accepted.</li><li><b>A certificate naming the wrong entity.</b> City Wide alone is not enough. Your agent needs the exact certificate holder shown on the request form.</li><li><b>Signing the waiver early.</b> The notary must watch you sign. A waiver signed at the kitchen table has to be redone.</li></ul></div>
-<div><img src="images/walkthrough.jpg" alt="Walkthrough on a job site" loading="lazy"></div>
-</div></div></section>
-<section class="opps-band"><div class="wrap inner"><span class="dot"></span><span class="txt"><b>Paperwork done?</b><span>New contracts and one-time projects post to the Open Opportunities board the moment they open. First qualified answers get the walkthrough.</span></span><a class="btn btn-red" href="opportunities.html">View the Board</a></div></section><footer class="site-foot"><div class="wrap"><div class="cols"><div><b style="color:#FFFFFF">City Wide Facility Solutions</b> &middot; Las Vegas &amp; Northern Nevada<br>Vendor Resource Hub</div><div><a href="shop/">Order Supplies</a> &nbsp;&nbsp; <a href="index.html">Resource Center</a> &nbsp;&nbsp; <a href="https://www.gocitywide.com" target="_blank" rel="noopener">GoCityWide.com</a></div></div><div class="fine">For crew and vendor reference. There is no fee to join the vendor network. Questions? Contact your City Wide Facility Solutions representative.</div></div></footer>
+<footer class="site-foot"><div class="wrap"><div class="cols"><div><b style="color:#FFFFFF">City Wide Facility Solutions</b> &middot; Las Vegas &amp; Northern Nevada<br>Vendor Resource Hub</div><div><a href="shop/">Order Supplies</a> &nbsp;&nbsp; <a href="index.html">Resource Center</a> &nbsp;&nbsp; <a href="https://www.gocitywide.com" target="_blank" rel="noopener">GoCityWide.com</a></div></div><div class="fine">For crew and vendor reference. There is no fee to join the vendor network. Questions? Contact your City Wide Facility Solutions representative.</div></div></footer>
 <script>
 (function(){
   var t=document.querySelector('.menu-toggle'),n=document.querySelector('.site-head nav');
   if(t&&n){t.addEventListener('click',function(){n.classList.toggle('open');});}
 })();
 </script>
-<script>function showReg(r){["lv","nnv"].forEach(function(k){document.getElementById("reg-"+k).classList.toggle("on",k===r);document.getElementById("btn-"+k).classList.toggle("on",k===r);});var h=document.getElementById("regHint");if(h){h.style.display="none";}}</script>
+<script src="journey.js?v=20261122c"></script>
 <script>
+/* Five steps, one at a time. Progress lives in journey.js (this device only). */
 (function(){
-  var KEY='cwv_journey_v1', total=5;
-  function load(){try{var v=JSON.parse(localStorage.getItem(KEY)||'[]');return Array.isArray(v)?v:[];}catch(e){return[];}}
-  function save(v){try{localStorage.setItem(KEY,JSON.stringify(v));}catch(e){}}
-  function paint(){
-    var done=load(), n=done.filter(Boolean).length;
-    for(var i=1;i<=total;i++){
-      var d=!!done[i-1];
-      var det=document.querySelector('details.step[data-step="'+i+'"]');
-      var li=document.querySelector('#railList li[data-step="'+i+'"]');
-      if(det){det.classList.toggle('done',d);
-        var btn=det.querySelector('.btn-done');
-        if(btn){btn.textContent=d?'Step '+i+' Done \u2713':'Mark Step '+i+' Done';}}
-      if(li){li.classList.toggle('done',d);}
-    }
-    var bar=document.getElementById('progBar');
-    if(bar){bar.style.width=(n/total*100)+'%';}
-    var note=document.getElementById('progNote');
-    if(note){note.innerHTML='<b>Your progress:</b> '+n+' of '+total+' steps done'+(n===total?' \u2713 All set. Watch the Open Opportunities board.':'');}
+  var J=window.CWJourney, total=5;
+  function $(s,r){return (r||document).querySelector(s);}
+  function $$(s,r){return Array.prototype.slice.call((r||document).querySelectorAll(s));}
+  function det(i){return $('details.step[data-step="'+i+'"]');}
+  function nm(i){var h=$('summary h2',det(i));return h?h.textContent:'';}
+  var still=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function go(el){if(el&&el.scrollIntoView){el.scrollIntoView({behavior:still?'auto':'smooth',block:'start'});}}
+
+  /* ---- region: remembered, and it trims step 2 to one office ---- */
+  var bothOffices=false;
+  function applyRegion(r){
+    var one=(r==='lv'||r==='nnv');
+    ['lv','nnv'].forEach(function(k){
+      var p=document.getElementById('reg-'+k), b=document.getElementById('btn-'+k);
+      if(p){p.classList.toggle('on',k===r);} if(b){b.classList.toggle('on',k===r);b.setAttribute('aria-pressed',k===r?'true':'false');}
+    });
+    var h=document.getElementById('regHint'); if(h){h.style.display=one?'none':'';}
+    $$('a.card[data-reg]').forEach(function(c){c.hidden=one&&!bothOffices&&c.getAttribute('data-reg')!==r;});
+    var rb=document.getElementById('regBoth'); if(rb){rb.hidden=!one||bothOffices;}
   }
-  document.querySelectorAll('.btn-done').forEach(function(btn){
+  window.showReg=function(r){J.setRegion(r);bothOffices=false;applyRegion(r);};
+  var rbb=document.getElementById('regBothBtn');
+  if(rbb){rbb.addEventListener('click',function(){bothOffices=true;applyRegion(J.region());});}
+
+  /* ---- paint ---- */
+  function paint(){
+    var n=J.count(), nx=J.next();
+    for(var i=1;i<=total;i++){
+      var d=J.isDone(i), el=det(i); if(!el){continue;}
+      el.classList.toggle('done',d); el.classList.toggle('next',i===nx);
+      var st=$('.s-state',el); if(st){st.textContent=d?'Done':(i===nx?'Do This Next':'');}
+      var btn=$('.btn-done',el);
+      if(btn){btn.innerHTML=d?'<i class=ic-check></i>Step '+i+' Done':'Mark Step '+i+' Done';btn.setAttribute('aria-pressed',d?'true':'false');}
+    }
+    var bar=document.getElementById('progBar'); if(bar){bar.style.width=(n/total*100)+'%';}
+    var pw=document.getElementById('progWrap'); if(pw){pw.setAttribute('aria-valuenow',n);}
+    var note=document.getElementById('progNote');
+    if(note){
+      note.textContent='';
+      var b=document.createElement('b'); b.textContent=n+' of '+total+' steps done.'; note.appendChild(b);
+      if(!nx){
+        note.appendChild(document.createTextNode(' All set. Watch the '));
+        var a=document.createElement('a'); a.href='opportunities.html'; a.textContent='Open Opportunities board';
+        note.appendChild(a); note.appendChild(document.createTextNode('.'));
+      } else {note.appendChild(document.createTextNode(n?' Step '+nx+' is next.':' Start with Step 1.'));}
+    }
+  }
+  function openStep(i,scroll){
+    var el=det(i); if(!el){return;}
+    for(var k=1;k<=total;k++){var o=det(k); if(o&&k!==i){o.open=false;}}
+    el.open=true;
+    if(scroll){setTimeout(function(){go(el);var s=$('summary',el); if(s){try{s.focus({preventScroll:true});}catch(e){}}},40);}
+  }
+  function finish(i){
+    J.set(i,true); paint();
+    var cb=document.getElementById('cameback'+i); if(cb){cb.hidden=true;}
+    var nx=J.next();
+    if(nx){openStep(nx,true);} else {var el=det(i); if(el){el.open=false;} go($('.nv-head'));}
+  }
+  $$('.btn-done').forEach(function(btn){
     btn.addEventListener('click',function(){
-      var i=parseInt(btn.getAttribute('data-done'),10), done=load();
-      done[i-1]=!done[i-1]; save(done); paint();
-      if(done[i-1]&&i<total){
-        var nxt=document.querySelector('details.step[data-step="'+(i+1)+'"]');
-        if(nxt){nxt.open=true;}
-      }
+      var i=parseInt(btn.getAttribute('data-done'),10);
+      if(J.isDone(i)){J.set(i,false);paint();} else {finish(i);}
     });
   });
-  function openFor(hash){
-    if(!hash){return;}
-    var el=document.querySelector(hash.indexOf('#')===0?hash:'#'+hash);
-    if(!el){return;}
-    var det=el.closest?el.closest('details.step'):null;
-    if(el.tagName==='DETAILS'){el.open=true;}
-    else if(det){det.open=true;}
-  }
-  window.addEventListener('hashchange',function(){openFor(location.hash);});
-  document.querySelectorAll('a[href^="#"]').forEach(function(a){
-    a.addEventListener('click',function(){openFor(a.getAttribute('href'));});
+
+  /* ---- back from booking (step 2 opens a new tab) ---- */
+  var pending=0;
+  document.addEventListener('click',function(e){
+    var a=e.target.closest?e.target.closest('a[data-act]'):null;
+    if(a){pending=parseInt(a.getAttribute('data-act'),10)||0;}
+    var c=e.target.closest?e.target.closest('[data-cb]'):null;
+    if(c){
+      var box=c.closest('.cameback'), i=parseInt(box.id.replace('cameback',''),10);
+      box.hidden=true; pending=0;
+      if(c.getAttribute('data-cb')==='yes'){finish(i);}
+    }
   });
-  var m=location.search.match(/region=(lv|nnv)/);
-  if(m){showReg(m[1]);
-    if(location.hash==='#step3'||location.hash==='#packet'){var s3=document.getElementById('step3');if(s3){s3.open=true;}
-      setTimeout(function(){var el=document.getElementById('step3');if(el){el.scrollIntoView();}},60);}}
-  if(location.hash){openFor(location.hash);}
-  var first=document.querySelector('details.step[data-step="1"]');
-  var done=load();
-  if(first&&!done.filter(Boolean).length&&!location.hash){first.open=true;}
-  if(location.hash==='#why'){setTimeout(function(){var w=document.getElementById('why');if(w){w.scrollIntoView();}},60);}
+  function cameBack(){
+    if(document.hidden||!pending||J.isDone(pending)){return;}
+    var box=document.getElementById('cameback'+pending);
+    if(box){box.hidden=false;}
+  }
+  document.addEventListener('visibilitychange',cameBack);
+  window.addEventListener('focus',cameBack);
+
+  /* ---- the packet says when it is submitted ---- */
+  window.addEventListener('message',function(e){
+    var ok=false; try{ok=/(^|\.)pandadoc\.com$/.test(new URL(e.origin).hostname);}catch(x){}
+    if(!ok){return;}
+    var d=e.data, t=d&&(d.type||d.event);
+    if(t==='session_view.document.completed'&&!J.isDone(3)){
+      J.set(3,true); paint();
+      var a=document.getElementById('autodone3'); if(a){a.hidden=false;}
+    }
+  });
+
+  /* ---- in-page links to a step or to something inside one ---- */
+  function openFor(hash,scroll){
+    if(!hash||hash.length<2){return false;}
+    if(hash==='#packet'){hash='#step3';}
+    var el=null; try{el=document.querySelector(hash);}catch(x){}
+    if(!el){return false;}
+    var d=el.tagName==='DETAILS'?el:(el.closest?el.closest('details.step'):null);
+    if(!d){return false;}
+    openStep(parseInt(d.getAttribute('data-step'),10),false);
+    if(scroll){setTimeout(function(){go(el);},60);}
+    return true;
+  }
+  window.addEventListener('hashchange',function(){openFor(location.hash,true);});
+  $$('a[href^="#"]').forEach(function(a){a.addEventListener('click',function(){openFor(a.getAttribute('href'),false);});});
+
+  /* ---- arrive ---- */
+  var q; try{q=new URLSearchParams(location.search);}catch(x){q=null;}
+  var rg=q?(q.get('region')||'').toLowerCase():'';
+  if(/^(lv|nnv|both)$/.test(rg)){J.setRegion(rg);}
+  applyRegion(J.region());
+  var dn=q?parseInt(q.get('done'),10):0;
+  var arrived=false;
+  if(dn>=1&&dn<=total){
+    arrived=true; J.set(dn,true);
+    q.delete('done');
+    try{history.replaceState(null,'',location.pathname+(q.toString()?'?'+q.toString():''));}catch(x){}
+    var f=J.takeFlash()||{}, nx=J.next(), msg=document.getElementById('nvFlashMsg'), box=document.getElementById('nvFlash');
+    if(msg&&box){
+      var b=document.createElement('b');
+      b.textContent=(dn===1?'Evaluation received. ':'')+'Step '+dn+' is done.';
+      msg.appendChild(b);
+      var tail=(f.first?' Thanks, '+f.first+'.':'')+(nx?' Next is Step '+nx+', '+nm(nx)+'.':' All five steps are done. Watch the Open Opportunities board.');
+      msg.appendChild(document.createTextNode(tail));
+      box.hidden=false;
+    }
+  }
   paint();
+  var opened=!arrived&&location.hash?openFor(location.hash,true):false;
+  if(!opened){var first=J.next(); if(first){openStep(first,false);}}
+  if(!arrived&&location.hash&&!opened){
+    var toHash=function(){var w=null;try{w=document.querySelector(location.hash);}catch(x){} if(w){w.scrollIntoView();}};
+    setTimeout(toHash,60); window.addEventListener('load',function(){setTimeout(toHash,120);});
+  }
 })();
 </script>
 <script>(function(){var cards=document.querySelectorAll('a.card.packet');function open(a){var rg=a.getAttribute('data-region'),id=a.getAttribute('data-packet'),url='https://form.pandadoc.com/form/'+id;var box=document.getElementById('pf-'+rg),f=document.getElementById('pf-if-'+rg);document.getElementById('pf-title-'+rg).textContent=a.getAttribute('data-title');document.getElementById('pf-new-'+rg).href=url;if(f.getAttribute('src')!==url)f.setAttribute('src',url);box.hidden=false;Array.prototype.forEach.call(cards,function(c){c.classList.toggle('on',c===a);});box.scrollIntoView({behavior:'smooth',block:'start'});}

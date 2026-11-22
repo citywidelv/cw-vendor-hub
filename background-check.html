@@ -483,6 +483,7 @@ input:not([type=checkbox]):not([type=radio]):not([type=file]):not([type=range]),
   if(t&&n){t.addEventListener('click',function(){n.classList.toggle('open');});}
 })();
 </script>
+<script src="journey.js?v=20261122c"></script>
 <script>
 (function(){
 var EXEC = "https://script.google.com/macros/s/AKfycbzfNnrpidCbWB1DeUNgXvRhDFMQgApfpn-3C9GU45wMEHcJpWFl8ZQVo6PUBSRfEVfRdg/exec";
@@ -658,6 +659,7 @@ form.addEventListener("submit", function(ev){
     $("#doneMsg").textContent = "Thanks, " + (d.submitted_by.split(" ")[0] || "") + ". " + (needsReport() ? "We have the report for " : needsCheck() ? "We have the background check request for " : "We have the badge request for ") + names.join(", ") + " from " + d.company.trim() + " (" + (d.market === "nnv" ? "Northern Nevada" : "Las Vegas") + ")." + (needsReport() ? " Our compliance team reviews the report, files it, and marks them cleared." : "");
     var sp = specialFor(d.building);
     if(sp && (needsCheck() || needsReport())) $("#doneMsg").textContent += " " + sp.done;
+    try{ if(window.CWJourney && needsCheck()) CWJourney.set(5,true); }catch(e){}
     $("#done").classList.add("show"); $("#done").scrollIntoView({ behavior:"smooth", block:"start" });
   }).catch(function(e){
     go.disabled = false; go.textContent = "Send the Request";

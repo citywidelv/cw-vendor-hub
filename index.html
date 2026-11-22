@@ -112,6 +112,18 @@ details.past[open] summary svg.i{transform:rotate(90deg)}
 .steps li:first-child{border-top:0;padding-top:0}
 .steps .n{width:36px;height:36px;border-radius:50%;background:var(--black);color:#fff;font-weight:700;display:flex;align-items:center;justify-content:center;grid-row:span 3}
 .steps b{font-size:15px}
+/* five steps, same list and same progress as new-vendors.html */
+.steps li.done .n{background:var(--white);color:var(--black);border:1px solid var(--line)}
+.steps li.done .n span{display:none}
+.steps li.done .n::before{content:"";width:16px;height:16px;background:currentColor;-webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12.5l4.5 4.5L19 7.5'/%3E%3C/svg%3E") center/contain no-repeat;mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12.5l4.5 4.5L19 7.5'/%3E%3C/svg%3E") center/contain no-repeat}
+.steps li b a{color:inherit;text-decoration:none}
+.steps li.done b a{color:var(--grey)}
+.steps li .tagd{display:none;font-size:12px;font-weight:700;margin-left:8px;color:var(--grey)}
+.steps li.done .tagd{display:inline}
+.steps li .sb:empty{display:none}
+.steps li.after .n{background:var(--white);color:var(--black);border:1px solid var(--line)}
+.steps li.after .n .i{width:18px;height:18px}
+
 .steps p{font-size:13px;color:var(--grey);max-width:65ch}
 .steps .sb{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
 .guides{list-style:none;display:grid;grid-template-columns:1fr 1fr;gap:0 24px}
@@ -225,7 +237,7 @@ details.past[open] summary svg.i{transform:rotate(90deg)}
   <div class="phead">
     <h1 class="ptitle">Vendor Hub</h1>
     <span class="psub">Las Vegas &amp; Northern Nevada</span>
-    <a class="btn blk" href="new-vendors.html">New Vendor? Start Here</a>
+    <a class="btn blk" id="nvStart" href="new-vendors.html">New Vendor? Start Here</a>
   </div>
 
   <div class="strips">
@@ -257,12 +269,15 @@ details.past[open] summary svg.i{transform:rotate(90deg)}
   </section>
 
   <section class="sec">
-    <div class="sechead"><h2>New to City Wide? Three Steps to Your First Building</h2><p>No cost to join.</p></div>
+    <div class="sechead"><h2>New to City Wide? Get On File in Five Steps</h2><p>No cost to join.</p></div>
     <div class="newv">
-      <ol class="steps">
-        <li><span class="n">1</span><b>Tell Us What Your Crew Does</b><p>Fill out the vendor evaluation once and pick your services. The services checklist drives your notifications.</p><div class="sb"><a class="btn blk" href="vendor-evaluation.html">Complete the Evaluation</a></div></li>
-        <li><span class="n">2</span><b>Meet the Team &amp; Sign Your Packet</b><p>A visit with our team, the signed vendor packet, banking for direct deposit, your insurance certificate, and the notarized waiver.</p><div class="sb"><a class="btn" href="new-vendors.html?region=lv">Las Vegas Checklist</a><a class="btn" href="new-vendors.html?region=nnv">Northern Nevada Checklist</a></div></li>
-        <li><span class="n">3</span><b>Get to Work</b><p>Watch the board, answer the postings that fit your crew, and use the guides before the first clean.</p><div class="sb"><a class="btn" href="opportunities.html">View the Board</a></div></li>
+      <ol class="steps" id="jsteps">
+        <li data-step="1" class="next"><span class="n"><span>1</span></span><b><a href="new-vendors.html#step1">Tell Us What Your Crew Does</a></b><p>Vendor evaluation. About 5 minutes online.</p><div class="sb"><a class="btn blk" data-go href="vendor-evaluation.html">Complete the Evaluation</a></div></li>
+        <li data-step="2"><span class="n"><span>2</span></span><b><a href="new-vendors.html#step2">Meet the Team</a></b><p>30 minutes at our office.</p><div class="sb"></div></li>
+        <li data-step="3"><span class="n"><span>3</span></span><b><a href="new-vendors.html#step3">Sign Your Vendor Packet</a></b><p>Online. Pick your region.</p><div class="sb"></div></li>
+        <li data-step="4"><span class="n"><span>4</span></span><b><a href="new-vendors.html#step4">Banking: Voided Check or Bank Letter</a></b><p>Direct deposit setup.</p><div class="sb"></div></li>
+        <li data-step="5"><span class="n"><span>5</span></span><b><a href="new-vendors.html#step5">Doing Janitorial? One More Item</a></b><p>Background check. Janitorial crews only.</p><div class="sb"></div></li>
+        <li class="after"><span class="n"><svg class="i" aria-hidden="true"><use href="#i-work"/></svg></span><b>Get to Work</b><p>Watch the board, answer the postings that fit your crew, and use the guides before the first clean.</p><div class="sb"><a class="btn" href="opportunities.html">View the Board</a></div></li>
       </ol>
       <img src="images/crew-office-cart-right.jpg" alt="City Wide crew member pushing a cleaning cart through an office" width="1292" height="859" loading="lazy" decoding="async">
     </div>
@@ -400,6 +415,31 @@ try{
     if(r&&r.ok&&r.items&&r.items.length){WALL=r.items.filter(function(w){return w.type!=="goat";});year=null;wall();jump();}
   }).catch(function(){});
 }catch(e){}
+})();
+</script>
+<script src="journey.js?v=20261122c"></script>
+<script>
+/* New vendor progress on the hub home. Reads this device only, no fetch. */
+(function(){
+  var J=window.CWJourney; if(!J){return;}
+  var n=J.count(), nx=J.next();
+  var list=document.getElementById('jsteps');
+  if(list){
+    Array.prototype.forEach.call(list.querySelectorAll('li[data-step]'),function(li){
+      var i=parseInt(li.getAttribute('data-step'),10), d=J.isDone(i), sb=li.querySelector('.sb');
+      li.classList.toggle('done',d); li.classList.toggle('next',i===nx);
+      if(d){var t=document.createElement('span');t.className='tagd';t.textContent='Done';li.querySelector('b').appendChild(t);}
+      if(sb){sb.textContent='';
+        if(i===nx){var a=document.createElement('a');a.className='btn blk';
+          a.href=i===1?'vendor-evaluation.html':'new-vendors.html#step'+i;
+          a.textContent=i===1?'Complete the Evaluation':'Go to Step '+i;sb.appendChild(a);}}
+    });
+  }
+  var top=document.getElementById('nvStart');
+  if(top){
+    if(!nx){top.hidden=true;}
+    else if(n){top.textContent='Continue to Step '+nx+' of 5';top.href='new-vendors.html#step'+nx;}
+  }
 })();
 </script>
 </body></html>
