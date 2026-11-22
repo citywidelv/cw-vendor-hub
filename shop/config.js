@@ -12,7 +12,10 @@ window.CW_CONFIG = {
   // every few minutes). Leave blank ("") to use the catalog.csv in this repo.
   // If the Sheet is ever unreachable, the site automatically falls back to
   // the repo's catalog.csv.
-  CATALOG_URL: "https://docs.google.com/spreadsheets/d/e/2PACX-1vQKNqUqE4xDUT24EmeEthfuPYSvAO7nl5Fb1LbaE3-nU3V5t_EhJYtdk4AETcFiMIcQj2zDrkXgOWEl/pub?output=csv",
+  // 2026-11-21: this points at the "Shop Public" tab only. That tab mirrors the catalog tab
+  // (Sheet1) without the cost and margin_pct columns, and it is the only tab published to the
+  // web. Keep editing products on Sheet1; never publish Sheet1 or Orders.
+  CATALOG_URL: "https://docs.google.com/spreadsheets/d/e/2PACX-1vQKNqUqE4xDUT24EmeEthfuPYSvAO7nl5Fb1LbaE3-nU3V5t_EhJYtdk4AETcFiMIcQj2zDrkXgOWEl/pub?gid=36655771&single=true&output=csv",
 
   // Where orders go. One POST to the CW Team Portal Backend (kind shop_order): it writes
   // the row to the Orders tab of the CW Vendor Shop Catalog sheet (what the Ops Hub
