@@ -28,7 +28,7 @@ color:var(--black);background:var(--light);font-size:14px;line-height:1.6}
 .head img{height:36px;width:auto;flex:none}
 .head .t{font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--grey);
 border-left:2px solid var(--border);padding-left:14px;white-space:nowrap}
-.head a.back{margin-left:auto;font-size:11px;font-weight:700;color:var(--grey);text-decoration:none;
+.head a.back{margin-left:auto;font-size:12px;font-weight:700;color:var(--grey);text-decoration:none;
 border:1px solid var(--border);border-radius:14px;padding:5px 12px;background:var(--light);white-space:nowrap}
 .head a.back:hover{background:var(--red);color:#fff;border-color:var(--red)}
 .hero{background:linear-gradient(180deg,#26231f 0%,var(--black) 85%);color:#fff;border-bottom:4px solid var(--red)}
@@ -49,7 +49,7 @@ width:100%;font-family:inherit;font-size:14px;border:1.5px solid var(--border);b
 padding:10px 12px;background:#fff;outline:none;color:var(--black)}
 input:focus,select:focus,textarea:focus{border-color:var(--red)}
 textarea{min-height:90px;resize:vertical}
-.hint{font-size:11px;color:var(--grey);margin-top:4px}
+.hint{font-size:12px;color:var(--grey);margin-top:4px}
 .radio-list{display:flex;flex-direction:column;gap:8px}
 .radio-row{display:flex;flex-wrap:wrap;gap:8px}
 .radio-item{display:flex;align-items:flex-start;gap:10px;border:1.5px solid var(--border);border-radius:10px;
@@ -69,7 +69,7 @@ padding:11px 14px;cursor:pointer;background:#fff}
 .photo-drop .cam{display:inline-flex;align-items:center;justify-content:center;gap:8px;margin-top:10px;font-size:14px;font-weight:700;color:#fff;background:var(--black);border-radius:8px;padding:12px 20px}
 .photo-drop.need .cam{background:var(--red)}
 .radio-item .rt{font-size:13px;font-weight:700}
-.radio-item .rs{font-size:11px;color:var(--grey)}
+.radio-item .rs{font-size:12px;color:var(--grey)}
 .grid2{display:grid;grid-template-columns:1fr 1fr;gap:0 16px}
 @media(max-width:620px){.grid2{grid-template-columns:1fr}}
 /* site chooser */
@@ -79,10 +79,10 @@ padding:11px 14px;cursor:pointer;background:#fff}
 padding:18px 16px;cursor:pointer;color:var(--black);min-height:96px;display:flex;flex-direction:column;gap:4px}
 .choice:hover,.choice:focus-visible{border-color:var(--red);background:#fdf3f3;outline:none}
 .choice .ct{font-size:15px;font-weight:700;line-height:1.3}
-.choice .cs{font-size:11px;color:var(--grey)}
+.choice .cs{font-size:12px;color:var(--grey)}
 .sitebadge{display:inline-flex;align-items:center;gap:10px;font-size:12px;font-weight:700;background:var(--light);
 border:1px solid var(--border);border-radius:14px;padding:5px 12px;margin-left:auto}
-.sitebadge a{font-size:11px;font-weight:700;color:var(--red);text-decoration:none}
+.sitebadge a{font-size:12px;font-weight:700;color:var(--red);text-decoration:none}
 .sitebadge a:hover{text-decoration:underline}
 .sitebox[hidden]{display:none}
 a.alt{display:inline-block;margin-top:8px;font-size:12px;font-weight:700;color:var(--red);text-decoration:none}
@@ -94,13 +94,13 @@ border-radius:0 0 10px 10px;box-shadow:var(--shadow);max-height:260px;overflow:a
 .sugg div{padding:9px 12px;cursor:pointer;border-top:1px solid var(--light)}
 .sugg div:hover,.sugg div.sel{background:#fdf3f3}
 .sugg .sn{font-size:13px;font-weight:700}
-.sugg .sa{font-size:11px;color:var(--grey)}
+.sugg .sa{font-size:12px;color:var(--grey)}
 .sugg .none{cursor:default;color:var(--grey);font-size:12px}
 .filled{border-color:var(--teal)!important}
 .photo-drop{border:2px dashed var(--border);border-radius:12px;padding:22px;text-align:center;cursor:pointer;background:#fff}
 .photo-drop:hover{border-color:var(--red)}
 .photo-drop .big{font-size:14px;font-weight:700}
-.photo-drop .sm{font-size:11px;color:var(--grey);margin-top:4px}
+.photo-drop .sm{font-size:12px;color:var(--grey);margin-top:4px}
 .thumbs{display:flex;flex-wrap:wrap;gap:10px;margin-top:12px}
 .thumb{position:relative;width:86px;height:86px;border-radius:10px;overflow:hidden;border:1px solid var(--border)}
 .thumb img{width:100%;height:100%;object-fit:cover;display:block}
@@ -123,9 +123,17 @@ border:1px solid var(--border);border-radius:8px;padding:8px 18px}
 #done a{display:inline-block;margin-top:18px;font-size:13px;font-weight:700;color:var(--red)}
 .foot{border-top:1px solid var(--border);background:#fff}
 .foot .fin{max-width:860px;margin:0 auto;padding:18px 20px;display:flex;align-items:center;gap:12px;
-font-size:11px;color:var(--grey);flex-wrap:wrap}
+font-size:12px;color:var(--grey);flex-wrap:wrap}
 .foot b{color:var(--black)}
 .hp{position:absolute;left:-9999px;top:-9999px}
+
+/* 2026-11-22 Vendor Hub overhaul, round two. Nothing under 12px, and every control is at least 44px tall. */
+input:not([type=checkbox]):not([type=radio]):not([type=file]):not([type=hidden]):not([type=range]):not(.hp),select,textarea,button,a.btn,.btn{min-height:44px}
+.site-head nav a,.site-head nav button,.hp{min-height:0}
+:focus-visible{outline:3px solid #2D2A26;outline-offset:2px}
+small{font-size:max(12px,.83em)}
+.hubnav-toggle{min-height:44px;align-items:center;gap:8px;padding:0 14px;border:1px solid #BDBBB8;border-radius:6px;background:#fff;color:#2D2A26;font-family:inherit;font-size:13px;font-weight:700;cursor:pointer;flex:none}
+@media(max-width:700px){.head img,.hdr-logo img{height:28px}.head .t,.head .back,.hdr-title{display:none}.head .bar{gap:8px}.head .bar .hubnav-toggle,.hdr-inner .hubnav-toggle{margin-left:auto}}
 </style>
 <link rel="stylesheet" href="https://citywidelv.github.io/cw-base.css">
 </head>
@@ -135,9 +143,13 @@ font-size:11px;color:var(--grey);flex-wrap:wrap}
 <div class="bar">
 <img src="https://emailer.emfluence.com/clients/citywide/uploadedfiles/signature_logo.png" alt="City Wide Facility Solutions">
 <span class="t">Work Ticket</span>
-<a class="back" href="index.html">&larr; Vendor Hub</a>
+<a class="back" href="index.html">Vendor Hub</a>
+<button type="button" data-hubnav-toggle><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>Menu</button>
 </div>
 </header>
+<nav id="hubnav" data-base="" aria-label="Vendor Hub menu"></nav>
+<script src="nav.js"></script>
+<script src="hub-nav.js?v=20261122"></script>
 
 <section class="hero">
 <div class="in">

@@ -11,7 +11,12 @@
    Menu data comes from window.CW_NAV (nav.js, the same manifest cw-nav.js reads for the older pages).
    If nav.js is missing or malformed the FALLBACK below is used, so a bad publish shows
    yesterday's menu, never no menu. Keep FALLBACK in step with nav.js when the menu changes.
-   window.HubNav.menu() returns the menu in use, for a page that wants to build a search over it. */
+   window.HubNav.menu() returns the menu in use, for a page that wants to build a search over it.
+
+   Older pages (header class "site-head", 2026-11-22): load nav.js and this file and nothing else.
+   With no #hubnav on the page, the script hides the old hover menu in that header, adds a Menu
+   button and the red Order Supplies button to it, and puts the menu bar under it. If this file
+   fails to load, the old header menu written into the page still shows. */
 (function(){
   "use strict";
   var FALLBACK=[
@@ -80,7 +85,17 @@
   +'.hubnav .hn-b{justify-content:space-between;width:100%}'
   +'.hubnav .hn-p{position:static;min-width:0;max-width:none;box-shadow:none;border-radius:6px;margin:0 0 8px}'
   +'}'
-  +'@media(prefers-reduced-motion:reduce){.hubnav .hn-b svg{transition:none}}';
+  +'@media(prefers-reduced-motion:reduce){.hubnav .hn-b svg{transition:none}}'
+  /* older page headers */
+  +'.site-head.hn-up nav,.site-head.hn-up .menu-toggle{display:none!important}'
+  +'.hn-legacy{margin-left:auto;display:flex;align-items:center;gap:8px;flex:none}'
+  +'.hn-legacy a,.hn-legacy button{min-height:44px;display:inline-flex;align-items:center;gap:8px;padding:0 16px;border-radius:6px;font-family:inherit;font-size:13px;font-weight:700;line-height:1;white-space:nowrap;text-decoration:none;cursor:pointer}'
+  +'.hn-legacy a{background:#D22730;border:1px solid #D22730;color:#fff}'
+  +'.hn-legacy button{background:#fff;border:1px solid #BDBBB8;color:#2D2A26}'
+  +'.hn-legacy svg{width:20px;height:20px;flex:none;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}'
+  +'@media(hover:hover){.hn-legacy a:hover{background:#B01F27;border-color:#B01F27;color:#fff}.hn-legacy button:hover{border-color:#2D2A26}}'
+  +'.hn-legacy button.hubnav-toggle{display:none}'
+  +'@media(max-width:700px){.hn-legacy a{display:none}.hn-legacy button.hubnav-toggle{display:inline-flex}.site-head.hn-up img.logo{height:28px}}';
 
   function esc(s){return String(s==null?"":s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");}
   function shown(l){return (l||[]).filter(function(x){return x&&!x.hidden;});}
@@ -100,9 +115,20 @@
   }
   function ext(h){return /^https?:/.test(h);}
   function init(){
-    var nav=document.getElementById("hubnav");
-    if(!nav)return;
     if(!document.getElementById("hubnav-css")){var st=document.createElement("style");st.id="hubnav-css";st.textContent=CSS;document.head.appendChild(st);}
+    var nav=document.getElementById("hubnav");
+    if(!nav){
+      /* an older page: upgrade its header in place */
+      var head=document.querySelector("header.site-head"),bar=head&&head.querySelector(".bar");
+      if(!head||!bar)return;
+      nav=document.createElement("nav");nav.id="hubnav";nav.setAttribute("data-base","");nav.setAttribute("aria-label","Vendor Hub menu");
+      head.parentNode.insertBefore(nav,head.nextSibling);
+      var box=document.createElement("div");box.className="hn-legacy";
+      box.innerHTML='<a href="shop/"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>Order Supplies</a>'
+        +'<button type="button" data-hubnav-toggle><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>Menu</button>';
+      bar.appendChild(box);
+      head.classList.add("hn-up");
+    }
     var base=nav.getAttribute("data-base")||"";
     var file=location.pathname.split("/").pop()||"index.html";
     var atRoot=base==="";
