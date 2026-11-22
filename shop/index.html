@@ -567,7 +567,7 @@ function catList(){
   const cats = new Set();
   PRODUCTS.forEach(p=>p.categories.forEach(c=>cats.add(c)));
   const order = ["Desert Dust Sheets","EnvirOx","Uniforms","New Building Items","Apartments 5 Days","Apartments 7 Days","Chemicals","Cleaning Tools","Mopping",
-    "Sweeping & Dust Mopping","Window Cleaning","High Dusting","TruShot","Vacuums","Floor Machines",
+    "Sweeping & Dust Mopping","Window Cleaning","High Dusting","TruShot","FastDraw","3M Flow Control","Vacuums","Floor Machines",
     "Floor Cleaners","Carts & Dollies","Equipment","PPE","Storage","Kitchens (Sands)","Octapharma"];
   return [...cats].sort((a,b)=>{
     const ia=order.indexOf(a), ib=order.indexOf(b);
@@ -575,7 +575,7 @@ function catList(){
   });
 }
 const GROUPS = [
-  {key:"Supplies",   cats:["Desert Dust Sheets","Chemicals","EnvirOx","TruShot","Cleaning Tools","Mopping",
+  {key:"Supplies",   cats:["Desert Dust Sheets","Chemicals","EnvirOx","TruShot","FastDraw","3M Flow Control","Cleaning Tools","Mopping",
                            "Sweeping & Dust Mopping","Window Cleaning","High Dusting",
                            "Floor Cleaners","Restroom","PPE","Storage"]},
   {key:"Equipment",  cats:["Vacuums","Floor Machines","Carts & Dollies","Equipment"]},
