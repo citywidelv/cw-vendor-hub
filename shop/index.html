@@ -570,6 +570,9 @@ async function load(){
   try{
     const qc=new URLSearchParams(location.search).get("cat");
     if(qc && catList().includes(qc)){ activeCat=qc; activeGroup=groupFor(qc); }
+    // Deep link: shop/?q=MC7125 opens the shop already searched for that item (linked from emails).
+    const qq=new URLSearchParams(location.search).get("q");
+    if(qq){ document.getElementById("search").value=qq; }
   }catch(e){}
   buildChips(); render(); updateCartCount();
 }
